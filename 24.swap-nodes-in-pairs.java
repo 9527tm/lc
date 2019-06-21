@@ -35,7 +35,8 @@
  */
 class Solution {
     public ListNode swapPairs(ListNode head) {
-        return sol0(head);
+        //return sol0(head);
+        return sol1(head);
     }
 
     private ListNode sol0(ListNode head) {
@@ -75,6 +76,26 @@ class Solution {
         }
         tail.next = curr1;
 
+        return dummyHead.next;
+    }
+
+    private ListNode sol1(ListNode head) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode newTail = dummyHead;
+        ListNode curr = head;
+        while (curr != null && curr.next != null) {
+            newTail.next = curr.next;
+            ListNode next2 = curr.next.next;
+            curr.next.next = curr;
+            curr.next = null;
+
+            newTail = curr;
+            curr = next2;
+        }
+
+        if (curr != null) {
+            newTail.next = curr;
+        }
         return dummyHead.next;
     }
 }
