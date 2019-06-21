@@ -42,8 +42,10 @@
  */
 class Solution {
     public ListNode removeNthFromEnd(ListNode head, int n) {
-       return sol1(head, n); 
+       //return sol1(head, n); 
+       return sol2(head, n); 
     }
+    
     private ListNode sol1(ListNode head, int n) {
         ListNode dummyHead = new ListNode(0);
         dummyHead.next = head;
@@ -54,6 +56,22 @@ class Solution {
         while (fast.next != null) {
             slow = slow.next;
             fast = fast.next;
+        }
+        slow.next = slow.next.next;
+        return dummyHead.next;
+    }
+
+    private ListNode sol2(ListNode head, int n) {
+        ListNode dummyHead = new ListNode(0);
+        dummyHead.next = head;
+        ListNode slow = dummyHead;
+        for (ListNode fast = dummyHead; fast.next != null; fast = fast.next) {
+            if (n > 0) {
+                n--;
+            }
+            else {
+                slow = slow.next;
+            }
         }
         slow.next = slow.next.next;
         return dummyHead.next;
