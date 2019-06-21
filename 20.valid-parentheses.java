@@ -91,19 +91,21 @@ class Solution {
             if (ch == '(' || ch == '[' || ch == '{') {
                 stack.offerFirst(ch);
             }
-            else if (!stack.isEmpty()) {
-                char ch2 = stack.peekFirst();
-                if ((ch == ')' && ch2 == '(') ||
-                    (ch == ']' && ch2 == '[') ||
-                    (ch == '}' && ch2 == '{')) {
-                    stack.pollFirst();
+            else {
+                if (!stack.isEmpty()) {
+                    char ch2 = stack.peekFirst();
+                    if ((ch == ')' && ch2 == '(') ||
+                        (ch == ']' && ch2 == '[') ||
+                        (ch == '}' && ch2 == '{')) {
+                        stack.pollFirst();
+                    }
+                    else {
+                        return false;
+                    }
                 }
-                else {
+                else {//H.W.: missing the case -- "]"
                     return false;
                 }
-            }
-            else {//H.W.: missing the case -- "]"
-                return false;
             } 
         }
         return stack.isEmpty();
