@@ -26,12 +26,13 @@
  */
 class Solution {
     public int threeSumClosest(int[] nums, int target) {
-        return sol1(nums, target); 
+        //return sol1(nums, target); 
+        return sol2(nums, target); 
     }
 
-    private int sol1(int[] nums, int target) {
-        Arrays.sort(nums);
-        long res = nums[0] + nums[1] + nums[2]; //<= assume exactly one solution
+    private int sol1(int[] nums, int target) {//Overflow case: "[2147483647, 1, 2147483647, 35, 45]\n10"
+        Arrays.sort(nums); //assume exactly one solution =>
+        long res = nums[0] + nums[1] + nums[2];//the sum of the smallest 3 elements will not overflow.
         for (int i = 0; i < nums.length; i++) {
             if (i > 0 && nums[i] == nums[i - 1]) {
                 continue;
@@ -59,7 +60,29 @@ class Solution {
             }
         }
         return (int)res;
+    }
 
-
+    private int sol2(int[] nums, int target) { 
+        Arrays.sort(nums);
+        long res = nums[0] + nums[1] + nums[2];
+        for (int i = 0; i < nums.length; i++) {
+            int left = i + 1, right = nums.length - 1;
+            while (left < right) {
+                long sum = (long)nums[i] + (long)nums[left] + (long)nums[right];
+                if (Math.abs(sum - target) < Math.abs(res - target)) {
+                    res = sum;
+                }
+                if (sum < target) {
+                    left++;
+                }
+                else if (sum > target) {
+                    right--;
+                }
+                else {
+                    return target;
+                }
+            }
+        }
+        return (int)res;
     }
 }
