@@ -61,7 +61,8 @@
  */
 class Solution {
     public boolean isValid(String s) {
-        return sol1(s); 
+        //return sol1(s); 
+        return sol2(s); 
     }
 
     private boolean sol1(String s) {
@@ -79,6 +80,31 @@ class Solution {
             else {
                 return false;
             }
+        }
+        return stack.isEmpty();
+    }
+
+    private boolean sol2(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch == '(' || ch == '[' || ch == '{') {
+                stack.offerFirst(ch);
+            }
+            else if (!stack.isEmpty()) {
+                char ch2 = stack.peekFirst();
+                if ((ch == ')' && ch2 == '(') ||
+                    (ch == ']' && ch2 == '[') ||
+                    (ch == '}' && ch2 == '{')) {
+                    stack.pollFirst();
+                }
+                else {
+                    return false;
+                }
+            }
+            else {//H.W.: missing the case -- "]"
+                return false;
+            } 
         }
         return stack.isEmpty();
     }
