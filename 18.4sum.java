@@ -36,7 +36,8 @@
 class Solution {
     public List<List<Integer>> fourSum(int[] nums, int target) {
        //return sol1(nums, target); 
-       return sol2(nums, target); 
+       //return sol2(nums, target); 
+       return sol3(nums, target); 
     }
 
     private List<List<Integer>> sol1(int[] nums, int target) {
@@ -117,5 +118,47 @@ class Solution {
         }
 
         return res;
+    }
+
+    private List<List<Integer>> sol3(int[] nums, int target) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        sol3(nums, 4, 0, target, new ArrayList<>(), res);
+        return res;
+    }
+    private void sol3(int[] nums, int k, int i, int target, List<Integer> tmp, List<List<Integer>> res) {
+        if (k == 2) {//assume: k >= 2, i >= 0
+            int left = i, right = nums.length - 1; //H.W.: left = i + 1
+            while (left < right) {
+                if (left > i && nums[left] == nums[left - 1]) {//H.W.: left > i + 1
+                    left++;
+                    continue;
+                }
+                int sum = nums[left] + nums[right];
+                if (sum < target) {
+                    left++;
+                }
+                else if (sum > target) {
+                    right--;
+                }
+                else {
+                    tmp.add(nums[left++]);
+                    tmp.add(nums[right--]);
+                    res.add(new ArrayList<>(tmp));
+                    tmp.remove(tmp.size() - 1);
+                    tmp.remove(tmp.size() - 1);
+                }
+            }
+            return;
+        }
+
+        for (int j = i; j < nums.length; j++) {
+            if (j > i && nums[j] == nums[j - 1]) {
+                continue;
+            }
+            tmp.add(nums[j]);
+            sol3(nums, k - 1, j + 1, target - nums[j], tmp, res);
+            tmp.remove(tmp.size() - 1);
+        }
     }
 }
