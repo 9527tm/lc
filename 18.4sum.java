@@ -35,7 +35,8 @@
  */
 class Solution {
     public List<List<Integer>> fourSum(int[] nums, int target) {
-       return sol1(nums, target); 
+       //return sol1(nums, target); 
+       return sol2(nums, target); 
     }
 
     private List<List<Integer>> sol1(int[] nums, int target) {
@@ -71,6 +72,50 @@ class Solution {
                 }
             }
         }
+        return res;
+    }
+
+    private List<List<Integer>> sol2(int[] nums, int target) {
+        Arrays.sort(nums); //H.W.: missing the preprocessing -- SORT
+
+        Map<Integer, List<int[]>> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            for (int j = i + 1; j < nums.length; j++) {
+                if (j > i + 1 && nums[j] == nums[j - 1]) {
+                    continue;
+                }
+                int sum = nums[i] + nums[j];
+                List<int[]> list = map.get(sum);
+                if (list == null) {
+                    list = new ArrayList<>();
+                    map.put(sum, list);
+                }
+                list.add(new int[]{i, j});
+            }
+        }
+
+        List<List<Integer>> res = new ArrayList<>();
+        for (int k = nums.length - 1; k >= 0; k--) {
+            if (k < nums.length - 1 && nums[k + 1] == nums[k]) {
+                continue;
+            }
+            for (int l = k - 1; l >= 0; l--) {
+                if (l < k - 1 && nums[l + 1] == nums[l]) {
+                    continue;
+                }
+                List<int[]> list = map.get(target - nums[k] - nums[l]);
+                if (list != null) {
+                    for (int n = list.size() - 1; n >= 0 && list.get(n)[1] < l; n--) {
+                        int i = list.get(n)[0], j = list.get(n)[1];
+                        res.add(Arrays.asList(nums[i], nums[j], nums[l], nums[k]));
+                    }
+                }
+            }
+        }
+
         return res;
     }
 }
