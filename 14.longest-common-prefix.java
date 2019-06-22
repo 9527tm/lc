@@ -38,8 +38,8 @@
  */
 class Solution {
     public String longestCommonPrefix(String[] strs) {
-        return sol1(strs);
-        //return sol2(strs);
+        //return sol1(strs);
+        return sol2(strs);
     }
 
     private String sol1(String[] strs) {
@@ -48,7 +48,8 @@ class Solution {
         }
         for (int i = 0; i < strs[0].length(); i++) {
             for (int j = 1; j < strs.length; j++) {
-                if (i >= strs[j].length() || strs[j].charAt(i) !=  strs[0].charAt(i)) {
+                if (i >= strs[j].length() || 
+                    strs[j].charAt(i) !=  strs[0].charAt(i)) {
                     return strs[0].substring(0, i);
                 }
             }
@@ -62,7 +63,8 @@ class Solution {
         }
         Arrays.sort(strs);
         for (int i = 0; i < strs[0].length(); i++) {
-            if (i >= strs[strs.length - 1].length() || strs[strs.length - 1].charAt(i) != strs[0].charAt(i)) {
+            if (i >= strs[strs.length - 1].length() ||
+                strs[strs.length - 1].charAt(i) != strs[0].charAt(i)) {
                 return strs[0].substring(0, i);
             }
         }
