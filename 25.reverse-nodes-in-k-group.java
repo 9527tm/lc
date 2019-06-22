@@ -48,7 +48,8 @@
  */
 class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
-        return sol1(head, k);    
+        //return sol1(head, k);    
+        return sol2(head, k);    
     }
 
     private ListNode sol1(ListNode head, int k) {
@@ -74,5 +75,37 @@ class Solution {
         head.next.next = head;
         head.next = null;
         return newHead;
+    }
+
+    private ListNode sol2(ListNode head, int k) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+        ListNode curr = head;
+        while (curr != null) {
+            int i = 0;
+            ListNode curr2 = curr;
+            while (i < k && curr2 != null) {
+                i++;
+                curr2 = curr2.next;
+            }
+            if (i < k) {
+                tail.next = curr; //H.W.: missing the chaining
+                break;
+            }
+
+            ListNode prev = null, curr3 = curr;
+            while (curr3 != curr2) {
+                ListNode next = curr3.next;
+                curr3.next = prev;
+                prev = curr3;
+                curr3 = next;
+            }
+         
+            tail.next = prev;
+            curr.next = curr2;
+            tail = curr;
+            curr = curr2;
+        }
+        return dummyHead.next;
     }
 }
