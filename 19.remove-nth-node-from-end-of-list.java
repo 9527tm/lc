@@ -43,7 +43,8 @@
 class Solution {
     public ListNode removeNthFromEnd(ListNode head, int n) {
        //return sol1(head, n); 
-       return sol2(head, n); 
+       //return sol2(head, n); 
+       return sol3(head, n); 
     }
     
     private ListNode sol1(ListNode head, int n) {
@@ -76,4 +77,15 @@ class Solution {
         slow.next = slow.next.next;
         return dummyHead.next;
     }
+
+    private ListNode sol3(ListNode head, int n) {
+        return sol3(head, new int[]{n});
+    }
+    private ListNode sol3(ListNode head, int[] count) {
+        if (head == null) {
+            return null;
+        }
+        head.next = sol3(head.next, count);
+        return count[0]-- == 1 ? head.next : head; //potentially underflow: count[0]-- 
+    }                                              //if num of nodes in list > Integer.MAX_VALUE
 }
