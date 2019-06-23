@@ -62,7 +62,9 @@
 class Solution {
     public boolean isValid(String s) {
         //return sol1(s); 
-        return sol2(s); 
+        //return sol2(s); 
+        return sol22(s); 
+        //return sol3(s); 
     }
 
     private boolean sol1(String s) {
@@ -107,6 +109,48 @@ class Solution {
                     return false;
                 }
             } 
+        }
+        return stack.isEmpty();
+    }
+
+    private boolean sol22(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch == '(' || ch == '[' || ch == '{') {
+                stack.offerFirst(ch);
+            }
+            else {
+                if (stack.isEmpty()) {
+                    return false;
+                }
+                char ch2 = stack.pollFirst();
+                if ((ch2 == '(' && ch != ')') || 
+                    (ch2 == '[' && ch != ']') || 
+                    (ch2 == '{' && ch != '}')) {
+                    return false;
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    private boolean sol3(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch == '(') {
+                stack.offerFirst(')');
+            }
+            else if (ch == '[') {
+                stack.offerFirst(']');
+            }
+            else if (ch == '{') {
+                stack.offerFirst('}');
+            }
+            else if (stack.isEmpty() || stack.pollFirst() != ch) {
+                return false;
+            }
         }
         return stack.isEmpty();
     }
