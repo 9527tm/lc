@@ -65,8 +65,8 @@ class Solution {
         //return sol2(s); 
         //return sol22(s); 
         //return sol3(s); 
-        return sol4(s); 
-        //return sol5(s); 
+        //return sol4(s); 
+        return sol5(s); 
 
     }
 
