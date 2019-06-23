@@ -64,7 +64,10 @@ class Solution {
         //return sol1(s); 
         //return sol2(s); 
         //return sol22(s); 
-        return sol3(s); 
+        //return sol3(s); 
+        return sol4(s); 
+        //return sol5(s); 
+
     }
 
     private boolean sol1(String s) {
@@ -149,6 +152,45 @@ class Solution {
                 stack.offerFirst('}');
             }
             else if (stack.isEmpty() || stack.pollFirst() != ch) {
+                return false;
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    private boolean sol4(String s) {
+        char[] array = s.toCharArray();
+        int i = 0;
+        for (int j = 0; j < array.length; j++) {
+            switch(array[j]) {
+                case '(': 
+                    array[i++] = ')'; 
+                    break;
+                case '[': 
+                    array[i++] = ']'; 
+                    break;
+                case '{': 
+                    array[i++] = '}'; 
+                    break;
+                default:
+                    if (i <= 0 || array[--i] != array[j]) {
+                        return false;
+                    }
+            }
+        }
+        return i == 0;
+    }
+
+    private boolean sol5(String s) {
+        String table = "()[]{}";
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            int pos = table.indexOf(ch);
+            if (pos % 2 == 0) {
+                stack.offerFirst(pos + 1);
+            }
+            else if (stack.isEmpty() || stack.pollFirst() != pos) {
                 return false;
             }
         }
