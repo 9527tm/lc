@@ -44,7 +44,8 @@ class Solution {
     public ListNode removeNthFromEnd(ListNode head, int n) {
        //return sol1(head, n); 
        //return sol2(head, n); 
-       return sol3(head, n); 
+       //return sol3(head, n); 
+       return sol4(head, n); 
     }
     
     private ListNode sol1(ListNode head, int n) {
@@ -88,4 +89,18 @@ class Solution {
         head.next = sol3(head.next, count);
         return count[0]-- == 1 ? head.next : head; //potentially underflow: count[0]-- 
     }                                              //if num of nodes in list > Integer.MAX_VALUE
+
+    private ListNode sol4(ListNode head, int n) {
+        return sol4_recursion(head, n) == n ? head.next : head;
+    }
+    private int sol4_recursion(ListNode head, int n) {
+        if (head == null) {
+            return 0;
+        }
+        int m = sol4_recursion(head.next, n);
+        if (m == n) {
+            head.next = head.next.next;
+        }
+        return m + 1;
+    }
 }
