@@ -63,8 +63,8 @@ class Solution {
     public boolean isValid(String s) {
         //return sol1(s); 
         //return sol2(s); 
-        return sol22(s); 
-        //return sol3(s); 
+        //return sol22(s); 
+        return sol3(s); 
     }
 
     private boolean sol1(String s) {
