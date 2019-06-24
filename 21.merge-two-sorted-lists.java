@@ -32,8 +32,8 @@
 class Solution {
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         //return sol1(l1, l2);
-        //return sol2(l1, l2);
-        return sol22(l1, l2);
+        return sol2(l1, l2);
+        //return sol22(l1, l2);
     }
 
     private ListNode sol1(ListNode l1, ListNode l2) {
@@ -65,8 +65,10 @@ class Solution {
             l1.next = sol2(l1.next, l2);
             return l1;
         }
-        l2.next = sol2(l1, l2.next);
-        return l2;
+        else {
+            l2.next = sol2(l1, l2.next);
+            return l2;
+        }
     }
 
     private ListNode sol22(ListNode l1, ListNode l2) {
