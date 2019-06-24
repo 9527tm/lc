@@ -31,8 +31,9 @@
  */
 class Solution {
     public List<String> generateParenthesis(int n) {
-        //return sol1(n);
-        return sol2(n);  
+        //return sol1(n); //DFS: O(2^(2n) * 2n) / O(2n)
+        //return sol2(n); //BFS: O(2^(2n + 1) * 2n) / O(2^(2n) * 2n)
+        return sol3(n);   //DP:  O(2^(2n + 1) * 2n) / O(2^(2n) * 2n) <= catalan Number: 4^n / (n^1.5)
     }
 
     private List<String> sol1(int n) {
@@ -96,5 +97,23 @@ class Solution {
             }
         }
         return res;
+    }
+
+    private List<String> sol3(int n) {
+        List<List<String>> dp = new ArrayList<>();
+        dp.add(Arrays.asList("")); //dp[0] = "";
+
+        for (int i = 1; i <= n; i++) {
+            dp.add(new ArrayList<>());
+            for (int j = 0; j <= i - 1; j++) {//dp[i] = {(dp[0])dp[i-1], (dp[1])dp[i-2], .. (dp[i-1])dp[0]}
+                for (String substr1 : dp.get(j)) {
+                    substr1 = "(" + substr1 + ")";
+                    for (String substr2 : dp.get(i - 1 - j)) {
+                        dp.get(i).add(substr1 + substr2);
+                    }
+                }
+            }
+        }
+        return dp.get(n);
     }
 }
