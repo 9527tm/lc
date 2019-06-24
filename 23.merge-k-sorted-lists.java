@@ -37,7 +37,8 @@
  */
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
-        return sol1(lists); 
+        //return sol1(lists); 
+        return sol2(lists); 
     }
 
     private ListNode sol1(ListNode[] lists) {
@@ -58,6 +59,28 @@ class Solution {
                 minHeap.offer(p.next);
             }
         }
+        return dummyHead.next;
+    }
+
+    private ListNode sol2(ListNode[] lists) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+
+        while (true) {
+            int minIndex = -1;
+            for (int i = 0; i < lists.length; i++) {
+                if (lists[i] != null && (minIndex == -1 || lists[i].val < lists[minIndex].val)) {
+                    minIndex = i;
+                }
+            }
+            if (minIndex < 0) {
+                break;
+            }
+            tail.next = lists[minIndex];
+            tail = tail.next;
+            lists[minIndex] = lists[minIndex].next;
+        }
+
         return dummyHead.next;
     }
 }
