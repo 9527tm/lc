@@ -31,7 +31,8 @@
  */
 class Solution {
     public List<String> generateParenthesis(int n) {
-        return sol1(n);   
+        //return sol1(n);
+        return sol2(n);  
     }
 
     private List<String> sol1(int n) {
@@ -54,5 +55,46 @@ class Solution {
             tmp[left + right] = ')';
             sol1(left, right + 1, tmp, res);
         }
+    }
+
+    static class Slot {
+        private char[] buffer;
+        private int left;
+        private int right;
+        public Slot(int n) {
+            buffer = new char[n * 2];
+        }
+        public Slot copy() {
+            Slot c = new Slot(this.buffer.length / 2);
+            c.left = this.left;
+            c.right = this.right;
+            c.buffer = Arrays.copyOf(this.buffer, this.buffer.length);
+            return c;
+        }
+    }
+    private List<String> sol2(int n) {
+        List<String> res = new ArrayList<>();
+        Queue<Slot> queue = new ArrayDeque<>();
+        queue.offer(new Slot(n));
+        while (!queue.isEmpty()) {
+            Slot slot = queue.poll();
+            if (slot.left + slot.right == slot.buffer.length) {
+                res.add(new String(slot.buffer));
+            }
+            else {
+                if (slot.left < slot.buffer.length / 2) {
+                    Slot copy = slot.copy();
+                    copy.buffer[copy.left + copy.right] = '(';
+                    copy.left++;
+                    queue.offer(copy);
+                }
+                if (slot.right < slot.left) {
+                    slot.buffer[slot.left + slot.right] = ')';
+                    slot.right++;
+                    queue.offer(slot);
+                }
+            }
+        }
+        return res;
     }
 }
