@@ -31,14 +31,15 @@
  */
 class Solution {
     public List<String> generateParenthesis(int n) {
-        //return sol1(n); //DFS: O(2^(2n) * 2n) / O(2n)
+          return sol1(n); //DFS: O(2^(2n) * 2n) / O(2n)
         //return sol2(n); //BFS: O(2^(2n + 1) * 2n) / O(2^(2n) * 2n)
-        return sol3(n);   //DP:  O(2^(2n + 1) * 2n) / O(2^(2n) * 2n) <= catalan Number: 4^n / (n^1.5)
+        //return sol3(n); //DP:  O(2^(2n + 1) * 2n) / O(2^(2n) * 2n) <= catalan Number: 4^n / (n^1.5)
     }
 
     private List<String> sol1(int n) {
         List<String> res = new ArrayList<>();
-        sol1(0, 0, new char[n * 2], res);
+        //sol1(0, 0, new char[n * 2], res);
+        sol1a(0, 0, new char[n * 2], res);
         return res;
     }
     private void sol1(int left, int right, char[] tmp, List<String> res) {
@@ -56,6 +57,23 @@ class Solution {
             tmp[left + right] = ')';
             sol1(left, right + 1, tmp, res);
         }
+    }
+
+    private void sol1a(int left, int right, char[] tmp, List<String> res) {
+        int n = tmp.length / 2;
+        if (left > n || right > left) {
+            return;
+        }
+        if (left == n && right == n) {
+            res.add(new String(tmp));
+            return;
+        }
+
+        tmp[left + right] = '(';
+        sol1a(left + 1, right, tmp, res);
+
+        tmp[left + right] = ')';
+        sol1a(left, right + 1, tmp, res);
     }
 
     static class Slot {
