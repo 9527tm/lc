@@ -37,15 +37,15 @@
  */
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
-        //return sol1(lists); 
-        //return sol2(lists); 
-        //return sol3(lists); 
-        return sol4(lists); 
+        //return sol1(lists); //Heap: O(N * lgk) / O(k)
+        //return sol2(lists); //BF1:  O(N * k) / O(1)
+        return sol3(lists);   //DC:   O(N * lgk) / O(lgk)
+        //return sol4(lists); //BF2:  O(N * k) / O(1)
     }
 
     private ListNode sol1(ListNode[] lists) {
         PriorityQueue<ListNode> minHeap = new PriorityQueue<>(17, 
-                  (p1, p2) -> {return Integer.compare(p1.val, p2.val);});
+                  (p1, p2) -> Integer.compare(p1.val, p2.val));
         for (ListNode h : lists) {
             if (h != null) {
                 minHeap.offer(h);
@@ -117,12 +117,9 @@ class Solution {
     }
 
     private ListNode sol4(ListNode[] lists) {
-        if (lists.length <= 0) {
-            return null;
-        }
         for (int i = 1; i < lists.length; i++) {
             lists[0] = merge(lists[0], lists[i]);
         }
-        return lists[0];
+        return lists.length > 0 ? lists[0] : null;
     }
 }
