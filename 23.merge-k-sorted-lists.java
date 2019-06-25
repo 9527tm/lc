@@ -39,7 +39,8 @@ class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
         //return sol1(lists); 
         //return sol2(lists); 
-        return sol3(lists); 
+        //return sol3(lists); 
+        return sol4(lists); 
     }
 
     private ListNode sol1(ListNode[] lists) {
@@ -113,5 +114,15 @@ class Solution {
         }
         tail.next = head1 != null ? head1 : head2; //H.W.: forgot post-processing
         return dummyHead.next;
+    }
+
+    private ListNode sol4(ListNode[] lists) {
+        if (lists.length <= 0) {
+            return null;
+        }
+        for (int i = 1; i < lists.length; i++) {
+            lists[0] = merge(lists[0], lists[i]);
+        }
+        return lists[0];
     }
 }
