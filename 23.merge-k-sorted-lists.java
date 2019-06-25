@@ -38,7 +38,8 @@
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
         //return sol1(lists); 
-        return sol2(lists); 
+        //return sol2(lists); 
+        return sol3(lists); 
     }
 
     private ListNode sol1(ListNode[] lists) {
@@ -81,6 +82,36 @@ class Solution {
             lists[minIndex] = lists[minIndex].next;
         }
 
+        return dummyHead.next;
+    }
+
+    private ListNode sol3(ListNode[] lists) {
+        return lists.length > 0 ? sol3(lists, 0, lists.length - 1) : null;
+    }
+    private ListNode sol3(ListNode[] lists, int left, int right) {
+        if (left >= right) {
+            return lists[left];
+        }
+        int mid = left + (right - left) / 2;
+        ListNode leftRes = sol3(lists, left, mid);
+        ListNode rightRes = sol3(lists, mid + 1, right);
+        return merge(leftRes, rightRes);
+    }
+    private ListNode merge(ListNode head1, ListNode head2) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+        while (head1 != null && head2 != null) {
+            if (head1.val < head2.val) {
+                tail.next = head1;
+                head1 = head1.next;
+            }
+            else {
+                tail.next = head2;
+                head2 = head2.next;
+            }
+            tail = tail.next;
+        }
+        tail.next = head1 != null ? head1 : head2; //H.W.: forgot post-processing
         return dummyHead.next;
     }
 }
