@@ -39,7 +39,8 @@ class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
         //return sol1(lists); //Heap: O(N * lgk) / O(k)
         //return sol2(lists); //BF1:  O(N * k) / O(1)
-        return sol3(lists);   //DC:   O(N * lgk) / O(lgk)
+        //return sol3(lists);   //DC:   O(N * lgk) / O(lgk)
+        return sol3a(lists);   //DC:   O(N * lgk) / O(lgk)
         //return sol4(lists); //BF2:  O(N * k) / O(1)
     }
 
@@ -114,6 +115,16 @@ class Solution {
         }
         tail.next = head1 != null ? head1 : head2; //H.W.: forgot post-processing
         return dummyHead.next;
+    }
+
+
+    private ListNode sol3a(ListNode[] lists) {
+        for (int num = lists.length; num > 1; num = (num + 1) / 2) {
+            for (int left = 0, right = num - 1; left < right; left++, right--) {
+                lists[left] = merge(lists[left], lists[right]);
+            }
+        }
+        return lists.length > 0 ? lists[0] : null;
     }
 
     private ListNode sol4(ListNode[] lists) {
