@@ -42,7 +42,8 @@ class Solution {
         //return sol3(lists);  //DC:   O(N * lgk) / O(lgk)
         //return sol3a(lists); //DC:   O(N * lgk) / O(1)
         //return sol4(lists);  //BF2:  O(N * k)   / O(1)
-        return sol5(lists);    //BF2:  O(N * lgN) / O(N)
+        //return sol5(lists);  //BF3:  O(N * lgN) / O(N)
+        return sol6(lists);    //BF4:  O(N * lgN) / O(N)
     }
 
     private ListNode sol1(ListNode[] lists) {
@@ -151,6 +152,33 @@ class Solution {
             tail = tail.next;
         }
         tail.next = null;
+        return dummyHead.next;
+    }
+
+    private ListNode sol6(ListNode[] lists) {
+        Map<Integer, ListNode[]> map = new TreeMap<>();
+        for (ListNode head : lists) {
+            for (ListNode curr = head; curr != null; curr = curr.next) {
+                ListNode[] frontRearPair = map.get(curr.val);
+                if (frontRearPair == null) {
+                    frontRearPair = new ListNode[]{curr, curr};
+                    map.put(curr.val, frontRearPair);
+                }
+                else {
+                    frontRearPair[1].next = curr;
+                    frontRearPair[1] = curr;
+                }
+            }
+        }
+
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+        for (ListNode[] frontRearPair : map.values()) {
+            tail.next = frontRearPair[0];
+            tail = frontRearPair[1];
+        }
+        tail.next = null;
+
         return dummyHead.next;
     }
 }
