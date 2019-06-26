@@ -43,7 +43,8 @@ class Solution {
         //return sol3a(lists); //DC:   O(N * lgk) / O(1)
         //return sol4(lists);  //BF2:  O(N * k)   / O(1)
         //return sol5(lists);  //BF3:  O(N * lgN) / O(N)
-        return sol6(lists);    //BF4:  O(N * lgN) / O(N)
+        //return sol6(lists);  //BF4:  O(N * lgN) / O(N)
+        return sol7(lists);    //BF5:  O(N * lgN) / O(N)
     }
 
     private ListNode sol1(ListNode[] lists) {
@@ -181,4 +182,24 @@ class Solution {
 
         return dummyHead.next;
     }
+
+    private ListNode sol7(ListNode[] lists) {
+        Queue<ListNode> minHeap = new PriorityQueue<>(17, (p1, p2) -> Integer.compare(p1.val, p2.val));
+        for (ListNode head : lists) {
+            for (ListNode curr = head; curr != null; curr = curr.next) {
+                minHeap.offer(curr);
+            }
+        }
+
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+        while (!minHeap.isEmpty()) {
+            tail.next = minHeap.poll();
+            tail = tail.next;
+        }
+        tail.next = null;
+
+        return dummyHead.next;
+    }
 }
+
