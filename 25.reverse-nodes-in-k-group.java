@@ -50,8 +50,8 @@ class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
         //return sol1(head, k);    
         //return sol2(head, k);    
-        //return sol1a(head, k);
-        return sol2a(head, k);
+        return sol1a(head, k);
+        //return sol2a(head, k);
     }
 
     private ListNode sol1(ListNode head, int k) {
@@ -76,6 +76,31 @@ class Solution {
         ListNode newHead = sol1_reverse1Node(head.next, tail);
         head.next.next = head;
         head.next = null;
+        return newHead;
+    }
+
+    private ListNode sol1a(ListNode head, int k) {
+        if (head == null) {
+            return head;
+        }
+        ListNode nextK = head;
+        for (int i = 0; i < k; i++) {//H.W.: missing the case: [],0
+            if (nextK == null) {
+                return head;
+            }
+            nextK = nextK.next;
+        }
+        ListNode newHead = sol1a_r1(head, nextK);
+        head.next = sol1a(nextK, k);
+        return newHead;
+    }
+    private ListNode sol1a_r1(ListNode head, ListNode tail) {
+        if (head.next == tail) {
+            return head;
+        }
+        ListNode newHead = sol1a_r1(head.next, tail);
+        head.next.next = head;
+        //head.next = tail; // = null;
         return newHead;
     }
 
@@ -109,31 +134,6 @@ class Solution {
             curr = curr2;
         }
         return dummyHead.next;
-    }
-
-    private ListNode sol1a(ListNode head, int k) {
-        if (head == null) {
-            return head;
-        }
-        ListNode nextK = head;
-        for (int i = 0; i < k; k++) {//H.W.: missing the case: [],0
-            if (nextK == null) {
-                return head;
-            }
-            nextK = nextK.next;
-        }
-        ListNode newHead = sol1a_r1(head, nextK);
-        head.next = sol1a(nextK, k);
-        return newHead;
-    }
-    private ListNode sol1a_r1(ListNode head, ListNode tail) {
-        if (head.next == tail) {
-            return head;
-        }
-        ListNode newHead = sol1a_r1(head.next, tail);
-        head.next.next = head;
-        //head.next = tail; // = null;
-        return newHead;
     }
 
     private ListNode sol2a(ListNode head, int k) {
