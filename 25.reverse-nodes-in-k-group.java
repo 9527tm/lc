@@ -167,4 +167,38 @@ class Solution {
 
         return dummyHead.next;
     }
+
+    private ListNode sol3(ListNode head, int k) {
+        if (head == null || k <= 0) {
+            return null;
+        }
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+        tail.next = head;
+
+        int i = 0;
+        ListNode curr = head, prev = null;
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+
+            if (++i % k == 0) {
+                ListNode newTail = tail.next;
+                newTail.next = next; // = curr;
+                tail.next = prev;
+                tail = newTail;
+            }
+        }
+
+        if (i % k != 0) {
+            //ListNode newTail = tail.next;
+            //newTail.next = null;
+            tail.next = sol3(prev, i % k);
+            //prev.next = null;
+        }
+
+        return dummyHead.next;
+    }
 }
