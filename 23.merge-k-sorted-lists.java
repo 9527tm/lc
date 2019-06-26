@@ -37,11 +37,12 @@
  */
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
-        //return sol1(lists); //Heap: O(N * lgk) / O(k)
-        //return sol2(lists); //BF1:  O(N * k) / O(1)
-        //return sol3(lists);   //DC:   O(N * lgk) / O(lgk)
-        return sol3a(lists);   //DC:   O(N * lgk) / O(lgk)
-        //return sol4(lists); //BF2:  O(N * k) / O(1)
+        //return sol1(lists);  //Heap: O(N * lgk) / O(k)
+        //return sol2(lists);  //BF1:  O(N * k)   / O(1)
+        //return sol3(lists);  //DC:   O(N * lgk) / O(lgk)
+        //return sol3a(lists); //DC:   O(N * lgk) / O(1)
+        //return sol4(lists);  //BF2:  O(N * k)   / O(1)
+        return sol5(lists);    //BF2:  O(N * lgN) / O(N)
     }
 
     private ListNode sol1(ListNode[] lists) {
@@ -118,7 +119,7 @@ class Solution {
     }
 
 
-    private ListNode sol3a(ListNode[] lists) {
+    private ListNode sol3a(ListNode[] lists) {//discuss/10719/DC-python-solution-O(nk-log-k)-runtime-O(1)-space
         for (int num = lists.length; num > 1; num = (num + 1) / 2) {
             for (int left = 0, right = num - 1; left < right; left++, right--) {
                 lists[left] = merge(lists[left], lists[right]);
@@ -132,5 +133,24 @@ class Solution {
             lists[0] = merge(lists[0], lists[i]);
         }
         return lists.length > 0 ? lists[0] : null;
+    }
+
+    private ListNode sol5(ListNode[] lists) {
+        List<ListNode> oneList = new ArrayList<>();
+        for (ListNode head : lists) {
+            for (ListNode curr = head; curr != null; curr = curr.next) {
+                oneList.add(curr);
+            }
+        }
+        Collections.sort(oneList, (node1, node2) -> Integer.compare(node1.val, node2.val));
+     
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+        for (ListNode curr : oneList) {
+            tail.next = curr;
+            tail = tail.next;
+        }
+        tail.next = null;
+        return dummyHead.next;
     }
 }
