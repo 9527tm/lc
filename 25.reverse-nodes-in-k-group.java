@@ -49,7 +49,9 @@
 class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
         //return sol1(head, k);    
-        return sol2(head, k);    
+        //return sol2(head, k);    
+        //return sol1a(head, k);
+        return sol2a(head, k);
     }
 
     private ListNode sol1(ListNode head, int k) {
@@ -106,6 +108,63 @@ class Solution {
             tail = curr;
             curr = curr2;
         }
+        return dummyHead.next;
+    }
+
+    private ListNode sol1a(ListNode head, int k) {
+        if (head == null) {
+            return head;
+        }
+        ListNode nextK = head;
+        for (int i = 0; i < k; k++) {//H.W.: missing the case: [],0
+            if (nextK == null) {
+                return head;
+            }
+            nextK = nextK.next;
+        }
+        ListNode newHead = sol1a_r1(head, nextK);
+        head.next = sol1a(nextK, k);
+        return newHead;
+    }
+    private ListNode sol1a_r1(ListNode head, ListNode tail) {
+        if (head.next == tail) {
+            return head;
+        }
+        ListNode newHead = sol1a_r1(head.next, tail);
+        head.next.next = head;
+        //head.next = tail; // = null;
+        return newHead;
+    }
+
+    private ListNode sol2a(ListNode head, int k) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+        tail.next = head;
+
+        ListNode currK = head;
+        while (currK != null) {
+            ListNode nextK = currK;
+            for (int i = 0; i < k; i++) {
+                if (nextK == null) {
+                    return dummyHead.next;
+                }
+                nextK = nextK.next;
+            }
+
+            ListNode prev = nextK, curr = currK; //prev = null;
+            while (curr != nextK) {
+                ListNode next = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = next;
+            }
+            //currK.next = nextK;
+            tail.next = prev;
+
+            tail = currK;
+            currK = nextK;
+        }
+
         return dummyHead.next;
     }
 }
