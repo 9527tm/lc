@@ -37,14 +37,14 @@
  */
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
-        //return sol1(lists);  //Heap: O(N * lgk) / O(k)
-        //return sol2(lists);  //BF1:  O(N * k)   / O(1)
-        //return sol3(lists);  //DC:   O(N * lgk) / O(lgk)
-        //return sol3a(lists); //DC:   O(N * lgk) / O(1)
-        //return sol4(lists);  //BF2:  O(N * k)   / O(1)
-        //return sol5(lists);  //BF3:  O(N * lgN) / O(N)
-        //return sol6(lists);  //BF4:  O(N * lgN) / O(N)
-        return sol7(lists);    //BF5:  O(N * lgN) / O(N)
+        //return sol1(lists);  //Heap:     O(N * lgk) / O(k)
+        //return sol2(lists);  //BF1:      O(N * k)   / O(1)
+        //return sol3(lists);  //DC:       O(N * lgk) / O(lgk)
+        //return sol3a(lists); //DC:       O(N * lgk) / O(1)
+        //return sol4(lists);  //BF2:      O(N * k)   / O(1)
+        //return sol5(lists);  //Sort:     O(N * lgN) / O(N)
+        //return sol6(lists);  //TreeMap:  O(N * lgN) / O(N)
+        return sol7(lists);    //Heap:     O(N * lgN) / O(N)
     }
 
     private ListNode sol1(ListNode[] lists) {
