@@ -53,7 +53,8 @@ class Solution {
         //return sol1a(head, k);
         //return sol2a(head, k);
         //return sol3(head, k);
-        return sol3a(head, k);
+        //return sol3a(head, k);
+        return sol4(head, k);
     }
 
     private ListNode sol1(ListNode head, int k) {
@@ -233,5 +234,33 @@ class Solution {
         }
 
         return dummyHead.next;
+    }
+
+    private ListNode sol4(ListNode head, int k) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+        tail.next = head;
+        
+        ListNode curr = head, prev = null;
+        for (int num = getLength(head); k > 0 && num >= k; num -= k) {
+            for (int i = 0; i < k; i++) {
+                ListNode next = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = next;
+            }
+            ListNode newTail = tail.next;
+            tail.next = prev;
+            newTail.next = curr;
+            tail = newTail;
+        }
+        return dummyHead.next;
+    }
+    private int getLength(ListNode head) {
+        int num = 0;
+        for (ListNode curr = head; curr != null; curr = curr.next) {
+            num++;
+        }
+        return num;
     }
 }
