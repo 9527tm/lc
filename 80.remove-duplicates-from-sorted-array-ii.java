@@ -63,8 +63,8 @@
 class Solution {
     public int removeDuplicates(int[] nums) {
         //return sol1(nums); 
-        return sol2(nums); 
-        //return sol2a(nums, 2); 
+        //return sol2(nums); 
+        return sol2a(nums, 2); 
     }
     
     private int sol1(int[] nums) {
