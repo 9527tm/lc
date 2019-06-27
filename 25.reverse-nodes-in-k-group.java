@@ -50,8 +50,9 @@ class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
         //return sol1(head, k);    
         //return sol2(head, k);    
-        return sol1a(head, k);
+        //return sol1a(head, k);
         //return sol2a(head, k);
+        return sol3(head, k);
     }
 
     private ListNode sol1(ListNode head, int k) {
@@ -186,17 +187,48 @@ class Solution {
 
             if (++i % k == 0) {
                 ListNode newTail = tail.next;
-                newTail.next = next; // = curr;
-                tail.next = prev;
+                newTail.next = next; // = curr; //H.W.: wrongly cut this line => 
+                tail.next = prev;               //      so, the head of the next group cannot be saved.
                 tail = newTail;
             }
         }
 
         if (i % k != 0) {
-            //ListNode newTail = tail.next;
-            //newTail.next = null;
-            tail.next = sol3(prev, i % k);
-            //prev.next = null;
+            ListNode newTail = tail.next;
+            newTail.next = null;               //H.W.: wrongly cut this line
+            tail.next = sol3(prev, i % k);     //      since, newTail.next is actually not to null
+                                               //      but to the tail of the last group.
+            //prev.next = null;                //this is safe.
+        }
+
+        return dummyHead.next;
+    }
+
+    private ListNode sol3a(ListNode head, int k) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+        tail.next = head;
+
+        int i = 0;
+        ListNode curr = head, prev = null;
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+
+            if (++i % k == 0) {
+                ListNode newTail = tail.next;
+                newTail.next = next; //H.W.: lost the chaining
+                tail.next = prev;
+                tail = newTail;
+            }
+        }
+
+        if (k > 0 && i % k != 0) {
+            ListNode newTail = tail.next;
+            newTail.next = null;     //H.W.: forgot to de-chain
+            tail.next = sol3a(prev, i % k);
         }
 
         return dummyHead.next;
