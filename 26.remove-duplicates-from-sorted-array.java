@@ -62,8 +62,8 @@
 class Solution {
     public int removeDuplicates(int[] nums) {
         //return sol1(nums); 
-        //return sol2(nums); 
-        return sol2a(nums, 1);
+        return sol2(nums); 
+        //return sol2a(nums, 1);
     }
     
     private int sol1(int[] nums) {
@@ -79,7 +79,7 @@ class Solution {
     private int sol2(int[] nums) {
         int i = 1; //k
         for (int j = 1; j < nums.length; j++) {// int j = k;
-            if (nums[j] != nums[j - 1]) {      // nums[j] != nums[j - k]
+            if (nums[j] != nums[i - 1]) {      // nums[j] != nums[i - k]
                 nums[i++] = nums[j];
             }
         }
@@ -89,10 +89,10 @@ class Solution {
     private int sol2a(int[] nums, int k) {
         int i = k;
         for (int j = k; j < nums.length; j++) {
-            if (nums[j] != nums[j - k]) {
-                nums[i++] = nums[j];
-            }
-        }
+            if (nums[j] != nums[i - k]) {//H.W.: Yiran Li's mistake if (nums[j] != nums[j - 1)
+                nums[i++] = nums[j];     //      ex: [1,1,1,2,2,3], 3
+            }                            //why? since the array is shrinked after i = 2,
+        }                                //     the nums[2] is changed from 1 to 2 and nums[4] gets lost soon.
         return nums.length <= k ? nums.length : i;
     }
 }
