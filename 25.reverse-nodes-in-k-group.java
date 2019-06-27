@@ -52,7 +52,8 @@ class Solution {
         //return sol2(head, k);    
         //return sol1a(head, k);
         //return sol2a(head, k);
-        return sol3(head, k);
+        //return sol3(head, k);
+        return sol3a(head, k);
     }
 
     private ListNode sol1(ListNode head, int k) {
