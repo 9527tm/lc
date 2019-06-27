@@ -62,7 +62,8 @@
 class Solution {
     public int removeDuplicates(int[] nums) {
         //return sol1(nums); 
-        return sol1(nums); 
+        return sol2(nums); 
+        //return sol2a(nums, 1);
     }
     
     private int sol1(int[] nums) {
@@ -76,12 +77,22 @@ class Solution {
     }
     
     private int sol2(int[] nums) {
-        int i = 1;
-        for (int j = 1; j < nums.length; j++) {
-            if (nums[j] != nums[j - 1]) {
+        int i = 1; //k
+        for (int j = 1; j < nums.length; j++) {// int j = k;
+            if (nums[j] != nums[j - 1]) {      // nums[j] != nums[j - k]
                 nums[i++] = nums[j];
             }
         }
-        return nums.length > 0 ? i : 0;
+        return nums.length > 0 ? i : 0;        // nums.length >= k ? i : nums.length
+    }
+
+    private int sol2a(int[] nums, int k) {
+        int i = k;
+        for (int j = k; j < nums.length; j++) {
+            if (nums[j] != nums[j - k]) {
+                nums[i++] = nums[j];
+            }
+        }
+        return nums.length <= k ? nums.length : i;
     }
 }
