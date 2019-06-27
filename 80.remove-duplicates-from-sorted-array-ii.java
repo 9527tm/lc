@@ -62,8 +62,8 @@
  */
 class Solution {
     public int removeDuplicates(int[] nums) {
-        return sol1(nums); 
-        //return sol2(nums); 
+        //return sol1(nums); 
+        return sol2(nums); 
         //return sol2a(nums, 2); 
     }
     
