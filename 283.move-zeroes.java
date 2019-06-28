@@ -1,4 +1,4 @@
-/*
+/*G
  * @lc app=leetcode id=283 lang=java
  *
  * [283] Move Zeroes
@@ -32,9 +32,10 @@ class Solution {
         //sol1(nums); 
         //sol1a(nums);
         //sol2(nums); 
-        sol2a(nums); 
+        //sol2a(nums); 
         //sol3(nums); //relative order fails
         //sol4(nums); //relative order fails
+        sol5(nums); 
     }
     
     private void sol1(int[] nums) {
@@ -112,6 +113,17 @@ class Solution {
             else {
                 swap(nums, left, right--);
             }
+        }
+    }
+
+    //discuss/72074/Share-my-one-line-python-solution
+    //https://stackoverflow.com/questions/31394715/convert-integer-to-int-array
+    //https://stackoverflow.com/a/27043087
+    private void sol5(int[] nums) {
+        Integer[] arrays = Arrays.stream(nums).boxed().toArray( Integer[]::new);
+        Arrays.sort(arrays, (i1, i2) -> {return (i1 * i2 != 0) ? 0 : (i1 != 0) ? -1 : 1;});
+        for (int i = 0; i < arrays.length; i++) {
+            nums[i] = arrays[i];
         }
     }
 
