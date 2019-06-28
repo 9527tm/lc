@@ -40,8 +40,8 @@
  */
 class Solution {
     public void sortColors(int[] nums) {
-        sol0(nums, 3);
-        //sol1(numl);
+        //sol0(nums, 3);
+        sol1(nums);
     }
 
     private void sol0(int[] nums, int k) {
