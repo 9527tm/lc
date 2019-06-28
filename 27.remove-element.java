@@ -67,7 +67,8 @@
 class Solution {
     public int removeElement(int[] nums, int val) {
         //return sol1(nums, val); 
-        return sol2(nums, val); 
+        //return sol2(nums, val); 
+        return sol3(nums, val); 
     }
 
     private int sol1(int[] nums, int val) {
@@ -91,7 +92,8 @@ class Solution {
             }
             else {
                 swap(nums, left++, right--);
-            }
+                //nums[left++] = nums[right--]; //no requirements on tail elements
+            }                                   //which are right to the "left" pointer.
 
         }
         return left;
@@ -100,5 +102,18 @@ class Solution {
         int tmp = nums[i];
         nums[i] = nums[j];
         nums[j] = tmp;
+    }
+
+    private int sol3(int[] nums, int val) {///discuss/12289/My-solution-for-your-reference./12795
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+            if (nums[left] != val) {
+                left++;
+            }
+            else {
+                nums[left] = nums[right--];  // <= color sort (Dutch national flag), i, j, [k]
+            }
+        }
+        return left;
     }
 }
