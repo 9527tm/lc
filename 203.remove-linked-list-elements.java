@@ -32,8 +32,8 @@
 class Solution {
     public ListNode removeElements(ListNode head, int val) {
         //return sol1(head, val); 
-        return sol2(head, val); 
-        //return sol3(head, val); 
+        //return sol2(head, val); 
+        return sol3(head, val); 
     }
 
     private ListNode sol1(ListNode head, int val) {
