@@ -72,11 +72,6 @@ class Solution {
             }
         }
     }
-    private void swap(int[] nums, int i, int j) {
-        int tmp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = tmp;
-    }
 
     private void sol2(int[] nums) {
         int i = 0, j = 0, k = 0;
@@ -92,5 +87,11 @@ class Solution {
                 k++;
             }
         }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
     }
 }
