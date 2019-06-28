@@ -41,7 +41,8 @@
 class Solution {
     public void sortColors(int[] nums) {
         //sol0(nums, 3);
-        sol1(nums);
+        //sol1(nums);
+        sol2(nums);
     }
 
     private void sol0(int[] nums, int k) {
@@ -75,5 +76,21 @@ class Solution {
         int tmp = nums[i];
         nums[i] = nums[j];
         nums[j] = tmp;
+    }
+
+    private void sol2(int[] nums) {
+        int i = 0, j = 0, k = 0;
+        for (int n : nums) {
+            if (n == 0) {
+                swap(nums, j, k++);
+                swap(nums, i++, j++);
+            }
+            else if (n == 1) {
+                swap(nums, j++, k++);
+            }
+            else {
+                k++;
+            }
+        }
     }
 }
