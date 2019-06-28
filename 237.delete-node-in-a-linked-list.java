@@ -62,7 +62,8 @@
 class Solution {
     public void deleteNode(ListNode node) {
         //sol1(node); 
-        sol2(node); 
+        //sol2(node); 
+        sol3(node); 
     }
 
     private void sol1(ListNode node) {
@@ -82,5 +83,14 @@ class Solution {
             prev = curr;
         }
         prev2.next = null;
+    }
+
+    private void sol3(ListNode node) {
+        node.val = node.next.val;
+        if (node.next.next == null) {
+            node.next = null;
+            return;
+        }
+        sol3(node.next);
     }
 }
