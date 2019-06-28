@@ -31,8 +31,8 @@
  */
 class Solution {
     public ListNode removeElements(ListNode head, int val) {
-        return sol1(head, val); 
-        //return sol2(head, val); 
+        //return sol1(head, val); 
+        return sol2(head, val); 
         //return sol3(head, val); 
     }
 
@@ -47,8 +47,8 @@ class Solution {
     private ListNode sol2(ListNode head, int val) {
         ListNode dummyHead = new ListNode(0);
         ListNode tail = dummyHead;
-        for (ListNode curr = head; curr != head; curr = curr.next) {
-            if (head.val != val) {
+        for (ListNode curr = head; curr != null; curr = curr.next) {
+            if (curr.val != val) {
                 tail.next = curr;
                 tail = tail.next;
             }
