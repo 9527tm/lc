@@ -30,7 +30,8 @@
 class Solution {
     public void moveZeroes(int[] nums) {
         //sol1(nums); 
-        sol2(nums); 
+        sol1a(nums);
+        //sol2(nums); 
         //sol3(nums); //relative order fails
         //sol4(nums); //relative order fails
     }
@@ -47,11 +48,38 @@ class Solution {
         }
     }
 
+    private void sol1a(int[] nums) {
+        int i = 0;
+        for (int j = 0; j < nums.length; j++) {
+            if (nums[j] != 0) {
+                if (j != i) {
+                    nums[i] = nums[j];
+                }
+                i++;
+            }
+        }
+        for (int j = i; j < nums.length; j++) {
+            if (nums[j] != 0) {
+                nums[j] = 0;
+            }
+        }
+    }
+
     private void sol2(int[] nums) {
         int i = 0;
         for (int j = 0; j < nums.length; j++) {
             if (nums[j] != 0) {
                 swap(nums, i++, j);
+            }
+        }
+    }
+
+    private void sol2a(int[] nums) {
+        int i = 0;
+        for (int j = 0; j < nums.length; j++) {
+            if (nums[j] != 0) {
+                nums[i++] = nums[j];
+                nums[j] = 0;
             }
         }
     }
