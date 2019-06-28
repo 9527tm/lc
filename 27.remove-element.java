@@ -66,7 +66,8 @@
  */
 class Solution {
     public int removeElement(int[] nums, int val) {
-        return sol1(nums, val); 
+        //return sol1(nums, val); 
+        return sol2(nums, val); 
     }
 
     private int sol1(int[] nums, int val) {
@@ -77,5 +78,27 @@ class Solution {
             }
         }
         return i;
+    }
+
+    private int sol2(int[] nums, int val) {//from laioffer quicksort partition
+        int left = 0, right = nums.length - 1; //minimum data movement
+        while (left <= right) {                //when there are very few elements equal to "val".
+            if (nums[left] != val) {
+                left++;
+            }
+            else if (nums[right] == val) {
+                right--;
+            }
+            else {
+                swap(nums, left++, right--);
+            }
+
+        }
+        return left;
+    }
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
     }
 }
