@@ -60,10 +60,17 @@
  * }
  */
 class Solution {
-    public void deleteNode(ListNode node) {
-        //sol1(node); 
-        //sol2(node); 
-        sol3(node); 
+    public void deleteNode(ListNode node) {// Wierd question!
+        sol(node);    //O(1) / O(1)
+
+        //sol1(node); //O(N) / O(1)
+        //sol2(node); //O(N) / O(1)
+        //sol3(node); //O(N) / O(N)
+    }
+
+    private void sol(ListNode node) {
+        node.val = node.next.val;
+        node.next = node.next.next;
     }
 
     private void sol1(ListNode node) {
