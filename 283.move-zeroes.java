@@ -31,8 +31,8 @@ class Solution {
     public void moveZeroes(int[] nums) {
         //sol1(nums); 
         sol2(nums); 
-        //sol3(nums); 
-        //sol4(nums); 
+        //sol3(nums); //relative order fails
+        //sol4(nums); //relative order fails
     }
     
     private void sol1(int[] nums) {
@@ -56,7 +56,7 @@ class Solution {
         }
     }
 
-    private void sol3(int[] nums) {
+    private void sol3(int[] nums) {//relative order cannot be held.
         int left = 0, right = nums.length - 1;
         while (left <= right) {
             if (nums[left] != 0) {
@@ -71,7 +71,7 @@ class Solution {
         }
     }
 
-    private void sol4(int[] nums) {
+    private void sol4(int[] nums) {//relative order cannot be held.
         int left = 0, right = nums.length - 1;
         while (left <= right) {
             if (nums[left] != 0) {
