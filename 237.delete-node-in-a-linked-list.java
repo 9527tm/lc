@@ -61,8 +61,8 @@
  */
 class Solution {
     public void deleteNode(ListNode node) {
-        sol1(node); 
-        //sol2(node); 
+        //sol1(node); 
+        sol2(node); 
     }
 
     private void sol1(ListNode node) {
