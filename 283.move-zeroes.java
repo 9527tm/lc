@@ -29,8 +29,8 @@
  */
 class Solution {
     public void moveZeroes(int[] nums) {
-        sol1(nums); 
-        //sol2(nums); 
+        //sol1(nums); 
+        sol2(nums); 
         //sol3(nums); 
         //sol4(nums); 
     }
