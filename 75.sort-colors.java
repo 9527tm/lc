@@ -42,7 +42,10 @@ class Solution {
     public void sortColors(int[] nums) {
         //sol0(nums, 3);
         //sol1(nums);
-        sol2(nums);
+        sol1a(nums);
+        //sol2(nums);
+        //sol2a(nums);
+        //sol2b(nums);
     }
 
     private void sol0(int[] nums, int k) {
@@ -73,6 +76,23 @@ class Solution {
         }
     }
 
+    private void sol1a(int[] nums) {
+        int i = 0, j = 0, k = nums.length - 1;
+        while (j <= k) {
+            if (nums[j] == 0) {
+                nums[j++] = 1;        //Tricky: nums[j++] = 1 FIRST
+                nums[i++] = 0;        //        when j == i, no 1 is actually found yet.
+            }
+            else if (nums[j] == 1) {
+                j++;
+            }
+            else {
+                nums[j] = nums[k];
+                nums[k--] = 2;
+            }
+        }
+    }
+
     private void sol2(int[] nums) {
         int i = 0, j = 0, k = 0;
         for (int n : nums) {
@@ -89,6 +109,39 @@ class Solution {
         }
     }
 
+    private void sol2a(int[] nums) {
+        int i = 0, j = 0, k = 0;
+        for (int n : nums) {
+            if (n == 0) {
+                nums[k++] = 2;
+                nums[j++] = 1;
+                nums[i++] = 0;
+            }
+            else if (n == 1) {
+                nums[k++] = 2;
+                nums[j++] = 1;
+            }
+            else {
+                nums[k++] = 2;
+            }
+        }
+    }
+
+    private void sol2b(int[] nums) {
+        int i = 0, j = 0, k = 0;
+        for (int n : nums) {
+            if (n <= 2) {
+                nums[k++] = 2;
+                if (n <= 1) {
+                    nums[j++] = 1;
+                    if (n <= 0) {
+                        nums[i++] = 0;
+                    }
+                }
+            }
+        }
+    }
+                
     private void swap(int[] nums, int i, int j) {
         int tmp = nums[i];
         nums[i] = nums[j];
