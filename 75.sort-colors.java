@@ -213,7 +213,7 @@ class Solution {
         }
     }
 
-    private void sol5b(int[] nums) {
+    private void sol5b(int[] nums) { // sol5b() totally equal to <=> sol1()    
         int left = 0, mid = 0, right = nums.length - 1;
         while (mid <= right) {
             if (nums[mid] == 2) {
