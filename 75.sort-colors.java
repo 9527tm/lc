@@ -42,9 +42,9 @@ class Solution {
     public void sortColors(int[] nums) {
         //sol0(nums, 3);
         //sol1(nums);
-        sol1a(nums);
+        //sol1a(nums);
         //sol2(nums);
-        //sol2a(nums);
+        sol2a(nums);
         //sol2b(nums);
     }
 
