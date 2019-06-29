@@ -44,8 +44,8 @@ class Solution {
         //sol1(nums);
         //sol1a(nums);
         //sol2(nums);
-        sol2a(nums);
-        //sol2b(nums);
+        //sol2a(nums);
+        sol2b(nums);
     }
 
     private void sol0(int[] nums, int k) {
