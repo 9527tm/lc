@@ -47,7 +47,8 @@ class Solution {
         //sol2a(nums);
         //sol2b(nums);
         //sol3(nums);
-        sol4(nums);
+        //sol4(nums);
+        sol5(nums);
     }
 
     private void sol0(int[] nums, int k) {
@@ -181,6 +182,18 @@ class Solution {
             }
         }
         return left;
+    }
+
+    private void sol5(int[] nums) {///discuss/26472/Share-my-at-most-two-pass-constant-space-10-line-solution
+        int left = 0, right = nums.length - 1; //[left, right]: from first 1 to last 1, 
+        for (int i = left; i <= right; i++) {  //               both are inclusive.
+            while (i <= right && nums[i] == 2) {
+                swap(nums, i, right--);
+            }                                  //H.W.: wrongly check 0 before 2, ex:[1,2,0] 
+            while (left <= i && nums[i] == 0) {
+                swap(nums, left++, i);
+            }
+        }
     }
 
     private void swap(int[] nums, int i, int j) {
