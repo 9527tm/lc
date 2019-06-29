@@ -46,7 +46,8 @@ class Solution {
         //sol2(nums);
         //sol2a(nums);
         //sol2b(nums);
-        sol3(nums);
+        //sol3(nums);
+        sol4(nums);
     }
 
     private void sol0(int[] nums, int k) {
@@ -147,12 +148,12 @@ class Solution {
         int count0 = sol3(nums, 0, nums.length - 1, 0);
         int count1 = sol3(nums, count0, nums.length - 1, 1);
     }
-    private int sol3(int[] nums, int left, int right, int target) {
+    private int sol3(int[] nums, int left, int right, int smaller) {
         while (left <= right) {
-            if (nums[left] == target) {
+            if (nums[left] == smaller) {
                 left++;
             }
-            else if (nums[right] != target) {
+            else if (nums[right] != smaller) {
                 right--;
             }
             else {
@@ -161,7 +162,27 @@ class Solution {
         }
         return left;
     }
-                
+
+    private void sol4(int[] nums) {
+        int mid = sol4(nums, 0, nums.length - 1, 0, 2);
+        sol3(nums, 0, mid - 1, 0);
+        sol3(nums, mid, nums.length - 1, 1);
+    }
+    private int sol4(int[] nums, int left, int right, int smallest, int largest) {
+        while (left <= right) {
+            if (nums[left] != largest) {
+                left++;
+            }
+            else if (nums[right] != smallest) {
+                right--;
+            }
+            else {
+                swap(nums, left++, right--);
+            }
+        }
+        return left;
+    }
+
     private void swap(int[] nums, int i, int j) {
         int tmp = nums[i];
         nums[i] = nums[j];
