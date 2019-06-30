@@ -50,7 +50,9 @@ class Solution {
         //sol4(nums);
         //sol5(nums);
         //sol5a(nums);
-        sol5b(nums);
+        //sol5b(nums);
+        sol6(nums, 3);
+        //sol6a(nums, 3);
     }
 
     private void sol0(int[] nums, int k) {
@@ -226,6 +228,38 @@ class Solution {
                 mid++;
             }
         }
+    }
+
+    private void sol6(int[] nums, int k) {//k >= 2, nums[i] belongs to [0, 1, 2, k - 1]
+        sol6(nums, 0, nums.length - 1, 0, k);
+    }
+    private void  sol6(int[] nums, int left, int right, int target, int k) {
+        if (target + 2 > k) {
+            return;
+        }
+        int i = left;
+        for (int j = left; j <= right; j++) {
+            if (nums[j] == target) {
+                swap(nums, i++, j);
+            }
+        }
+        sol6(nums, i, right, target + 1, k);
+    }
+
+    private void sol6a(int[] nums, int k) {
+        sol6a(nums, 0, nums.length - 1, k - 1);
+    }
+    private void sol6a(int[] nums, int left, int right, int target) {
+        if (target < 1) {
+            return;
+        }
+        int i = right;
+        for (int j = right; j >= left; j--) {
+            if (nums[j] == target) {
+                swap(nums, i--, j);
+            }
+        }
+        sol6a(nums, left, i, target - 1);
     }
 
     private void swap(int[] nums, int i, int j) {
