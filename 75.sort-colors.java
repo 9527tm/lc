@@ -52,7 +52,8 @@ class Solution {
         //sol5a(nums);
         //sol5b(nums);
         //sol6(nums, 3);
-        sol6a(nums, 3);
+        //sol6a(nums, 3);
+        sol7(nums, 3);
     }
 
     private void sol0(int[] nums, int k) {
@@ -260,6 +261,15 @@ class Solution {
             }
         }
         sol6a(nums, left, i, target - 1);
+    }
+
+    private void sol7(int[] nums, int k) {
+        int[] pointers = new int[k];
+        for (int n : nums) {
+            for (int i = k - 1; i >= 0 && n <= i; i--) {
+                nums[pointers[i]++] = i;
+            }
+        }
     }
 
     private void swap(int[] nums, int i, int j) {
