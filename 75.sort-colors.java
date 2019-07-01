@@ -53,7 +53,8 @@ class Solution {
         //sol5b(nums);
         //sol6(nums, 3);
         //sol6a(nums, 3);
-        sol7(nums, 3);
+        //sol7(nums, 3);
+        sol8(nums, 3);
     }
 
     private void sol0(int[] nums, int k) {
@@ -266,9 +267,22 @@ class Solution {
     private void sol7(int[] nums, int k) {
         int[] pointers = new int[k];
         for (int n : nums) {
-            for (int i = k - 1; i >= 0 && n <= i; i--) {
+            for (int i = k - 1; i >= n; i--) { // i >= 0 && i >= n
                 nums[pointers[i]++] = i;
             }
+        }
+    }
+
+    private void sol8(int[] nums, int k) {
+        int[] pointers = new int[k];
+        for (int n : nums) {
+            int j = k - 1;
+            while (j - 1 >= n) {// j >= 1 && j - 1 >= n //H.W.: wrongly use nums[i] for n
+                //System.out.println(n + " " + j + " " + pointers[j - 1]+ " " + pointers[j]);
+                swap(nums, pointers[j - 1], pointers[j]++);//   because it has been swaped and changed.
+                j--;
+            }
+            pointers[j]++;
         }
     }
 
