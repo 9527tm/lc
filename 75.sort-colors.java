@@ -54,7 +54,9 @@ class Solution {
         //sol6(nums, 3);
         //sol6a(nums, 3);
         //sol7(nums, 3);
-        sol8(nums, 3);
+        //sol8(nums, 3);
+        sol9(nums, 3);
+        //sol10(nums, 3);
     }
 
     private void sol0(int[] nums, int k) {
@@ -286,9 +288,43 @@ class Solution {
         }
     }
 
+    private void sol9(int[] nums, int k) {//discuss/26654/Sort-colors-and-sort-k-colors-C++-solution
+        int left = 0, right = nums.length - 1;//www.lintcode.com/en/problem/sort-colors-ii/
+        for (int minColor = 0, maxColor = k - 1; minColor < maxColor; minColor++, maxColor--) {
+            int i = left, j = left, l = right;
+            while (j <= l) {
+                if (nums[j] == minColor) {
+                    swap(nums, i++, j++);
+                }
+                else if (nums[j] == maxColor) {
+                    swap(nums, j, l--);
+                }
+                else {
+                    j++;
+                }
+            }
+            left = i;
+            right = l;
+        }
+    }
+        
+    private void sol10(int[] nums, int k) {
+        int left = 0, right = nums.length - 1;
+        for (int minColor = 0; minColor < k - 1; minColor++) {
+            int i = left;
+            for (int j = left; j <= right; j++) {
+                if (nums[j] == minColor) {
+                    swap(nums, i++, j);
+                }
+            }
+            left = i;
+        }
+    }
+
     private void swap(int[] nums, int i, int j) {
         int tmp = nums[i];
         nums[i] = nums[j];
         nums[j] = tmp;
     }
 }
+
