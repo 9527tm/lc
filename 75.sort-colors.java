@@ -55,8 +55,8 @@ class Solution {
         //sol6a(nums, 3);
         //sol7(nums, 3);
         //sol8(nums, 3);
-        sol9(nums, 3);
-        //sol10(nums, 3);
+        //sol9(nums, 3);
+        sol10(nums, 3);
     }
 
     private void sol0(int[] nums, int k) {
