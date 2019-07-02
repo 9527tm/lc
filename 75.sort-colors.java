@@ -324,7 +324,7 @@ class Solution {
     }
 
     private void sol11(int[] nums) {///discuss/26637/Simple-one-pass-solution
-        int i = 0, j = 0, k = nums.length - 1;
+        int i = 0, j = 0, k = nums.length - 1; //test case: [0, 1, 0]
         while (j <= k) {
             if (nums[j] == 0 && j > i) {
                 swap(nums, i++, j);
