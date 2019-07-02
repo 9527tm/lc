@@ -56,7 +56,9 @@ class Solution {
         //sol7(nums, 3);
         //sol8(nums, 3);
         //sol9(nums, 3);
-        sol10(nums, 3);
+        //sol10(nums, 3);
+        sol11(nums);
+        //sol11a(nums);
     }
 
     private void sol0(int[] nums, int k) {
@@ -321,7 +323,39 @@ class Solution {
         }
     }
 
-    private void swap(int[] nums, int i, int j) {
+    private void sol11(int[] nums) {///discuss/26637/Simple-one-pass-solution
+        int i = 0, j = 0, k = nums.length - 1;
+        while (j <= k) {
+            if (nums[j] == 0 && j > i) {
+                swap(nums, i++, j);
+            }
+            else if (nums[j] == 2 && j < k) {
+                swap(nums, j, k--);
+            }
+            else {
+                j++;
+            }
+        }
+    }
+
+    private void sol11a(int[] nums) {///discuss/195342/O(n)-one-pass-Java-solution-beat-100
+        int i = 0, j = 0, k = nums.length - 1;
+        while (j <= k) {
+            if (nums[j] == 0 && j > i) {
+                nums[j] = nums[i];
+                nums[i++] = 0;
+            }
+            else if (nums[j] == 2 && j < k) {
+                nums[j] = nums[k];
+                nums[k--] = 2;
+            }
+            else {
+                j++;
+            }
+        }
+    }
+
+   private void swap(int[] nums, int i, int j) {
         int tmp = nums[i];
         nums[i] = nums[j];
         nums[j] = tmp;
