@@ -44,7 +44,7 @@ class Solution {
         //sol0(nums, 3);   //5     //Count Sort
         //sol1(nums);      //5     //DNF Dijkstra
         //sol1a(nums);         //3 //sol1 -> sol1a: no swap
-        //sol2(nums);      //5     //CLRS 2 + 1 => 3 way, p171
+        //sol2(nums);      //5     //KR partition: 2 + 1 => 3 ways -- CPL p87, CLRS p171
         //sol2a(nums);     //5     //sol2 -> sol2a: no swap
         //sol2b(nums);     //5     //sol2a -> sol2b: if nested
         //sol3(nums);          //3 //EPIJ, p43: 2 passes and 2 ways
@@ -107,7 +107,7 @@ class Solution {
         }
     }
 
-    private void sol2(int[] nums) {//CLRS 2 + 1 => 3 way, p171
+    private void sol2(int[] nums) {//KR partition: 2 + 1 => 3 ways -- CPL p87, CLRS p171
         int i = 0, j = 0, k = 0;
         for (int n : nums) {
             if (n == 0) {
