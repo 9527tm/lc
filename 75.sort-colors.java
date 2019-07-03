@@ -54,12 +54,12 @@ class Solution {
         //sol5b(nums);         //3 //sol5a -> sol5b: immediately mid++, sol5b <=> sol1 TOTALLY
         //sol5c(nums);         //0 //sol5b -> sol5c: Not good just delayed i++ / k--
         //sol5d(nums);         //0 //sol5c -> sol5d: no swap
-        //sol6(nums, 3);   //5     //Recursion, 2 -> n ways
+        //sol6(nums, 3);   //5     //Recursion, 2 => n ways
         //sol6a(nums, 3);      //4 //sol6 -> sol6a: reversely
-        sol7(nums, 3);     //5     //Iterative, 1 pass, 3 -> n ways (sol2b)
+        sol7(nums, 3);     //5     //Iterative, 1 pass, 3 => n ways (sol2b)
         //sol8(nums, 3);       //4 //sol7 -> sol8: sol2b -> sol2
-        //sol9(nums, 3);   //5     //Iterative, O(1) space, 3 -> n ways (sol1)
-        //sol10(nums, 3);      //4 //sol9 -> sol10: 2 -> n ways
+        //sol9(nums, 3);   //5     //Iterative, O(1) space, 3 => n ways (sol1)
+        //sol10(nums, 3);      //4 //sol9 -> sol10: 2 => n ways
     }
 
     private void sol0(int[] nums, int k) {//Count Sort
@@ -194,7 +194,7 @@ class Solution {
         }
         return left;
     }
-                                   //LC top 1, left 2 + right 2 -> 3 ways
+                                   //LC top 1, left 2 + right 2 => 3 ways
     private void sol5(int[] nums) {///discuss/26472/Share-my-at-most-two-pass-constant-space-10-line-solution
         int left = 0, right = nums.length - 1; //[left, right]: from first 1 to last 1, 
         for (int i = left; i <= right; i++) {  //               both are inclusive.
@@ -273,7 +273,7 @@ class Solution {
     }
 
     //k >= 2, nums[i] belongs to [0, 1, 2, k - 1]
-    private void sol6(int[] nums, int k) {//Recursion, 2 -> n ways
+    private void sol6(int[] nums, int k) {//Recursion, 2 => n ways
         sol6(nums, 0, nums.length - 1, 0, k);
     }
     private void  sol6(int[] nums, int left, int right, int target, int k) {
@@ -305,7 +305,7 @@ class Solution {
         sol6a(nums, left, i, target - 1);
     }
 
-    private void sol7(int[] nums, int k) {//Iterative, 1 pass, 3 -> n ways (sol2b)
+    private void sol7(int[] nums, int k) {//Iterative, 1 pass, 3 => n ways (sol2b)
         int[] pointers = new int[k];
         for (int n : nums) {
             for (int i = k - 1; i >= n; i--) { // i >= 0 && i >= n
@@ -326,7 +326,7 @@ class Solution {
             pointers[j]++;
         }
     }
-                                          //Iterative, O(1) space, 3 -> n ways (sol1)
+                                          //Iterative, O(1) space, 3 => n ways (sol1)
     private void sol9(int[] nums, int k) {//discuss/26654/Sort-colors-and-sort-k-colors-C++-solution
         int left = 0, right = nums.length - 1;//www.lintcode.com/en/problem/sort-colors-ii/
         for (int minColor = 0, maxColor = k - 1; minColor < maxColor; minColor++, maxColor--) {
@@ -347,7 +347,7 @@ class Solution {
         }
     }
         
-    private void sol10(int[] nums, int k) {//sol9 -> sol10: 2 -> n ways
+    private void sol10(int[] nums, int k) {//sol9 -> sol10: 2 => n ways
         int left = 0, right = nums.length - 1;
         for (int minColor = 0; minColor < k - 1; minColor++) {
             int i = left;
