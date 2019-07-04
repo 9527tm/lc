@@ -58,8 +58,8 @@ class Solution {
         //sol6a(nums, 3);      //4 //sol6 -> sol6a: reversely
         //sol7(nums, 3);   //5     //Iterative, 1 pass, 3 => n ways (sol2b)
         //sol8(nums, 3);       //4 //sol7 -> sol8: sol2b -> sol2
-        sol8a(nums, 3);    //5     //sol8 -> sol8a: while => for
-        //sol8b(nums, 3)       //4 //sol8a -> sol8b:  k => pivots[k]
+        //sol8a(nums, 3);  //5     //sol8 -> sol8a: while => for
+        sol8b(nums, 3);        //4 //sol8a -> sol8b:  k => pivots[k]
         //sol9(nums, 3);   //5     //Iterative, O(1) space, 3 => n ways (sol1)
         //sol10(nums, 3);      //4 //sol9 -> sol10: 2 => n ways
     }
@@ -348,9 +348,10 @@ class Solution {
         }
 
         for (int n : nums) {
-            int j = 0;
-            for (j = k - 2; j >= 0 && pivots[j] >= n; j--) {
+            int j = k - 2; 
+            while (j >= 0 && pivots[j] >= n) {
                 swap(nums, pointers[j], pointers[j + 1]++);
+                j--;
             }
             pointers[j + 1]++;
         }
