@@ -56,8 +56,10 @@ class Solution {
         //sol5d(nums);         //0 //sol5c -> sol5d: no swap
         //sol6(nums, 3);   //5     //Recursion, 2 => n ways
         //sol6a(nums, 3);      //4 //sol6 -> sol6a: reversely
-        sol7(nums, 3);     //5     //Iterative, 1 pass, 3 => n ways (sol2b)
+        //sol7(nums, 3);   //5     //Iterative, 1 pass, 3 => n ways (sol2b)
         //sol8(nums, 3);       //4 //sol7 -> sol8: sol2b -> sol2
+        sol8a(nums, 3);    //5     //sol8 -> sol8a: while => for
+        //sol8b(nums, 3)       //4 //sol8a -> sol8b:  k => pivots[k]
         //sol9(nums, 3);   //5     //Iterative, O(1) space, 3 => n ways (sol1)
         //sol10(nums, 3);      //4 //sol9 -> sol10: 2 => n ways
     }
@@ -326,7 +328,34 @@ class Solution {
             pointers[j]++;
         }
     }
-                                          //Iterative, O(1) space, 3 => n ways (sol1)
+
+    private void sol8a(int[] nums, int k) {//sol8 -> sol8a: while => for
+        int[] pointers = new int[k];
+        for (int n : nums) {
+            for (int j = k - 2; j >= n; j--) {
+                swap(nums, pointers[j], pointers[j + 1]++);
+            }
+            pointers[n]++;
+        }
+    }
+ 
+    private void sol8b(int[] nums, int k) {//sol8a -> sol8b:  k => pivots[k]
+        int[] pointers = new int[k];
+        
+        int[] pivots = new int[k]; //
+        for (int j = 0; j < k; j++) {
+            pivots[j] = j;
+        }
+
+        for (int n : nums) {
+            int j = 0;
+            for (j = k - 2; j >= 0 && pivots[j] >= n; j--) {
+                swap(nums, pointers[j], pointers[j + 1]++);
+            }
+            pointers[j + 1]++;
+        }
+    }
+                                         //Iterative, O(1) space, 3 => n ways (sol1)
     private void sol9(int[] nums, int k) {//discuss/26654/Sort-colors-and-sort-k-colors-C++-solution
         int left = 0, right = nums.length - 1;//www.lintcode.com/en/problem/sort-colors-ii/
         for (int minColor = 0, maxColor = k - 1; minColor < maxColor; minColor++, maxColor--) {
