@@ -41,7 +41,8 @@
  */
 class Solution {
     public int strStr(String haystack, String needle) {
-        return sol1(haystack, needle); 
+        //return sol1(haystack, needle); 
+        return sol2(haystack, needle); 
     }
 
     private int sol1(String haystack, String needle) {
@@ -54,10 +55,39 @@ class Solution {
     }
     private boolean isMatched(String haystack, int i, String needle) {
         for (int j = 0; j < needle.length(); j++) {
-            if (i + j >= haystack.length() || haystack.charAt(i + j) != needle.charAt(j)) {
+            if (i + j < 0 || i + j >= haystack.length() || haystack.charAt(i + j) != needle.charAt(j)) {
                 return false;
             }
         }
         return true;
+    }
+
+    final long smallPrime = 11L, bigPrime = 257L;
+
+    private int sol2(String haystack, String needle) {
+        if (needle.length() <= 0) {
+            return 0;
+        }
+        long needleHashCode = 0L, baseFactor = 1L;
+        for (int i = 0; i < needle.length(); i++) {
+            needleHashCode = updateHC(needle, i - needle.length(), i, needleHashCode, baseFactor); 
+            baseFactor = (baseFactor * smallPrime) % bigPrime;
+        }
+        long substrHashCode = 0L;
+        for (int i = 0; i < haystack.length(); i++) {
+            substrHashCode = updateHC(haystack, i - needle.length(), i, substrHashCode, baseFactor);
+            if (substrHashCode == needleHashCode && isMatched(haystack, i - needle.length() + 1, needle)) {
+                return i - needle.length() + 1; //H.W.: many times of wrongly taking i for start index.
+            }
+        }
+        return -1;
+    }
+    private long updateHC(String str, int oldCharPos, int newCharPos, long oldHashCode, long baseFactor) {
+        oldHashCode = (oldHashCode * smallPrime) % bigPrime;
+        if (oldCharPos >= 0) {
+            oldHashCode = (oldHashCode + baseFactor * bigPrime * 256 - baseFactor * str.charAt(oldCharPos)) % bigPrime; 
+        }//H.W.: many times of the same mistake for updating oldHashCode when the oldest char is ejected! 
+        oldHashCode = (oldHashCode + str.charAt(newCharPos)) % bigPrime;
+        return oldHashCode;
     }
 }
