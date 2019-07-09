@@ -43,7 +43,8 @@ class Solution {
     public int strStr(String haystack, String needle) {
         //return sol1(haystack, needle); //Brute Force: O(m * n) / O(1)
         //return sol2(haystack, needle); //Rabin-Karp:  O(m * n) / O(1) 
-        return sol3a(haystack, needle);  //Brute Force (KMP Pre):  O(m * n) / O(1) 
+        //return sol3a(haystack, needle);//Brute Force (KMP Pre):  O(m * n) / O(1) 
+        return sol3(haystack, needle);   //KMP (CSDN July): O(m + n) / O(n) 
     }
 
     private int sol1(String haystack, String needle) {
@@ -92,7 +93,7 @@ class Solution {
         return oldHashCode;
     }
 
-    private int sol3a(String haystack, String needle) {
+    private int sol3a(String haystack, String needle) {//CSDN July -- KMP
         int i = 0, j = 0;
         while (i < haystack.length() && j < needle.length()) {
             if (haystack.charAt(i) == needle.charAt(j)) {
@@ -106,4 +107,39 @@ class Solution {
         }
         return j == needle.length() ? i - j : -1;
     }
+
+    private int sol3(String haystack, String needle) {//CSDN July -- KMP
+        int[] next = getNext(needle);
+
+        int i = 0, j = 0;
+        while (i < haystack.length() && j < needle.length()) {
+            if (j == -1 || haystack.charAt(i) == needle.charAt(j)) {
+                j++;
+                i++;
+            }
+            else {
+                j = next[j];
+            }
+        }
+        return j == needle.length() ? i - j : -1;
+    }
+    private int[] getNext(String needle) {
+        int[] next = new int[needle.length()];
+        if (needle.length() <= 0) {
+            return next;
+        }
+
+        next[0] = -1; 
+        int k = -1, j = 0;
+        while (j < needle.length() - 1) {
+            if (k == -1 || needle.charAt(k) == needle.charAt(j)) {
+                next[++j] = ++k;
+            }
+            else {
+                k = next[k];
+            }
+        }
+        return next;
+   }
+        
 }
