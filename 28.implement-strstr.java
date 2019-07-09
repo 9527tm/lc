@@ -41,8 +41,9 @@
  */
 class Solution {
     public int strStr(String haystack, String needle) {
-        //return sol1(haystack, needle); 
-        return sol2(haystack, needle); 
+        //return sol1(haystack, needle); //Brute Force: O(m * n) / O(1)
+        //return sol2(haystack, needle); //Rabin-Karp:  O(m * n) / O(1) 
+        return sol3a(haystack, needle);  //Brute Force (KMP Pre):  O(m * n) / O(1) 
     }
 
     private int sol1(String haystack, String needle) {
@@ -89,5 +90,20 @@ class Solution {
         }//H.W.: many times of the same mistake for updating oldHashCode when the oldest char is ejected! 
         oldHashCode = (oldHashCode + str.charAt(newCharPos)) % bigPrime;
         return oldHashCode;
+    }
+
+    private int sol3a(String haystack, String needle) {
+        int i = 0, j = 0;
+        while (i < haystack.length() && j < needle.length()) {
+            if (haystack.charAt(i) == needle.charAt(j)) {
+                i++;
+                j++;
+            }
+            else {
+                i = i - j + 1;
+                j = 0;
+            }
+        }
+        return j == needle.length() ? i - j : -1;
     }
 }
