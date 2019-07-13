@@ -113,4 +113,47 @@ class Solution {
         }
         return sign > 0 ? res : -res;
     }
+    
+    private int sol2a(int dividend, int divisor) {
+        if (divisor == Integer.MIN_VALUE) {
+            return dividend == Integer.MIN_VALUE ? 1 : 0;
+        }
+        if (dividend == Integer.MIN_VALUE) {
+            if (divisor < -2 || divisor > 2) {
+                dividend = Integer.MIN_VALUE + 1;
+            }
+            else if (divisor == -2 || divisor == 2) {
+                dividend >>= 1;
+                divisor >>= 1;
+            }
+            else {
+                return divisor == 1 ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+            }
+        }
+        
+        int dvd = dividend > 0 ? dividend : -dividend;
+        int dvs = divisor > 0 ? divisor : -divisor;
+        int sign = (dividend > 0 && divisor > 0) || (dividend < 0 && divisor < 0) ? 1 : -1;
+
+        int exp = dvs, quo = 1;
+        int lmt = Integer.MAX_VALUE >> 1;
+        
+        lmt = dvd < lmt ? dvd : lmt; 
+        while (exp <= lmt) {
+            exp <<= 1;
+            quo <<=1;
+        }
+
+        int res = 0;
+        while (dvd > 0) {
+            if (dvd >= exp) {
+                dvd -= exp;
+                res += quo;
+            }
+            exp >>= 1;
+            quo >>= 1;
+        }
+
+        return res;
+    }
 }
