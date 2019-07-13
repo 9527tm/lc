@@ -98,9 +98,9 @@ class Solution {
         int sign = (dividend > 0 && divisor > 0) || (dividend < 0 && divisor < 0) ? 1 : -1; //H.W.: missing the sign processing
         
         int exp = dvs, quo = 1;
-        while (exp < dvd && exp < (Integer.MAX_VALUE >> 1)) {//H.W.: exp overflow. ex: MAX_VALUE, 1
-            exp <<= 1;
-            quo <<= 1;
+        while (exp < dvd && exp <= (Integer.MAX_VALUE >> 1)) {//H.W.: exp overflow. ex: MAX_VALUE, 1
+            exp <<= 1;                                        //H.W.: wrong coverage (...&&exp < MAX_VALUE >> 1). 
+            quo <<= 1;                                        //      ex: 2147483646, 1073741823
         }
         int res = 0;
         while (dvd >= dvs) {
