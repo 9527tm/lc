@@ -43,9 +43,14 @@
  * 
  */
 class Solution {
+    // Compute quotient: dvd = q0 * 1 * dvs + q1 * 2 * dvs + q2 * 4 * dvs + q3 * 8 * dvs + ...
+    //              <=>  dvd = dvs * (q0 * 1 + q1 * 2 + q2 * 4 + q3 * 8 + ...)
+    //                         qi = 0, 1
     public int divide(int dividend, int divisor) {
        //return sol1(dividend, divisor); 
-       return sol2(dividend, divisor); 
+       //return sol2(dividend, divisor); 
+       return sol2a(dividend, divisor); 
+       //return sol2(dividend, divisor); 
     }
 
     private int sol1(int dividend, int divisor) {
@@ -133,7 +138,7 @@ class Solution {
         
         int dvd = dividend > 0 ? dividend : -dividend;
         int dvs = divisor > 0 ? divisor : -divisor;
-        int sign = (dividend > 0 && divisor > 0) || (dividend < 0 && divisor < 0) ? 1 : -1;
+        int sig = (dividend > 0 && divisor > 0) || (dividend < 0 && divisor < 0) ? 1 : -1;
 
         int exp = dvs, quo = 1;
         int lmt = Integer.MAX_VALUE >> 1;
@@ -145,7 +150,7 @@ class Solution {
         }
 
         int res = 0;
-        while (dvd > 0) {
+        while (dvd >= dvs) {//H.W.: dvd > 0 and H.W.: dvd > dvs
             if (dvd >= exp) {
                 dvd -= exp;
                 res += quo;
@@ -154,6 +159,53 @@ class Solution {
             quo >>= 1;
         }
 
-        return res;
+        return sig > 0 ? res : -res;
+    }
+
+    
+    private int sol2b(int dividend, int divisor) {
+        //0. Preprocess for Integer.MIN_VALUE that causes overflow 
+        if (divisor == Integer.MIN_VALUE) {//when x = -Integer.MIN_VALUE or x = Integer.MIN_VALUE / -1;
+            return dividend == Integer.MIN_VALUE ? 1 : 0;
+        }
+        if (dividend == Integer.MIN_VALUE) {
+            if (divisor < -2 || divisor > 2) {
+                dividend = Integer.MIN_VALUE + 1;
+            }
+            else if (divisor == -2 || divisor == 2) {
+                dividend >>= 1;
+                divisor >>= 1;
+            }
+            else {
+                return divisor == 1 ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+            }
+        }
+        //1. Preprocess for absolutions
+        int dvd = dividend > 0 ? dividend : -dividend;
+        int dvs = divisor > 0 ? divisor : -divisor;
+        int sig = (dividend > 0 && divisor > 0) || (dividend < 0 && divisor < 0) ? 1 : -1;
+        
+        //2. Compute exponential table: dvs * 1, dvs * 2, dvs * 4, dvs * 8, ... 
+        int exp = dvs, quo = 1;
+        while (exp <= (Integer.MAX_VALUE >> 1)) {//Optimization: while (exp <= dvd && exp <= (Integer.MAX_VALUE >> 1)) {...}
+            exp <<= 1;
+            quo <<= 1;
+        }
+
+        //3. Compute quotient: dvd = q0 * 1 * dvs + q1 * 2 * dvs + q2 * 4 * dvs + q3 * 8 * dvs + ...
+        //              <=>  dvd = dvs * (q0 * 1 + q1 * 2 + q2 * 4 + q3 * 8 + ...)
+        //                         qi = 0, 1
+        int res = 0;
+        while (exp >= dvs) {//Optimization: while (exp >= dvs && dvd >= dvs) {...}
+            if (dvd >= exp) {
+                dvd -= exp;
+                res += quo;
+            }
+            exp >>=1;
+            quo >>= 1;
+        }
+
+        //4. Postprocess for sign of result 
+        return sig > 0 ? res : -res;
     }
 }
