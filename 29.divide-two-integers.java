@@ -47,10 +47,10 @@ class Solution {
     //              <=>  dvd = dvs * (q0 * 1 + q1 * 2 + q2 * 4 + q3 * 8 + ...)
     //                         qi = 0, 1
     public int divide(int dividend, int divisor) {
-       //return sol1(dividend, divisor); 
-       //return sol2(dividend, divisor); 
-       return sol2a(dividend, divisor); 
-       //return sol2(dividend, divisor); 
+       //return sol1(dividend, divisor);  //5.5: long int64 extending
+       //return sol2(dividend, divisor);  //4.5: a little more verbose and readable than sol2b
+       //return sol2a(dividend, divisor); //4.0: alpha version with H.W.
+       return sol2b(dividend, divisor);   //5.0: int32 restriction with comments
     }
 
     private int sol1(int dividend, int divisor) {
