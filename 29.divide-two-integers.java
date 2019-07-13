@@ -44,7 +44,8 @@
  */
 class Solution {
     public int divide(int dividend, int divisor) {
-       return sol1(dividend, divisor); 
+       //return sol1(dividend, divisor); 
+       return sol2(dividend, divisor); 
     }
 
     private int sol1(int dividend, int divisor) {
@@ -71,5 +72,45 @@ class Solution {
 
         res = sign > 0 ? res : -res;
         return res >= Integer.MIN_VALUE && res <= Integer.MAX_VALUE ? (int) res : Integer.MAX_VALUE;
+    }
+
+    private int sol2(int dividend, int divisor) {
+        if (divisor == Integer.MIN_VALUE) {
+            return dividend == Integer.MIN_VALUE ? 1 : 0;
+        }
+        if (dividend == Integer.MIN_VALUE) {
+            if (divisor == 1) {
+                return Integer.MIN_VALUE;
+            }
+            if (divisor == -1) {
+                return Integer.MAX_VALUE;
+            }
+            if (divisor == 2) {
+                return Integer.MIN_VALUE >> 1;
+            }
+            if (divisor == -2) {
+                return -(Integer.MIN_VALUE >> 1);
+            }
+            dividend = Integer.MIN_VALUE + 1;
+        }
+        int dvd = dividend > 0 ? dividend : -dividend;
+        int dvs = divisor > 0 ? divisor : -divisor;
+        int sign = (dividend > 0 && divisor > 0) || (dividend < 0 && divisor < 0) ? 1 : -1; //H.W.: missing the sign processing
+        
+        int exp = dvs, quo = 1;
+        while (exp < dvd && exp < (Integer.MAX_VALUE >> 1)) {//H.W.: exp overflow. ex: MAX_VALUE, 1
+            exp <<= 1;
+            quo <<= 1;
+        }
+        int res = 0;
+        while (dvd >= dvs) {
+            if (dvd >= exp) {
+                dvd -= exp;
+                res += quo;
+            }
+            exp >>= 1;
+            quo >>= 1;
+        }
+        return sign > 0 ? res : -res;
     }
 }
