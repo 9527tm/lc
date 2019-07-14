@@ -48,10 +48,11 @@ class Solution {
     //                         qi = 0, 1
     public int divide(int dividend, int divisor) {
        //return sol1(dividend, divisor);   //5.5: long int64 extending
-       return sol1a(dividend, divisor);  //6.0: one for() loop only: sol1 => sol1a
+       //return sol1a(dividend, divisor);  //6.0: one for() loop only: sol1 => sol1a
        //return sol2(dividend, divisor);   //4.5: a little more verbose and readable than sol2b
        //return sol2a(dividend, divisor);  //4.0: alpha version with H.W.
        //return sol2b(dividend, divisor);  //5.0: int32 restriction with comments
+       return sol2c(dividend, divisor);  //5.0: different overflow criteria: sol2b => sol2c
     }
 
     private int sol1(int dividend, int divisor) {
@@ -230,4 +231,42 @@ class Solution {
         //4. Postprocess for sign of result 
         return sig > 0 ? res : -res;
     }
+
+    private int sol2c(int dividend, int divisor) {
+        if (divisor == Integer.MIN_VALUE) {
+            return dividend == Integer.MIN_VALUE ? 1 : 0;
+        }
+        if (dividend == Integer.MIN_VALUE) {
+            if (divisor > 2 || divisor < -2) {
+                dividend = Integer.MIN_VALUE + 1;
+            }
+            else if (divisor == 2 || divisor == -2) {
+                dividend >>= 1;
+                divisor >>= 1;
+            }
+            else {
+                return divisor == 1 ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+            }
+        }
+
+        int sig = (dividend > 0 && divisor > 0) || (dividend < 0 && divisor < 0) ? 1 : -1;
+        int dvd = dividend > 0 ? dividend : -dividend;
+        int dvs = divisor > 0 ? divisor : -divisor;
+        return sig > 0 ? divideAbs(dvd, dvs) : -divideAbs(dvd, dvs);
+    }
+    private int divideAbs(int dvd, int dvs) {
+        int n = 0;
+        for (int i = 1; (dvs << i) > 0; i++) {//dvs left shift by 1 each step =>
+            n = i;                            //dvs changes to negative when overflow happens.
+        }
+        
+        int res = 0;
+        for (int i = n; i >= 0; i--) {
+            if (dvd >= (dvs << i)) {
+                dvd -= (dvs << i);
+                res += (1 << i);
+            }
+        }
+        return res;
+    }    
 }
