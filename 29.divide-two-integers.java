@@ -47,10 +47,11 @@ class Solution {
     //              <=>  dvd = dvs * (q0 * 1 + q1 * 2 + q2 * 4 + q3 * 8 + ...)
     //                         qi = 0, 1
     public int divide(int dividend, int divisor) {
-       //return sol1(dividend, divisor);  //5.5: long int64 extending
-       //return sol2(dividend, divisor);  //4.5: a little more verbose and readable than sol2b
-       //return sol2a(dividend, divisor); //4.0: alpha version with H.W.
-       return sol2b(dividend, divisor);   //5.0: int32 restriction with comments
+       //return sol1(dividend, divisor);   //5.5: long int64 extending
+       return sol1a(dividend, divisor);  //6.0: one for() loop only: sol1 => sol1a
+       //return sol2(dividend, divisor);   //4.5: a little more verbose and readable than sol2b
+       //return sol2a(dividend, divisor);  //4.0: alpha version with H.W.
+       //return sol2b(dividend, divisor);  //5.0: int32 restriction with comments
     }
 
     private int sol1(int dividend, int divisor) {
@@ -77,6 +78,27 @@ class Solution {
 
         res = sign > 0 ? res : -res;
         return res >= Integer.MIN_VALUE && res <= Integer.MAX_VALUE ? (int) res : Integer.MAX_VALUE;
+    }
+
+    //www.geeksforgeeks.org/divide-two-integers-without-using-multiplication-division-mod-operator/
+    private int sol1a(int dividend, int divisor) {
+        long dvd = dividend, dvs = divisor; //H.W.: wrongly use -dividend: "long dvd = dividend > 0 ? dividend : -dividend;"
+        int sig = (dvd > 0 && dvs > 0) || (dvd < 0 && dvs < 0) ? 1 : -1;
+        dvd = dvd > 0 ? dvd : -dvd; //Warning: -dvd is OK; -dividend is KO!
+        dvs = dvs > 0 ? dvs : -dvs;
+
+        long res = 0;
+        for (int i = 31; i >= 0; i--) {//Optimization: i >= 0 && dvd >= dvs
+            long exp = dvs << i;
+            long quo = 1L << i;  //H.W.: wrongly use 1 << 32: "long quo = 1 << i;"
+            if (dvd >= exp) {    //Warning: 1L << 32 is OK; 1 << 32 is KO!
+                dvd -= exp;
+                res += quo;
+            }
+        }
+
+        res = sig > 0 ? res : -res;
+        return res >= Integer.MIN_VALUE && res <= Integer.MAX_VALUE ? (int)res : Integer.MAX_VALUE;
     }
 
     private int sol2(int dividend, int divisor) {
