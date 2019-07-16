@@ -40,10 +40,11 @@
  */
 class Solution {
     public List<Integer> findSubstring(String s, String[] words) {
-        return sol1(s, words); 
+        //return sol1(s, words); 
+        return sol2(s, words); 
     }
 
-    private List<Integer> sol1(String s, String[] words) {//O(l * m) / O(n * m)
+    private List<Integer> sol1(String s, String[] words) {//O(l * (n + m)) / O(n * m) : copy HashMap O(n)
         List<Integer> res = new ArrayList<>(); //l = len(s), n = len(words), m = len(words[0])
         if (s.length() <= 0 || words.length <= 0 || words[0].length() <= 0) {
             return res;
@@ -95,5 +96,57 @@ class Solution {
                 slow += m;
             }
         }
+    }
+
+    private List<Integer> sol2(String s, String[] words) {
+        List<Integer> res = new ArrayList<>();
+        if (words.length <= 0 || words[0].length() <= 0) {
+            return res;
+        }
+        Map<String, Integer> targetMap = new HashMap<>();
+        for (String word : words) {
+            targetMap.put(word, targetMap.getOrDefault(word, 0) + 1);
+        }
+        Map<String, Integer> currentMap = new HashMap<>();
+        for (int i = 0; i < words[0].length(); i++) {
+            search(s, words, targetMap, i, currentMap, res);
+        }
+        return res;
+    }
+    private void search(String s, String[] words, Map<String, Integer> targetMap, 
+                    int i, Map<String, Integer> currentMap, List<Integer> res) {
+        int totalType = 0;
+        int n = words.length, m = words[0].length();
+        int slow = i, fast = i;
+        while (fast + m <= s.length()) {
+            String substr = s.substring(fast, fast + m);
+            Integer targetNum = targetMap.get(substr);
+            if (targetNum != null) {
+                int currentNum = currentMap.getOrDefault(substr, 0) + 1;
+                currentMap.put(substr, currentNum);
+                if (currentNum == targetNum) {
+                    if (++totalType == targetMap.size()) {
+                        res.add(slow);
+                    }
+                }
+            }
+            fast += m;
+
+            if (fast - slow < n * m) {
+                continue;
+            }
+
+            String oldSubStr = s.substring(slow, slow + m);
+            Integer oldTargetNum = targetMap.get(oldSubStr);
+            if (oldTargetNum != null) {
+                int oldCurrentNum = currentMap.getOrDefault(oldSubStr, 0);
+                currentMap.put(oldSubStr, oldCurrentNum - 1);
+                if (oldCurrentNum == oldTargetNum) {
+                    totalType--;
+                }
+            }
+            slow += m;
+        }
+        currentMap.clear();
     }
 }
