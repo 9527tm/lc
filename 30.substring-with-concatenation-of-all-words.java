@@ -41,7 +41,8 @@
 class Solution {
     public List<Integer> findSubstring(String s, String[] words) {
         //return sol1(s, words);  //5   O(m * (l + n * m)) / O(n * m) => O(m * l) / O(n * m)
-        return sol1a(s, words);   //5.5 Best one solution at the same complexity as sol1().
+        //return sol1a(s, words); //5.5 Best one solution at the same complexity as sol1().
+        return sol1b(s, words);   //5   Only one map: sol1a => sol1b.
         //return sol2(s, words);  //5   O(m * (l + n))     / O(n * m) => O(m * l) / O(n * m)
     }                             //    since l >= n * m
 
@@ -138,6 +139,49 @@ class Solution {
                 }
             }
             slow += m;
+        }
+    }
+
+    private List<Integer> sol1b(String s, String[] words) {//O(m * (l + n)) / O(n * m)
+        List<Integer> res = new ArrayList<>();
+        if (s.length() <= 0 || words.length <= 0 || words[0].length() <= 0 ||
+            s.length() < words.length * words[0].length()) {//H.W.: careless corner case <= "l <= n *m "
+            return res;
+        }
+        Map<String, Integer> map = new HashMap<>();
+        for (String word : words) {
+            map.put(word, map.getOrDefault(word, 0) + 1);
+        }
+        for (int i = 0; i < words[0].length(); i++) {
+            find1b(s, words, map, i, res);
+        }
+        return res;
+    }
+    private void find1b(String s, String[] words, Map<String, Integer> map, int i, List<Integer> res) {
+        int type = map.size();//only one map: /discuss/300985/C++-99.9-Beat-Single-Map-Solution
+        int n = words.length, m = words[0].length();
+        int fast = i, slow = fast - n * m;
+        while (fast < s.length() || slow < s.length()) {
+            if (fast >= i && fast + m <= s.length()) {
+                String newSubStr = s.substring(fast, fast + m);
+                Integer newNum = map.get(newSubStr);
+                if (newNum != null) {
+                    if (map.put(newSubStr, newNum - 1) == 1 && type-- == 1) {
+                        res.add(slow + m); //H.W.: confused start point <= res.add(slow);
+                    }
+                }
+            }
+            fast += m;
+            slow += m;
+            if (slow >= i && slow + m <= s.length()) {
+                String oldSubStr = s.substring(slow, slow + m);
+                Integer oldNum = map.get(oldSubStr);
+                if (oldNum != null) {
+                    if (map.put(oldSubStr, oldNum + 1) == 0) {
+                        type++;
+                    }
+                }
+            }
         }
     }
 
