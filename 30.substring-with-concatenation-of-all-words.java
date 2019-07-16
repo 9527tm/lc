@@ -40,11 +40,12 @@
  */
 class Solution {
     public List<Integer> findSubstring(String s, String[] words) {
-        //return sol1(s, words); 
-        return sol2(s, words); 
-    }
+        //return sol1(s, words);  //5   O(m * (l + n * m)) / O(n * m) => O(m * l) / O(n * m)
+        return sol1a(s, words);   //5.5 Best one solution at the same complexity as sol1().
+        //return sol2(s, words);  //5   O(m * (l + n))     / O(n * m) => O(m * l) / O(n * m)
+    }                             //    since l >= n * m
 
-    private List<Integer> sol1(String s, String[] words) {//O(l * (n + m)) / O(n * m) : copy HashMap O(n)
+    private List<Integer> sol1(String s, String[] words) {//O(m * (l + n * m)) / O(n * m) : copy HashMap is O(n * m)
         List<Integer> res = new ArrayList<>(); //l = len(s), n = len(words), m = len(words[0])
         if (s.length() <= 0 || words.length <= 0 || words[0].length() <= 0) {
             return res;
@@ -98,7 +99,49 @@ class Solution {
         }
     }
 
-    private List<Integer> sol2(String s, String[] words) {
+    private List<Integer> sol1a(String s, String[] words) {//O(m * (l + n * m)) / O(n * m)
+        List<Integer> res = new ArrayList<>();             //<=> O(m * l) / O(n * m)
+        if (words.length <= 0 || words[0].length() <= 0 || //since l >= n * m
+            s.length() < words.length * words[0].length()) {
+            return res;
+        }
+        Map<String, Integer> map = new HashMap<>();
+        for (String word : words) {//O(n * m) / O(n * m)
+            map.put(word, map.getOrDefault(word, 0) + 1);
+        }
+        for (int i = 0; i < words[0].length(); i++) {//O(m * (l + n * m)) / O(n * m)
+            find1a(s, words, i, new HashMap<>(map), res);
+        }
+        return res;
+    }
+    private void find1a(String s, String[] words, int i, Map<String, Integer> map, List<Integer> res) {//O(l / m * m * 2) / O(m) 
+        int type = map.size();
+        int n = words.length, m = words[0].length();
+        int slow = i, fast = i;
+        while (fast + m <= s.length()) {
+            String newSubStr = s.substring(fast, fast + m);
+            Integer newNum = map.get(newSubStr);
+            if (newNum != null) {
+                if (map.put(newSubStr, newNum - 1) == 1 && type-- == 1) {
+                    res.add(slow);
+                }
+            }
+            fast += m;
+            if (fast - slow < n * m) {
+                continue;
+            }
+            String oldSubStr = s.substring(slow, slow + m);
+            Integer oldNum = map.get(oldSubStr);
+            if (oldNum != null) {
+                if (map.put(oldSubStr, oldNum + 1) == 0) {
+                    type++;
+                }
+            }
+            slow += m;
+        }
+    }
+
+    private List<Integer> sol2(String s, String[] words) {//O(m * (l + n)) / O(n * m)
         List<Integer> res = new ArrayList<>();
         if (words.length <= 0 || words[0].length() <= 0) {
             return res;
@@ -111,7 +154,7 @@ class Solution {
         for (int i = 0; i < words[0].length(); i++) {
             search(s, words, targetMap, i, currentMap, res);
         }
-        return res;
+        return res; 
     }
     private void search(String s, String[] words, Map<String, Integer> targetMap, 
                     int i, Map<String, Integer> currentMap, List<Integer> res) {
