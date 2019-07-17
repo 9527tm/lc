@@ -37,7 +37,7 @@ class Solution {
     }
     /*
      dp[i]: the length of the longest valid paretheses substring which ends at s[i].
-     dp[i] = when two matching cases, dp[i] is changed. 
+     dp[i] = by two matching cases, dp[i] is changed. 
        case 1:   if s[i] = '('                          => dp[i] = 0
        case 2:   if s[i] = ')'
          case 2.1: if s[i - 1] = '('                    => dp[i] = dp[i - 2] + 2
