@@ -35,6 +35,15 @@ class Solution {
     public int longestValidParentheses(String s) {
         return sol1(s); 
     }
+    /*
+     dp[i]: the length of the longest valid paretheses substring which ends at s[i].
+     dp[i] = when two matching cases, dp[i] is changed. 
+       case 1:   if s[i] = '('                          => dp[i] = 0
+       case 2:   if s[i] = ')'
+         case 2.1: if s[i - 1] = '('                    => dp[i] = dp[i - 2] + 2
+         case 2.2: if s[i - 1] = ')'
+           case 2.2.1 if s[i - 1 - dp[i - 1]] = '('     => dp[i] = dp[i - 1 - dp[i - 1] - 1] + dp[i - 1] + 2
+     */
     private int sol1(String s) {
         int[] dp = new int[s.length()];
         int res = 0;
