@@ -145,8 +145,8 @@ class Solution {
     private List<Integer> sol1b(String s, String[] words) {//O(m * (l + n)) / O(n * m)
         List<Integer> res = new ArrayList<>();
         if (s.length() <= 0 || words.length <= 0 || words[0].length() <= 0 ||
-            s.length() < words.length * words[0].length()) {//H.W.: careless corner case <= "l <= n *m "
-            return res;
+            s.length() < words.length * words[0].length()) {
+            return res;//H.W.: careless corner case <= "l <= n * m"
         }
         Map<String, Integer> map = new HashMap<>();
         for (String word : words) {
@@ -160,19 +160,18 @@ class Solution {
     private void find1b(String s, String[] words, Map<String, Integer> map, int i, List<Integer> res) {
         int type = map.size();//only one map: /discuss/300985/C++-99.9-Beat-Single-Map-Solution
         int n = words.length, m = words[0].length();
-        int fast = i, slow = fast - n * m;
-        while (fast < s.length() || slow < s.length()) {
+        int fast = i, slow = i - n * m + m; //[-n+1, -n+2, -n+3, ... -1, 0] => n words
+        while (fast < s.length() || slow < s.length()) {//starting from slow ending at fast
             if (fast >= i && fast + m <= s.length()) {
                 String newSubStr = s.substring(fast, fast + m);
                 Integer newNum = map.get(newSubStr);
                 if (newNum != null) {
                     if (map.put(newSubStr, newNum - 1) == 1 && type-- == 1) {
-                        res.add(slow + m); //H.W.: confused start point <= res.add(slow);
+                        res.add(slow); //H.W.: confused start point
                     }
                 }
             }
             fast += m;
-            slow += m;
             if (slow >= i && slow + m <= s.length()) {
                 String oldSubStr = s.substring(slow, slow + m);
                 Integer oldNum = map.get(oldSubStr);
@@ -182,6 +181,7 @@ class Solution {
                     }
                 }
             }
+            slow += m;
         }
     }
 
