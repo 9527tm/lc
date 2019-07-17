@@ -33,7 +33,8 @@
  */
 class Solution {
     public int longestValidParentheses(String s) {
-        return sol1(s); 
+        //return sol1(s); 
+        return sol2(s); 
     }
     /*
      dp[i]: the length of the longest valid paretheses substring which ends at s[i].
@@ -64,4 +65,24 @@ class Solution {
         return res;
     }
 
+    private int sol2(String s) {//grandyang
+        Deque<Integer> stack = new ArrayDeque<>();
+        int start = 0, res = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                stack.offerFirst(i);
+            }
+            else {//if (s.charAt(i) == ')') {
+                if (stack.isEmpty()) {
+                    start = i + 1;
+                }
+                else {
+                    stack.pollFirst();//matching
+                    int num = stack.isEmpty() ? i - start + 1 : i - stack.peekFirst();
+                    res = Math.max(res, num);
+                }
+            }
+        }
+        return res;
+    }
 }
