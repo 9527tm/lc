@@ -44,6 +44,35 @@ class Solution {
     public int findMin(int[] nums) {
         return sol1(nums); 
     }
+    //why this works?
+    /*1. when nums[left] == nums[right],      /        /
+         there will be a confusion: -----|---/  - or -/  ---|-------
+                                              /         /
+         the minimum may be left or right of mid.
+         so we shrink left by one and no loss of searching space happens 
+         because of nums[right] holds the same value as nums[left].
+
+      2. if nums[left] =/= nums[right], there will be two cases: "<" or ">".
+         2.1.: if "<", the nums is non-decreasing from left to right (no shifting).
+               obviously, nums[left] is one of minimums.
+               our algorithm always works and right moves close to left until meet at left (minimum).
+
+         2.2.: if ">", there is a break point by shifting, 
+               so, nums[left, bp] is a non-decreasing segment and nums[bp + 1, right] is another.
+               nums[bp] is one of maximums while nums[bp + 1] is one of minimums.
+
+               2.2.1.: if the mid falls into [left, bp], i.e., [left, mid, bp], 
+                       we throws away the segment [left, mid];
+               2.2.2.: if the mid flas into [bp + 1, right], i.e., [bp + 1, mid, bp], 
+                       we throws away the segment [bp + 1, mid, bp].
+
+               our algorithm takes effect by judging nums[mid] <= nums[right]: 
+               true  is for 2.2.2.: [mid, right] is in second non-decreasing segment.
+                                    and all elements in it are no less than nums[mid].
+               and 
+               false is for 2.2.1.: [left, mid] is in first non-decreasing segment.
+                                    and all elements in it are no less than nums[mid].
+    */
     private int sol1(int[] nums) {
         int left = 0, right = nums.length - 1;
         while (left + 1 < right) {
