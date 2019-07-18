@@ -37,7 +37,8 @@
  */
 class Solution {
     public int findMin(int[] nums) {
-        return sol1(nums); 
+        //return sol1(nums); 
+        return sol2(nums); 
     }
 
     private int sol1(int[] nums) {
@@ -55,6 +56,23 @@ class Solution {
             }
         }
         return nums[left];
+    }
+
+    private int sol2(int[] nums) {
+        int left = 0, right = nums.length - 1;
+        while (left + 1 < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[left] < nums[right]) {
+                return nums[left];
+            }
+            else if (nums[left] < nums[mid]) {
+                left = mid;
+            }
+            else {
+                right = mid;
+            }
+        }
+        return Math.min(nums[left], nums[right]);
     }
 }
 
