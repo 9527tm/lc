@@ -187,7 +187,7 @@ class Solution {
     }               
 
     private int sol3b(String s) {
-        if (s.length() <= 0) {//H.W.: forgot the corner case when helper LEGALLY accepts start > end
+        if (s.length() <= 0) {//H.W.: forgot the corner case when helper() LEGALLY accepts start > end
             return 0;
         }
         int max1 = helper(s, 0, s.length() - 1, '(');
