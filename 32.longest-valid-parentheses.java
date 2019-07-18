@@ -37,7 +37,8 @@ class Solution {
         //return sol2(s);  //5   Stack
         //return sol2a(s); //5.5 Stack: Refine sol2 -> sol2a
         //return sol3(s);  //6   Two pass scans: O(1) space [when to reset and when to collect]
-        return sol3a(s);   //5.5 One side counting: sol3 => sol3a  
+        //return sol3a(s); //5.5 One side counting: sol3 => sol3a  
+        return sol3b(s);   //6   One loop: sol3a => sol3b
     }
     /*
      dp[i]: the length of the longest valid paretheses substring which ends at s[i].
@@ -154,34 +155,61 @@ class Solution {
     }
 
     private int sol3a(String s) {
-        int leftNum = 0, matchedNum1 = 0, max1 = 0;
+        int leftNum = 0, matachedLen1 = 0, max1 = 0;
         for (int i = 0; i < s.length(); i++) {
             leftNum += s.charAt(i) == '(' ? 1 : -1;
             if (leftNum < 0) {
                 leftNum = 0;
-                matchedNum1 = 0;
+                matachedLen1 = 0;
             }
             else {
-                matchedNum1++;
+                matachedLen1++;
                 if (leftNum == 0) {
-                    max1 = Math.max(max1, matchedNum1);
+                    max1 = Math.max(max1, matachedLen1);
                 }
             }
         }
-        int rightNum = 0, matchedNum2 = 0, max2 = 0;
+        int rightNum = 0, matachedLen2 = 0, max2 = 0;
         for (int i = s.length() - 1; i >= 0; i--) {
             rightNum += s.charAt(i) == ')' ? 1 : -1;
             if (rightNum < 0) {
                 rightNum = 0;
-                matchedNum2 = 0;
+                matachedLen2 = 0;
             }
             else {
-                matchedNum2++;
+                matachedLen2++;
                 if (rightNum == 0) {
-                    max2 = Math.max(max2, matchedNum2);
+                    max2 = Math.max(max2, matachedLen2);
                 }
             }
         }
         return Math.max(max1, max2);
     }               
+
+    private int sol3b(String s) {
+        if (s.length() <= 0) {//H.W.: forgot the corner case when helper LEGALLY accepts start > end
+            return 0;
+        }
+        int max1 = helper(s, 0, s.length() - 1, '(');
+        int max2 = helper(s, s.length() - 1, 0, ')');
+        return Math.max(max1, max2);
+    }
+    private int helper(String s, int start, int end, char openToken) {
+        int res = 0, openNum = 0, matachedLen = 0;
+        int step = start < end ? 1 : -1;
+        for (int i = start; i * step <= end; i += step) {//H.W.: Wrong loop terminating condition
+            openNum += s.charAt(i) == openToken ? 1 : -1;// <= for (...; i <= end;...) {
+            if (openNum < 0) {
+                openNum = 0;
+                matachedLen = 0;
+            }
+            else {
+                matachedLen++;
+                if (openNum == 0) {
+                    res = Math.max(res, matachedLen);
+                }
+            }
+        }
+        return res;
+    }
 }
