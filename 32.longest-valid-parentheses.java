@@ -33,9 +33,10 @@
  */
 class Solution {
     public int longestValidParentheses(String s) {
-        //return sol1(s); 
-        //return sol2(s); 
-        return sol2a(s); 
+        //return sol1(s);  //5   DP
+        //return sol2(s);  //5   Stack
+        //return sol2a(s); //5.5 Stack: Refine sol2 -> sol2a
+        return sol3(s);    //6   Two pass scans: O(1) space
     }
     /*
      dp[i]: the length of the longest valid paretheses substring which ends at s[i].
@@ -106,5 +107,48 @@ class Solution {
             }
         }
         return res;
+    }
+
+    private int sol3(String s) {//H.W.: wrongly inaccurate matching
+        int num1 = 0;           //ex: '"())()(()"' should return 2 instead of 2
+        int leftNum = 0;
+        int rightNum = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                leftNum++;
+            }
+            else {
+                rightNum++;
+                if (leftNum == rightNum) {//H.W.: wrongly inaccurate matching <= if (leftNum >= rightNum) {
+                    num1 = Math.max(num1, rightNum * 2); //'"())()(()"'
+                }
+                else if (leftNum < rightNum) {//H.W.: missing if (leftNum < rightNum) {
+                    leftNum = 0;
+                    rightNum = 0;
+                }
+            }
+        }
+        //((): left=>right = 0, right=>left = 2
+        //()): left=>right = 2, right=>left = 0
+        int num2 = 0;
+        leftNum = 0;
+        rightNum = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            if (s.charAt(i) == ')') {
+                rightNum++;
+            }
+            else {
+                leftNum++;
+                if (leftNum == rightNum) {//H.W.: wrongly inaccurate matching <= if (leftNum <= rightNum) {
+                    num2 = Math.max(num2, leftNum * 2);//'"())()(()"'
+                }
+                else if (leftNum > rightNum) {//H.W.: missing if (leftNum > rightNum) {
+                    rightNum = 0;
+                    leftNum = 0;
+                }
+            }
+        }
+
+        return Math.max(num1, num2);
     }
 }
