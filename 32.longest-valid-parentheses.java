@@ -36,7 +36,8 @@ class Solution {
         //return sol1(s);  //5   DP
         //return sol2(s);  //5   Stack
         //return sol2a(s); //5.5 Stack: Refine sol2 -> sol2a
-        return sol3(s);    //6   Two pass scans: O(1) space
+        //return sol3(s);  //6   Two pass scans: O(1) space [when to reset and when to collect]
+        return sol3a(s);   //5.5 One side counting: sol3 => sol3a  
     }
     /*
      dp[i]: the length of the longest valid paretheses substring which ends at s[i].
@@ -151,4 +152,36 @@ class Solution {
 
         return Math.max(num1, num2);
     }
+
+    private int sol3a(String s) {
+        int leftNum = 0, matchedNum1 = 0, max1 = 0;
+        for (int i = 0; i < s.length(); i++) {
+            leftNum += s.charAt(i) == '(' ? 1 : -1;
+            if (leftNum < 0) {
+                leftNum = 0;
+                matchedNum1 = 0;
+            }
+            else {
+                matchedNum1++;
+                if (leftNum == 0) {
+                    max1 = Math.max(max1, matchedNum1);
+                }
+            }
+        }
+        int rightNum = 0, matchedNum2 = 0, max2 = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            rightNum += s.charAt(i) == ')' ? 1 : -1;
+            if (rightNum < 0) {
+                rightNum = 0;
+                matchedNum2 = 0;
+            }
+            else {
+                matchedNum2++;
+                if (rightNum == 0) {
+                    max2 = Math.max(max2, matchedNum2);
+                }
+            }
+        }
+        return Math.max(max1, max2);
+    }               
 }
