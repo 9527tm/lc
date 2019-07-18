@@ -38,7 +38,8 @@ class Solution {
         //return sol2a(s); //5.5 Stack: Refine sol2 -> sol2a
         //return sol3(s);  //6   Two pass scans: O(1) space [when to reset and when to collect]
         //return sol3a(s); //5.5 One side counting: sol3 => sol3a  
-        return sol3b(s);   //6   One loop: sol3a => sol3b
+        //return sol3b(s); //6   One loop: sol3a => sol3b [NOTE: step and terminating condition]
+        return sol3c(s);   //6.5 Like two pointers: sol3b => sol3c
     }
     /*
      dp[i]: the length of the longest valid paretheses substring which ends at s[i].
@@ -190,14 +191,14 @@ class Solution {
         if (s.length() <= 0) {//H.W.: forgot the corner case when helper() LEGALLY accepts start > end
             return 0;
         }
-        int max1 = helper(s, 0, s.length() - 1, '(');
-        int max2 = helper(s, s.length() - 1, 0, ')');
+        int max1 = helper3b(s, 0, s.length() - 1, '(');
+        int max2 = helper3b(s, s.length() - 1, 0, ')');
         return Math.max(max1, max2);
     }
-    private int helper(String s, int start, int end, char openToken) {
+    private int helper3b(String s, int start, int end, char openToken) {
         int res = 0, openNum = 0, matachedLen = 0;
-        int step = start < end ? 1 : -1;
-        for (int i = start; i * step <= end; i += step) {//H.W.: Wrong loop terminating condition
+        int step = start <= end ? 1 : -1; //H.W.: wrong direction when start == end
+        for (int i = start; i * step <= end * step; i += step) {//H.W.: Wrong loop terminating condition
             openNum += s.charAt(i) == openToken ? 1 : -1;// <= for (...; i <= end;...) {
             if (openNum < 0) {
                 openNum = 0;
@@ -208,6 +209,31 @@ class Solution {
                 if (openNum == 0) {
                     res = Math.max(res, matachedLen);
                 }
+            }
+        }
+        return res;
+    }
+
+    private int sol3c(String s) {
+        int end1 = 0, end2 = s.length() - 1;
+        return end1 > end2 ? 0 : Math.max(helper3c(s, end1, end2, '('), helper3c(s, end2, end1, ')'));
+    }
+    private int helper3c(String s, int start, int end, char openToken) {
+        int res = 0, openNum = 0, closeNum = 0;//Pay attention to: terminating condition and step
+        int step = start <= end ? 1 : -1;
+        for (int i = start; i * step <= end * step; i += step) {
+            if (s.charAt(i) == openToken) {
+                openNum++;
+            }
+            else {
+                closeNum++;
+            }
+            if (openNum < closeNum) {
+                openNum = 0;
+                closeNum = 0;
+            }
+            else if (openNum == closeNum) {
+                res = Math.max(res, openNum + closeNum);
             }
         }
         return res;
