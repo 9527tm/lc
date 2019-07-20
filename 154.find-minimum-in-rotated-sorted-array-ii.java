@@ -42,7 +42,8 @@
  */
 class Solution {
     public int findMin(int[] nums) {
-        return sol1(nums); 
+        //return sol1(nums); 
+        return sol2(nums);
     }
     //why this works?
     /*1. when nums[left] == nums[right],      /        /
@@ -89,5 +90,22 @@ class Solution {
             }
         }
         return Math.min(nums[left], nums[right]);
+    }
+
+    private int sol2(int[] nums) {
+        int left = 0, right = nums.length - 1;
+        while (left < right) {//case 3
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == nums[right]) {
+                right--;
+            }
+            else if (nums[mid] > nums[right]) {//case 2.1
+                left = mid + 1;
+            }
+            else {//case 1 and 2.2
+                right = mid;
+            }
+        }
+        return nums[left];
     }
 }
