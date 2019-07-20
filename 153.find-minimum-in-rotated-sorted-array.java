@@ -37,9 +37,10 @@
  */
 class Solution {
     public int findMin(int[] nums) {
-        //return sol1(nums); //bs1 
-        //return sol2(nums); //bs2
-        return sol3(nums);   //bs2 + implict 2 cases
+        //return sol1(nums);  5   //bs1 
+        //return sol2(nums);  5   //bs2
+        //return sol3(nums);  5   //bs2 + implict 2 cases
+        return sol4(nums);  //5.5 //bs1 + implict 2 cases
     }
 
     private int sol1(int[] nums) {
@@ -88,6 +89,20 @@ class Solution {
             }
         }
         return Math.min(nums[left], nums[right]);
+    }
+
+    private int sol4(int[] nums) {
+        int left = 0, right = nums.length - 1;
+        while (left < right) {//or more efficient: while (left < right && nums[left] > nums[right]) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] > nums[right]) {//case 2.1
+                left = mid + 1;
+            }
+            else {//case 1 and case 2.2
+                right = mid;
+            }
+        }
+        return nums[left];
     }
 }
 
