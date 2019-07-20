@@ -42,9 +42,10 @@
  */
 class Solution {
     public int findMin(int[] nums) {
-        //return sol1(nums); 
-        //return sol2(nums);
-        return sol3(nums);
+        //return sol1(nums);  //5   simplify the problem into 153
+        //return sol2(nums);  //5   more concise than sol1
+        //return sol3(nums);  //5.5 logical thinking  and comprehensive categories.
+        return sol3a(nums);   //6.0 refine sol3
     }
     //why this works?
     /*1. when nums[left] == nums[right],      /        /
@@ -170,4 +171,32 @@ class Solution {
         }
         return nums[left];
     }
+
+    private int sol3a(int[] nums) {
+        int left = 0, right = nums.length - 1;
+        while (left < right) {
+            if (nums[left] < nums[right]) {//01111222
+                break;
+            }
+            else {//nums[left] >= nums[right]
+                int mid = left + (right - left) / 2;
+                if (nums[mid] > nums[right]) {//234501, 1234501
+                    left = mid + 1;
+                }
+                else if (nums[mid] < nums[right]) {//501234, 4501234
+                    right = mid;
+                }
+                else {//nums[mid] == nums[right]
+                    if (nums[left] > nums[right]) {//501222222
+                        right = mid;
+                    }
+                    else {//nums[left] == nums[right] == nums[mid] //201222222, 2222222012, 2222222222
+                        right--;
+                    }
+                }
+            }
+        }
+        return nums[left];
+    }
+
 }
