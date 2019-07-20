@@ -43,7 +43,8 @@
 class Solution {
     public int findMin(int[] nums) {
         //return sol1(nums); 
-        return sol2(nums);
+        //return sol2(nums);
+        return sol3(nums);
     }
     //why this works?
     /*1. when nums[left] == nums[right],      /        /
@@ -104,6 +105,67 @@ class Solution {
             }
             else {//case 1 and 2.2
                 right = mid;
+            }
+        }
+        return nums[left];
+    }
+    /*
+     Before Shifting:
+        case 0: [1,1,1,1,1,1,1] nums[left] = nums[right]
+        case 1: [0,1,1,1,1,1,2] nums[left] < nums[right]
+     
+     After Shifting:
+        case 1: [0,1,1,1,1,1,2] nums[left] < nums[right] (rotate n times of array length)
+                                (nums[mid]  < nums[right]) 
+                                ACTION: return nums[left]
+
+        case 2: [2,0,1,1,1,1,1] nums[left] > nums[right] (1 = nums[bp1] < nums[bp2] = 2)
+                                ACTION: if (nums[mid] > nums[right]): left <= mid + 1;
+                                        else                        : right <= mid;
+                                                   
+        case 3: [1,1,1,2,0,1,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1) 
+                                ACTION: if (nums[mid] > nums[right]): left <= mid + 1
+
+        case 4: [1,1,2,0,1,1,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1) 
+                                ACTION: if (nums[mid] < nums[right]): right <= mid
+                                
+        case 5: [1,1,1,1,2,0,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1) 
+                                ACTION: if (nums[mid] == nums[right]): right--
+                                DILEMMA: solution(0) is right to mid.
+
+        case 6: [1,2,0,1,1,1,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1)
+                                ACTION: if (nums[mid] == nums[right]): right--
+                                DILEMMA: solution(0) is left to mid.
+
+        case 7: [1,1,1,1,1,1,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1)
+                                ACTION: if (nums[mid] == nums[right]): right--
+                                DILEMMA: solution(1) is left at mid.
+     */
+    private int sol3(int[] nums) {
+        int left = 0, right = nums.length - 1;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[left] < nums[right]) {//0123345
+                break;
+            }
+            else if (nums[left] > nums[right]) {
+                if (nums[mid] > nums[right]) {//2334501
+                    left = mid + 1;
+                }
+                else {//4501233, 4501111
+                    right = mid;
+                }
+            }
+            else {//nums[left] == nums[right]
+                if (nums[mid] > nums[right]) {//2333012
+                    left = mid + 1;
+                }
+                else if (nums[mid] < nums[right]) {//23012
+                    right = mid;
+                }
+                else {//222222012, 2012222222, 2222222222
+                    right--;
+                }
             }
         }
         return nums[left];
