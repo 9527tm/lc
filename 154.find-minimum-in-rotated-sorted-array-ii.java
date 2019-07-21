@@ -117,7 +117,7 @@ class Solution {
      
      After Shifting:
         case 1: [0,1,1,1,1,1,2] nums[left] < nums[right] (rotate n times of array length)
-                                (nums[mid]  < nums[right]) 
+                                (nums[mid] < nums[right]) 
                                 ACTION: return nums[left]
 
         case 2: [2,0,1,1,1,1,1] nums[left] > nums[right] (1 = nums[bp1] < nums[bp2] = 2)
@@ -191,6 +191,11 @@ class Solution {
                         right = mid;
                     }
                     else {//nums[left] == nums[right] == nums[mid] //201222222, 2222222012, 2222222222
+                        /*if (right >= 1 && (nums[right - 1] > nums[right]) {//2222222342
+                            return nums[right];
+                          } //if the index of minimum (break point index is requested): 
+                            // /discuss/48808/My-pretty-simple-code-to-solve-it/225388
+                         */
                         right--;
                     }
                 }
@@ -198,5 +203,4 @@ class Solution {
         }
         return nums[left];
     }
-
 }
