@@ -44,8 +44,9 @@ class Solution {
     public int findMin(int[] nums) {
         //return sol1(nums);  //5   simplify the problem into 153
         //return sol2(nums);  //5   more concise than sol1
-        //return sol3(nums);  //5.5 logical thinking  and comprehensive categories.
-        return sol3a(nums);   //6.0 refine sol3
+        //return sol3(nums);  //5.5 logical thinking and comprehensive categories (8 cases).
+        //return sol3a(nums); //6.0 refine sol3
+        return sol4(nums);    //6.5 complete but few categories (3 cases)
     }
     //why this works?
     /*1. when nums[left] == nums[right],      /        /
@@ -115,30 +116,32 @@ class Solution {
         case 0: [1,1,1,1,1,1,1] nums[left] = nums[right]
         case 1: [0,1,1,1,1,1,2] nums[left] < nums[right]
      
-     After Shifting:
+     After Shifting: (similarly to 9 cases disuccion in //discuss/48808/My-pretty-simple-code-to-solve-it/281823)
         case 1: [0,1,1,1,1,1,2] nums[left] < nums[right] (rotate n times of array length)
                                 (nums[mid] < nums[right]) 
                                 ACTION: return nums[left]
 
-        case 2: [2,0,1,1,1,1,1] nums[left] > nums[right] (1 = nums[bp1] < nums[bp2] = 2)
+        case 2: [2,3,4,5,6,0,1] nums[left] > nums[right] (1 = nums[bp1] < nums[bp2] = 2)
                                 ACTION: if (nums[mid] > nums[right]): left <= mid + 1;
-                                        else                        : right <= mid;
                                                    
-        case 3: [1,1,1,2,0,1,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1) 
+        case 3: [4,5,1,1,1,1,1] nums[left] > nums[right] (1 = nums[bp1] < nums[bp2] = 4)
+                [4,5,1,1,1,1,2] ACTION: if (nums[mid] <= nums[right]): right <= mid;
+
+        case 4: [1,1,1,2,0,1,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1) 
                                 ACTION: if (nums[mid] > nums[right]): left <= mid + 1
 
-        case 4: [1,1,2,0,1,1,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1) 
+        case 5: [1,1,2,0,1,1,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1) 
                                 ACTION: if (nums[mid] < nums[right]): right <= mid
                                 
-        case 5: [1,1,1,1,2,0,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1) 
+        case 6: [1,1,1,1,2,0,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1) 
                                 ACTION: if (nums[mid] == nums[right]): right--
                                 DILEMMA: solution(0) is right to mid.
 
-        case 6: [1,2,0,1,1,1,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1)
+        case 7: [1,2,0,1,1,1,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1)
                                 ACTION: if (nums[mid] == nums[right]): right--
                                 DILEMMA: solution(0) is left to mid.
 
-        case 7: [1,1,1,1,1,1,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1)
+        case 8: [1,1,1,1,1,1,1] nums[left] = nums[right] (1 = nums[bp1] = nums[bp2] = 1)
                                 ACTION: if (nums[mid] == nums[right]): right--
                                 DILEMMA: solution(1) is left at mid.
      */
@@ -191,13 +194,39 @@ class Solution {
                         right = mid;
                     }
                     else {//nums[left] == nums[right] == nums[mid] //201222222, 2222222012, 2222222222
-                        /*if (right >= 1 && (nums[right - 1] > nums[right]) {//2222222342
+                        /*if (nums[right - 1] > nums[right]) {//2222222342
                             return nums[right];
-                          } //if the index of minimum (break point index is requested): 
+                          } //if the index of minimum (the fast minimum / the last maximum index is requested): 
                             // /discuss/48808/My-pretty-simple-code-to-solve-it/225388
                          */
                         right--;
                     }
+                }
+            }
+        }
+        return nums[left];
+    }
+
+    private int sol4(int[] nums) {///discuss/167981/Beats-100-Binary-Search-with-Explanations
+        int left = 0, right = nums.length - 1;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[left] > nums[mid]) {/*the minimum is in the unsorted range: [left, mid], otherwise nums[left] <= nums[mid] (sorted)*/
+                right = mid;
+            }
+            else if (nums[mid] > nums[right]) {/*the minimum should be in: [mid, right], otherwise nums[mid] <= nums[right] (sorted)*/
+                left = mid + 1;
+            }     //           <,=          <,=
+            else {//nums[left] <= nums[mid] <= nums[right]
+                if (nums[left] < nums[right]) {///discuss/167981/Beats-100-Binary-Search-with-Explanations/214284
+                    return nums[left];
+                }
+                else {//nums[left] == nums[right] == nums[mid]
+                    /*if (nums[right] < nums[right - 1]) {///discuss/48808/My-pretty-simple-code-to-solve-it/225388
+                        return nums[right]; //return the index of minimum 
+                      }
+                     */
+                     right--; /*deal with the dilemma*/
                 }
             }
         }
