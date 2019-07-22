@@ -39,7 +39,9 @@
  */
 class Solution {
     public int search(int[] nums, int target) {
-        return sol1(nums, target); 
+        //return sol1(nums, target); //searching on 2 halves
+        //return sol2(nums, target);   //min index + 2 normal binary searches
+        return sol3(nums, target); //min index + 1 mapped binary search
     }
     private int sol1(int[] nums, int target) {
         int left = 0, right = nums.length - 1;
@@ -94,7 +96,7 @@ class Solution {
                 break;
             }
         }
-        return left; //when nums.length = 0, we return left = 0.
+        return left; //even when nums.length = 0, we still return left = 0.
     }
 
     private int binarySearch(int[] nums, int left, int right, int rotateStep, int target) {
