@@ -79,11 +79,11 @@ class Solution {
     */
     private int sol1(int[] nums) {
         int left = 0, right = nums.length - 1;
-        while (left + 1 < right) {
-            if (nums[left] == nums[right]) {
-                left++;
-                continue;
-            }
+        while (left + 1 < right) {          ///discuss/48815/Only-two-more-lines-code-on-top-of-the-solution-for-Part-I
+            if (nums[left] == nums[right]) {//equal condition can be moved out while loop,
+                left++;                     //since only one equal sequence is broken 
+                continue;                   //and placed to the head and tail.
+            }                               //it will be the best to furtherly compare nums[mid] = nums[left] as sol3/4.
             int mid = left + (right - left) / 2;
             if (nums[mid] <= nums[right]) {
                 right = mid;
@@ -99,7 +99,14 @@ class Solution {
         int left = 0, right = nums.length - 1;
         while (left < right) {//case 3
             int mid = left + (right - left) / 2;
-            if (nums[mid] == nums[right]) {
+            if (nums[mid] == nums[right]) {//needs further comparision: nums[left] == nums[mid] as sol3/4
+                /*if (nums[left] == nums[mid]) {
+                    right--;
+                  }
+                  else {
+                    right = mid;
+                  }
+                 *////discuss/48817/One-simple-and-clear-method-with-O(1)-space-and-worst-O(n)-time
                 right--;
             }
             else if (nums[mid] > nums[right]) {//case 2.1
@@ -210,11 +217,11 @@ class Solution {
     private int sol4(int[] nums) {///discuss/167981/Beats-100-Binary-Search-with-Explanations
         int left = 0, right = nums.length - 1;
         while (left < right) {
-            int mid = left + (right - left) / 2;
-            if (nums[left] > nums[mid]) {/*the minimum is in the unsorted range: [left, mid], otherwise nums[left] <= nums[mid] (sorted)*/
+            int mid = left + (right - left) / 2;/*nums[left] > nums[mid] && nums[mid] > nums[right]: Impossible to have two unsorted ranges!*/
+            if (nums[left] > nums[mid]) {/*the minimum is in the unsorted range: (left, mid], otherwise nums[left] <= nums[mid] (sorted)*/
                 right = mid;
             }
-            else if (nums[mid] > nums[right]) {/*the minimum should be in: [mid, right], otherwise nums[mid] <= nums[right] (sorted)*/
+            else if (nums[mid] > nums[right]) {/*the minimum should be in: (mid, right], otherwise nums[mid] <= nums[right] (sorted)*/
                 left = mid + 1;
             }     //           <,=          <,=
             else {//nums[left] <= nums[mid] <= nums[right]
