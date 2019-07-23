@@ -40,7 +40,8 @@ class Solution {
         //return sol1(nums);  5   //bs1 
         //return sol2(nums);  5   //bs2
         //return sol3(nums);  5   //bs2 + implict 2 cases
-        return sol4(nums);  //5.5 //bs1 + implict 2 cases
+        //return sol4(nums);  5.5 //bs1 + implict 2 cases
+        return sol5(nums);  //5.5 //follow up: compatible for asceding / descending rotated array.
     }
 
     private int sol1(int[] nums) {
@@ -103,6 +104,36 @@ class Solution {
             }
         }
         return nums[left];
+    }
+
+    private int sol5(int[] nums) {//6 cases: return min when ascending or descending on rotated array.
+        int left = 0, right = nums.length - 1;
+        while (left + 1 < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[right] < nums[left]) {
+                if (nums[mid] > nums[left]) {//34567812: 2 ascending subarrays
+                    left = mid + 1;
+                }
+                else if (nums[mid] < nums[right]) {//78123456: 2 ascending subarrays
+                    right = mid;
+                }
+                else {//nums[right] < nums[mid] < nums[left] //87654321: 1 descending array
+                    return nums[right]; //min
+                }
+            }
+            else {//nums[left] < nums[right]
+                if (nums[mid] > nums[right]) {//32187654: 2 descending subarrays
+                    right = mid - 1;
+                }
+                else if (nums[mid] < nums[left]) {//65432187: 2 descending subarrays
+                    left = mid;
+                }
+                else {//nums[left] < nums[mid] < nums[right] //12345678: 1 ascending array
+                    return nums[left]; //min
+                }
+            }
+        }
+        return Math.min(nums[left], nums[right]);
     }
 }
 
