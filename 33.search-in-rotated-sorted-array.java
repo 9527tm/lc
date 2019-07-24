@@ -41,7 +41,8 @@ class Solution {
     public int search(int[] nums, int target) {
         //return sol1(nums, target); //searching on 2 halves
         //return sol2(nums, target);   //min index + 2 normal binary searches
-        return sol3(nums, target); //min index + 1 mapped binary search
+        //return sol3(nums, target); //min index + 1 mapped binary search
+        return sol4(nums, target); //+00 and -00 are used as sentinels
     }
     private int sol1(int[] nums, int target) {
         int left = 0, right = nums.length - 1;
@@ -106,12 +107,31 @@ class Solution {
             int mid = left + (right - left) / 2;
             int midValue = nums[mid % nums.length];
             if (midValue == target) {
-                return mid % nums.length;
-            }
+                return mid % nums.length; //H.W.: return mid;
+            }                             //      <= forgot to unmap the index before return:
             else if (midValue < target) {
                 left = mid + 1;
             }
             else {//(midValue > target)
+                right = mid - 1;
+            }
+        }
+        return -1;
+    }
+    
+    private int sol4(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            int midVal = (nums[0] <= nums[mid]) == (nums[0] <= target) ? nums[mid] :
+                         nums[0] <= nums[mid] ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+            if (midVal == target) {
+                return mid;
+            }
+            else if (midVal < target) {
+                left = mid + 1;
+            }
+            else {//midVal > target
                 right = mid - 1;
             }
         }
