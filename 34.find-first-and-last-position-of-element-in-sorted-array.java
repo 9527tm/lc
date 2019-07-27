@@ -34,7 +34,8 @@
 class Solution {
     public int[] searchRange(int[] nums, int target) {
         //return sol1(nums, target); 
-        return sol2(nums, target); 
+        //return sol2(nums, target); 
+        return sol3(nums, target); 
     }
 
     private int[] sol1(int[] nums, int target) {
@@ -100,9 +101,9 @@ class Solution {
         return left;
     }
 
-    private int[] sol3(int[] nums, int target) {
-        return findRange(nums, target, 0, nums.length - 1);
-    }
+    private int[] sol3(int[] nums, int target) {///discuss/14707/9-11-lines-O(log-n)
+        return findRange(nums, target, 0, nums.length - 1);//Why O(lgN) instead of O(N)?
+    }                                                      //worst case://[0,1,1,...,1,1,2], 1
     private int[] findRange(int[] nums, int target, int left, int right) {
         if (left > right || nums[left] > target || nums[right] < target) {
             return new int[] {-1, -1};
