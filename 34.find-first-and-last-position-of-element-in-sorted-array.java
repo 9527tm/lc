@@ -99,4 +99,23 @@ class Solution {
         }
         return left;
     }
+
+    private int[] sol3(int[] nums, int target) {
+        return findRange(nums, target, 0, nums.length - 1);
+    }
+    private int[] findRange(int[] nums, int target, int left, int right) {
+        if (left > right || nums[left] > target || nums[right] < target) {
+            return new int[] {-1, -1};
+        }//now: nums[left] <= target <= nums[right]
+        if (nums[left] == nums[right]) {// both ends == target
+            return new int[] {left, right};
+        }//now: nums[left] < nums[right] (target is between both ends
+        int mid = left + (right - left) / 2;
+        int[] resMid = (nums[mid] == target) ? new int[] {mid, mid} : new int[] {-1, -1};
+        int[] resLeft = findRange(nums, target, left, mid - 1);
+        int[] resRight = findRange(nums, target, mid + 1, right);
+        int start = resLeft[0] != -1 ? resLeft[0] : resMid[0] != -1 ? resMid[0] : resRight[0];
+        int end = resRight[1] != -1 ? resRight[1] : resMid[1] != -1 ? resMid[1] :resLeft[1];
+        return new int[] {start, end};
+    }
 }
