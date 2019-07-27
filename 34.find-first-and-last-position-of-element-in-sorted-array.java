@@ -33,7 +33,8 @@
  */
 class Solution {
     public int[] searchRange(int[] nums, int target) {
-        return sol1(nums, target); 
+        //return sol1(nums, target); 
+        return sol2(nums, target); 
     }
 
     private int[] sol1(int[] nums, int target) {
@@ -69,5 +70,33 @@ class Solution {
         return nums.length <= 0 ? -1 :  
                nums[right] == target ? right : //H.W.: wrongly choose left before right for last index
                nums[left] == target ? left : -1;
+    }
+
+    private int[] sol2(int[] nums, int target) {
+        int index1 = findSmallestNoLessThan(nums, target);
+        if (index1 >= nums.length || nums[index1] != target) {
+            return new int[] {-1, -1};
+        }
+        if (target >= Integer.MAX_VALUE) {
+            return new int[] {index1, nums.length - 1};
+        }
+        int index2 = findSmallestNoLessThan(nums, target + 1);
+        return new int[] {index1, index2 - 1};
+    }
+    private int findSmallestNoLessThan(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] < target) {
+                left = mid + 1;
+            }
+            else {
+                right = mid;
+            }
+        }
+        if (left < nums.length && nums[left] < target) {
+            left += 1;//H.W.: wrong index2 <= forgot to handle the last one elem
+        }
+        return left;
     }
 }
