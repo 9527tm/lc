@@ -33,9 +33,10 @@
  */
 class Solution {
     public int[] searchRange(int[] nums, int target) {
-        //return sol1(nums, target); 
-        //return sol2(nums, target); 
-        return sol3(nums, target); 
+        //return sol1(nums, target); //5   two binary search: first / last occurrence
+        //return sol2(nums, target); //5   one binary search but twice uses: smallest larger or equal
+        //return sol3(nums, target); //5.5 one divide and conquer: tricky proof of O(lgN)
+        return sol3a(nums, target);  //5.5 optimized merging from two sections: sol3 => sol3a
     }
 
     private int[] sol1(int[] nums, int target) {
@@ -119,4 +120,26 @@ class Solution {
         int end = resRight[1] != -1 ? resRight[1] : resMid[1] != -1 ? resMid[1] :resLeft[1];
         return new int[] {start, end};
     }
+
+    private int[] sol3a(int[] nums, int target) {
+        return findRange3a(nums, target, 0, nums.length - 1);
+    }
+    private int[] findRange3a(int[] nums, int target, int left, int right) {
+        if (left > right || nums[left] > target || nums[right] < target) {
+            return new int[] {-1, -1};
+        }
+        if (nums[left] == nums[right]) {//nums[left] == target == nums[right]
+            return new int[] {left, right};
+        }
+        //nums[left] < nums[right], and target between both ends
+        int mid = left + (right - left) / 2;
+        int[] resLeft = findRange3a(nums, target, left, mid);//Tricky here: otherwise [left, mid - 1] 
+        int[] resRight = findRange3a(nums, target, mid + 1, right);//and [mid, right] will be endless recursion.
+        int start = resLeft[0] != -1 ? resLeft[0] : resRight[0];  //test case: [0,1],1
+        int end = resRight[1] != -1 ? resRight[1] : resLeft[1];
+        return new int[] {start, end};
+    }
+
+
+
 }
