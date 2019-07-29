@@ -50,7 +50,8 @@ class Solution {
     public int searchInsert(int[] nums, int target) {
         //return sol1(nums, target); 
         //return sol2(nums, target); 
-        return sol3(nums, target); 
+        //return sol3(nums, target); 
+        return sol4(nums, target);
     }
     private int sol1(int[] nums, int target) {
         int left = 0, right = nums.length - 1;
@@ -96,7 +97,7 @@ class Solution {
         }                        //                       all the elem in it are smaller than target
         return left;             //                       binary search ends at: mid = left > right = mid - 1
     }                            //if nums[mid] > target: the range is shrinked to [left, mid - 1]
-}                                //   if there is no one elem in it larger or equal target:
+                                 //   if there is no one elem in it larger or equal target:
                                  //                       binary search ends at: mid = left > right = mid - 1
                                  //   if there is at least one elem in it larget or equal target:
                                  //                       we assume that elem is nums[mid - 1] or nums[mid - k - 1] (k >= 0)
@@ -104,4 +105,10 @@ class Solution {
                                  //in one word, we return "left" which is equal to "right + 1" when binary search ends.
                                  //similar tricks:
                                  //1. /find-first-and-last-position-of-element-in-sorted-array/discuss/14910/The-insert-position-trick
-                                 //2. /search-insert-position/discuss/15080/My-8-line-Java-solution
+                                 //2. /search-insert-position/discuss/15080/My-8-line-Java-solution/256658
+                                 //3. /search-insert-position/discuss/15101/C++-O(logn)-Binary-Search-that-handles-duplicate
+   private int sol4(int[] nums, int target) {
+        int index = Arrays.binarySearch(nums, target); //Not work for dumplicate elems.
+        return index >= 0 ? index : -(index + 1);
+   }
+}
