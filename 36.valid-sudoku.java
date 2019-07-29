@@ -82,7 +82,8 @@
 class Solution {
     public boolean isValidSudoku(char[][] board) {
         //return sol1(board);       
-        return sol1a(board);       
+        //return sol1a(board);       
+        return sol2(board);       
     }
     private boolean sol1(char[][] board) {
         Set<Character> set = new HashSet<>();
@@ -146,5 +147,36 @@ class Solution {
             }
         }
         return res;
+    }
+
+    private boolean sol2(char[][] board) {
+        int n = board.length, m = n / 3;
+        for (int i = 0; i < n; i++) {
+            boolean[] row = new boolean[n], col = new boolean[n], box = new boolean[n];
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] != '.') {
+                    if (row[board[i][j] - '1']) {
+                        return false;
+                    }
+                    row[board[i][j] - '1'] = true;
+                }
+                if (board[j][i] != '.') {
+                    if (col[board[j][i] - '1']) {
+                        return false;
+                    }
+                    col[board[j][i] - '1'] = true;
+                }
+                int x0 = i / m * m, y0 = i % m * m;
+                int x1 = j / m, y1 = j % m;
+                int k = x0 + x1, l = y0 + y1;
+                if (board[k][l] != '.') {
+                    if (box[board[k][l] - '1']) {
+                        return false;
+                    }
+                    box[board[k][l] - '1'] = true;
+                }
+            }
+        }
+        return true;
     }
 }
