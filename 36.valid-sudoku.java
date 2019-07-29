@@ -81,10 +81,11 @@
  */
 class Solution {
     public boolean isValidSudoku(char[][] board) {
-        //return sol1(board);       
-        //return sol1a(board);       
-        //return sol2(board);       
-        return sol3(board);       
+        //return sol1(board);    //5.5  clear and approachable and definitely O(N) space 
+        //return sol1a(board);   //5    swap the i, j for row, col and also O(N) space
+        //return sol2(board);    //5    one pass and O(N) space but tricky coordinate transformation
+        //return sol3(board);    //5    one pass and potentially O(N*N) space
+        return sol4(board);      //4.5  one pass and O(N*N) space, potentially O(N*M) time
     }
     private boolean sol1(char[][] board) {
         Set<Character> set = new HashSet<>();
@@ -167,9 +168,9 @@ class Solution {
                     }
                     col[board[j][i] - '1'] = true;
                 }
-                int x0 = i / m * m, y0 = i % m * m;
-                int x1 = j / m, y1 = j % m;
-                int k = x0 + x1, l = y0 + y1;
+                int x0 = i / m * m, y0 = i % m * m;//Trikcy: Key Operation!
+                int x1 = j / m, y1 = j % m;        //the j-th elem in i-th box
+                int k = x0 + x1, l = y0 + y1;      //k, l = f(i, j)
                 if (board[k][l] != '.') {
                     if (box[board[k][l] - '1']) {
                         return false;
@@ -187,10 +188,10 @@ class Solution {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (board[i][j] != '.') {
+                    int k = i / m * m + j / m; //Tricky: Key Operation!
                     int rowBit = 1 << (board[i][j] - '1');
                     int colBit = 1 << (p + (board[i][j] - '1'));
                     int boxBit = 1 << (2 * p + (board[i][j] - '1'));
-                    int k = i / m * m + j / m;
                     if (((mask[i] & rowBit) != 0) || 
                         ((mask[j] & colBit) != 0) ||
                         ((mask[k] & boxBit) != 0)) {
@@ -199,6 +200,25 @@ class Solution {
                     mask[i] |= rowBit;
                     mask[j] |= colBit;
                     mask[k] |= boxBit;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean sol4(char[][] board) {
+        Set<String> set = new HashSet<>();
+        int n = board.length, m = n / 3;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] != '.') {
+                    int k = i / m * m + j / m;
+                    String row = "num (" + board[i][j] + ") in row (" + i + ")";
+                    String col = "num (" + board[i][j] + ") in col (" + j + ")";
+                    String box = "num (" + board[i][j] + ") in box (" + k + ")";
+                    if (!set.add(row) || !set.add(col) || !set.add(box)) {
+                        return false;
+                    }
                 }
             }
         }
