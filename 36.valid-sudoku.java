@@ -81,7 +81,8 @@
  */
 class Solution {
     public boolean isValidSudoku(char[][] board) {
-        return sol1(board);       
+        //return sol1(board);       
+        return sol1a(board);       
     }
     private boolean sol1(char[][] board) {
         Set<Character> set = new HashSet<>();
@@ -118,5 +119,35 @@ class Solution {
             }
         }
         return true;
+    }
+
+    private boolean sol1a(char[][] board) {
+        boolean res = true;
+        int n = board.length, m = n / 3;
+        for (int i = 0; res && i < n; i++) {
+            res = check(board, i, 0, 1, n);
+        }
+        for (int j = 0; res && j < n; j++) {
+            res = check(board, 0, j, n, 1);
+        }
+        for (int i = 0; res && i < n; i += m) {
+            for (int j = 0; res && j < n; j += m) {
+                res = check(board, i, j, m, m);
+            }
+        }
+        return res;
+    }
+    private boolean check(char[][] board, int top, int left, int height, int width) {
+        boolean res = true;
+        boolean[] set = new boolean[height * width];
+        for (int i = top; res && i < top + height; i++) {
+            for (int j = left; res && j < left + width; j++) {
+                if (board[i][j] != '.') {
+                    res = !set[board[i][j] - '1']; //H.W.: off by one <= set[board[i][j] - '0']
+                    set[board[i][j] - '1'] = true; //H.W.: the same above
+                }
+            }
+        }
+        return res;
     }
 }
