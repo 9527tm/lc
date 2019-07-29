@@ -85,7 +85,8 @@ class Solution {
         //return sol1a(board);   //5    swap the i, j for row, col and also O(N) space
         //return sol2(board);    //5    one pass and O(N) space but tricky coordinate transformation
         //return sol3(board);    //5    one pass and potentially O(N*N) space
-        return sol4(board);      //4.5  one pass and O(N*N) space, potentially O(N*M) time
+        //return sol4(board);    //4.5  one pass and O(N*N) space, potentially O(N*M) time
+        return sol5(board);      //4.5  one pass and O(N*N) space, simple however
     }
     private boolean sol1(char[][] board) {
         Set<Character> set = new HashSet<>();
@@ -219,6 +220,26 @@ class Solution {
                     if (!set.add(row) || !set.add(col) || !set.add(box)) {
                         return false;
                     }
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean sol5(char[][] board) {
+        int n = board.length, m = n / 3;
+        boolean[][] row = new boolean[n][n], col = new boolean[n][n], box = new boolean[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] != '.') {
+                    int num = board[i][j] - '1';
+                    int k = i / m * m + j / m; //Tricky: Key Operation!
+                    if (row[i][num] || col[j][num] || box[k][num]) {
+                        return false;
+                    }
+                    row[i][num] = true;
+                    col[j][num] = true;
+                    box[k][num] = true;
                 }
             }
         }
