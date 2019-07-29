@@ -83,7 +83,8 @@ class Solution {
     public boolean isValidSudoku(char[][] board) {
         //return sol1(board);       
         //return sol1a(board);       
-        return sol2(board);       
+        //return sol2(board);       
+        return sol3(board);       
     }
     private boolean sol1(char[][] board) {
         Set<Character> set = new HashSet<>();
@@ -149,7 +150,7 @@ class Solution {
         return res;
     }
 
-    private boolean sol2(char[][] board) {
+    private boolean sol2(char[][] board) {///valid-sudoku/discuss/15450/Shared-my-concise-Java-code
         int n = board.length, m = n / 3;
         for (int i = 0; i < n; i++) {
             boolean[] row = new boolean[n], col = new boolean[n], box = new boolean[n];
@@ -174,6 +175,30 @@ class Solution {
                         return false;
                     }
                     box[board[k][l] - '1'] = true;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean sol3(char[][] board) {
+        int n = board.length, m = n / 3, p = 10;
+        int[] mask = new int[n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] != '.') {
+                    int rowBit = 1 << (board[i][j] - '1');
+                    int colBit = 1 << (p + (board[i][j] - '1'));
+                    int boxBit = 1 << (2 * p + (board[i][j] - '1'));
+                    int k = i / m * m + j / m;
+                    if (((mask[i] & rowBit) != 0) || 
+                        ((mask[j] & colBit) != 0) ||
+                        ((mask[k] & boxBit) != 0)) {
+                        return false;
+                    }
+                    mask[i] |= rowBit;
+                    mask[j] |= colBit;
+                    mask[k] |= boxBit;
                 }
             }
         }
