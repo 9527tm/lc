@@ -48,10 +48,12 @@
  */
 class Solution {
     public int searchInsert(int[] nums, int target) {
-        //return sol1(nums, target); 
-        //return sol2(nums, target); 
-        //return sol3(nums, target); 
-        return sol4(nums, target);
+        //return sol1(nums, target); //5. (NO Duplicates) by product from standard binary search
+        return sol2(nums, target);   //5.5 (YES Duplicates) first occurrence / smallest larger or equal:
+                                     //                     post-processing + binary search variant 1
+                                     //                     -- the most explanationable solution!
+        //return sol3(nums, target); //5. (YES Duplicates) a new binary search variant for first occurrence
+        //return sol4(nums, target); //5. (NO Duplicates) From Java library binary search  
     }
     private int sol1(int[] nums, int target) {
         int left = 0, right = nums.length - 1;
