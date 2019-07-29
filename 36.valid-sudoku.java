@@ -124,11 +124,8 @@ class Solution {
     private boolean sol1a(char[][] board) {
         boolean res = true;
         int n = board.length, m = n / 3;
-        for (int i = 0; res && i < n; i++) {
-            res = check(board, i, 0, 1, n);
-        }
-        for (int j = 0; res && j < n; j++) {
-            res = check(board, 0, j, n, 1);
+        for (int k = 0; res && k < n; k++) {
+            res = check(board, 0, k, n, 1) && check(board, k, 0, 1, n);
         }
         for (int i = 0; res && i < n; i += m) {
             for (int j = 0; res && j < n; j += m) {
