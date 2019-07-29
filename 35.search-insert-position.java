@@ -49,7 +49,8 @@
 class Solution {
     public int searchInsert(int[] nums, int target) {
         //return sol1(nums, target); 
-        return sol2(nums, target); 
+        //return sol2(nums, target); 
+        return sol3(nums, target); 
     }
     private int sol1(int[] nums, int target) {
         int left = 0, right = nums.length - 1;
@@ -81,4 +82,26 @@ class Solution {
         }
         return (left < nums.length && nums[left] < target) ? left + 1 : left;
     }
-}
+
+    private int sol3(int[] nums, int target) {//new variant for smallest larger or equal 
+        int left = 0, right = nums.length - 1;//       also for first occurence
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] < target) {
+                left = mid + 1;
+            }
+            else {
+                right = mid - 1; //why does this work?
+            }                    //if nums[mid] = target: the range is shrinked to [left, mid - 1]
+        }                        //                       all the elem in it are smaller than target
+        return left;             //                       binary search ends at: mid = left > right = mid - 1
+    }                            //if nums[mid] > target: the range is shrinked to [left, mid - 1]
+}                                //   if there is no one elem in it larger or equal target:
+                                 //                       binary search ends at: mid = left > right = mid - 1
+                                 //   if there is at least one elem in it larget or equal target:
+                                 //                       we assume that elem is nums[mid - 1] or nums[mid - k - 1] (k >= 0)
+                                 //                       certainly the range [left, mid - 1] covers the answer.
+                                 //in one word, we return "left" which is equal to "right + 1" when binary search ends.
+                                 //similar tricks:
+                                 //1. /find-first-and-last-position-of-element-in-sorted-array/discuss/14910/The-insert-position-trick
+                                 //2. /search-insert-position/discuss/15080/My-8-line-Java-solution
