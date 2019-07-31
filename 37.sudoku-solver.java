@@ -44,7 +44,8 @@ class Solution {
 
     final int n = 9, m = n / 3, f = 100;
     public void solveSudoku(char[][] board) {
-        sol1(board); 
+        //sol1(board);
+        sol2(board);
     }
     private void sol1(char[][] board) {
         int[][] row = new int[n][n], col = new int[n][n], box = new int[n][n];
@@ -95,6 +96,48 @@ class Solution {
                 row[i][num] = 0;
                 col[j][num] = 0;
                 box[k][num] = 0;
+            }
+        }
+        return false;
+    }
+
+
+    private void sol2(char[][] board) {
+        boolean[][] row = new boolean[n][n], col = new boolean[n][n], box = new boolean[n][n];
+        for (int p = 0; p < n * n; p++) {
+            int i = p / n, j = p % n;
+            if (board[i][j] != '.') {
+                int k = i / m * m + j / m;
+                int num = board[i][j] - '1';
+                row[i][num] = true;
+                col[j][num] = true;
+                box[k][num] = true;
+            }
+        }
+        sol2(board, row, col, box, 0);
+    }
+    private boolean sol2(char[][] board, boolean[][] row, boolean[][] col, boolean[][] box, int p) {
+        if (p >= n * n) {
+            return true;
+        }
+        int i = p / n, j = p % n;
+        if (board[i][j] != '.') {
+            return sol2(board, row, col, box, p + 1);
+        }
+        int k = i / m * m + j / m;
+        for (int num = 0; num < n; num++) {
+            if (!row[i][num] && !col[j][num] && !box[k][num]) {
+                board[i][j] = (char)(num + '1');
+                row[i][num] = true;
+                col[j][num] = true;
+                box[k][num] = true;
+                if (sol2(board, row, col, box, p + 1)) {
+                    return true;
+                }
+                board[i][j] = '.';//H.W.: forgot to restore <= ..1.
+                row[i][num] = false;
+                col[j][num] = false;
+                box[k][num] = false;
             }
         }
         return false;
