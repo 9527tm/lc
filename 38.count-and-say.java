@@ -50,7 +50,8 @@
  */
 class Solution {
     public String countAndSay(int n) {
-        return sol1(n); 
+        //return sol1(n); 
+        return sol2(n); 
     }
 
     private String sol1(int n) {
@@ -61,12 +62,34 @@ class Solution {
             for (int j = 0; j < res.length(); j++) {
                 count++;
                 if (j >= res.length() - 1 || res.charAt(j) != res.charAt(j + 1)) {
-                    tmp += count + "" + res.charAt(j);
+                    tmp += count + "" + res.charAt(j); //H.W.: missing ... + " " + ...
                     count = 0;
                 }
             }
             res = tmp;
         }
         return res;
+    }
+
+    private String sol2(int n) {
+        StringBuilder res = new StringBuilder();
+        StringBuilder tmp = new StringBuilder();
+        res.append(1); //H.W.: missing initialization.
+        for (int i = 1; i < n; i++) {
+            int count = 0;
+            for (int j = 0; j < res.length(); j++) {
+                count++;
+                if (j >= res.length() - 1 || res.charAt(j) != res.charAt(j + 1)) {
+                    tmp.append(count);
+                    tmp.append(res.charAt(j));
+                    count = 0;
+                }
+            }
+            StringBuilder save = res; //H.W.: wrongly include swap operations into 
+            res = tmp;                //      for {
+            tmp = save;               //        ...
+            tmp.setLength(0);         //      }
+        }
+        return res.toString();
     }
 }
