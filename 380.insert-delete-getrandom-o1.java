@@ -75,7 +75,8 @@ class RandomizedSet {
     public boolean remove(int val) {
         //return sol1(val);
         //return sol2(val);
-        return sol3(val);
+        //return sol3(val);
+        return sol4(val);
     }
     
     /** Get a random element from the set. */
