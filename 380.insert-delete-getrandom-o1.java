@@ -73,16 +73,8 @@ class RandomizedSet {
     
     /** Removes a value from the set. Returns true if the set contained the specified element. */
     public boolean remove(int val) {
-        Integer index = map.remove(val);
-        if (index == null) {
-            return false;
-        }
-        Integer tailVal = list.remove(list.size() - 1); //careful removal by index in O(1) instead of by value in O(N)
-        if (index < list.size()) {
-            list.set(index, tailVal); //overwrite the deleted elem by the tail elem
-            map.put(tailVal, index);
-        }
-        return true;
+        //return sol1(val);
+        return sol2(val);
     }
     
     /** Get a random element from the set. */
@@ -91,6 +83,66 @@ class RandomizedSet {
         int randIndex = (int)(Math.random() * list.size());
         return list.get(randIndex);
     }
+
+    private boolean sol1(int val) {
+        Integer index = map.remove(val);
+        if (index == null) {
+            return false;
+        }
+        Integer tailVal = list.remove(list.size() - 1); //careful removal by int: index in O(1) instead of by value in O(N)
+        if (index < list.size()) {
+            list.set(index, tailVal); //overwrite the deleted elem by the tail elem
+            map.put(tailVal, index);
+        }
+        return true;
+    }
+
+    private boolean sol2(int val) {
+        Integer index = map.remove(val);
+        if (index == null) {
+            return false;
+        }
+        if (index == list.size() - 1) {
+            Integer dummyVal = list.remove(list.size() - 1); //remove by int(index) in O(1);
+            return true;
+        }
+        Integer tailVal = list.remove(list.size() - 1); //remove by int(index) in O(1);
+        list.set(index, tailVal);
+        map.put(tailVal, index);
+        return true;
+    }
+
+    private boolean sol3(int val) {
+        Integer index = map.remove(val);
+        if (index == null) {
+            return false;
+        }
+        list.set(index, list.get(list.size() - 1));
+        list.remove(list.size() - 1);
+        if (index < list.size()) {
+            map.put(list.get(index), index);
+        }
+        return true;
+    }
+
+    private boolean sol4(int val) {
+        Integer index = map.get(val);
+        if (index == null) {
+            return false;
+        }
+        if (index == list.size() - 1) {
+            list.remove(list.size() - 1);
+            map.remove(val);
+        }
+        else {
+            list.set(index, list.get(list.size() - 1));
+            map.put(list.get(index), index);
+            list.remove(list.size() - 1);
+            map.remove(val);
+        }
+        return true;
+    }
+
 }
 
 /**
