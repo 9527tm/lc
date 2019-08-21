@@ -74,7 +74,8 @@ class RandomizedSet {
     /** Removes a value from the set. Returns true if the set contained the specified element. */
     public boolean remove(int val) {
         //return sol1(val);
-        return sol2(val);
+        //return sol2(val);
+        return sol3(val);
     }
     
     /** Get a random element from the set. */
