@@ -55,10 +55,10 @@
  * 
  */
 class RandomizedCollection {
-    private Sol1 sol;
+    //private Sol1 sol = new Sol1();
+    private Sol2 sol = new Sol2();
     /** Initialize your data structure here. */
     public RandomizedCollection() {
-        sol = new Sol1();
     }
     
     /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
@@ -122,6 +122,46 @@ class RandomizedCollection {
         public int getRandom() {
             //assume dbList is not empty
             return dbList.get((int)(dbList.size() * Math.random()));
+        }
+    }
+
+    static class Sol2 implements InfRC {//int[] <=> class Slot: [0] = index, [1] = value
+        private List<int[]> dbList;
+        private Map<Integer, List<int[]>> indexMap;
+        public Sol2() {
+            dbList = new ArrayList<>();
+            indexMap = new HashMap<>();
+        }
+        public boolean insert(int val) {
+            List<int[]> indexList = indexMap.get(val);
+            if (indexList == null) {
+                indexList = new ArrayList<>();
+                indexMap.put(val, indexList);
+            }
+            int[] slot = new int[] {dbList.size(), val};
+            indexList.add(slot);
+            dbList.add(slot);
+            return indexList.size() == 1;
+        }
+        public boolean remove(int val) {
+            List<int[]> indexList = indexMap.get(val);
+            if (indexList == null) {
+                return false;
+            }
+            int[] slot = indexList.remove(indexList.size() - 1);
+            if (indexList.size() <= 0) {
+                indexMap.remove(val);
+            }
+            int[] slot2 = dbList.remove(dbList.size() - 1);
+            if (slot != slot2) {
+                slot2[0] = slot[0];
+                dbList.set(slot2[0], slot2);
+            }
+            return true;
+        }
+        public int getRandom() {
+            int[] slot = dbList.get((int)(dbList.size() * Math.random()));
+            return slot[1];
         }
     }
  }
