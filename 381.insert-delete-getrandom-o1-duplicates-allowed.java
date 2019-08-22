@@ -55,8 +55,8 @@
  * 
  */
 class RandomizedCollection {
-    //private Sol1 sol = new Sol1();
-    private Sol2 sol = new Sol2();
+    private Sol1 sol = new Sol1();
+    //private Sol2 sol = new Sol2();
     /** Initialize your data structure here. */
     public RandomizedCollection() {
     }
