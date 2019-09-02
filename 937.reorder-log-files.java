@@ -58,9 +58,9 @@
  */
 class Solution {
     public String[] reorderLogFiles(String[] logs) {
-        return sol1(logs); 
+        //return sol1(logs); 
+        return sol2(logs);
     }
-
     
     private String[] sol1(String[] logs) {
         Arrays.sort(logs, 
@@ -83,7 +83,6 @@ class Solution {
                     });
         return logs;
     }
-
     private boolean judgeDigitLog(String log) {
         for (int i = 0; i < log.length(); i++) {
             char ch = log.charAt(i);
@@ -92,5 +91,29 @@ class Solution {
             }
         }
         return true;
+    }
+
+    private String[] sol2(String[] logs) {
+        Arrays.sort(logs, new LogComparator());
+        return logs;
+    }
+    static class LogComparator implements Comparator<String> {
+        @Override
+        public int compare(String log1, String log2) {
+            String[] logArr1 = log1.split(" ", 2);
+            String[] logArr2 = log2.split(" ", 2);
+            String id1 = logArr1[0], text1 = logArr1[1];
+            String id2 = logArr2[0], text2 = logArr2[1];
+            boolean isDigitLog1 = text1.matches("([0-9]+ )*[0-9]+"); //H.W.: RegEX error => "([1-9]+ ) *[1-9]+"
+            boolean isDigitLog2 = text2.matches("([0-9]+ )*[0-9]+");
+            if (isDigitLog1 && isDigitLog2) {
+                return 0;
+            }
+            else if ((!isDigitLog1 && isDigitLog2) || (isDigitLog1 && !isDigitLog2)) {
+                return !isDigitLog1 ? -1 : 1;
+            }
+            int cmp = text1.compareTo(text2);
+            return cmp != 0 ? cmp : id1.compareTo(id2);
+        }
     }
 }
