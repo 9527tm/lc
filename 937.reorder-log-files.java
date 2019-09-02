@@ -58,8 +58,9 @@
  */
 class Solution {
     public String[] reorderLogFiles(String[] logs) {
-        //return sol1(logs); 
-        return sol2(logs);
+        //return sol1(logs); //4.5:
+        //return sol2(logs); //4.0:
+        return sol3(logs);   //5.0: simple but with full understanding of definition of "digit logs" and "letter logs".
     }
     
     private String[] sol1(String[] logs) {
@@ -115,5 +116,26 @@ class Solution {
             int cmp = text1.compareTo(text2);
             return cmp != 0 ? cmp : id1.compareTo(id2);
         }
+    }
+
+    private String[] sol3(String[] logs) {
+        Arrays.sort(logs, 
+                    (log1, log2) -> {
+                        String[] logArr1 = log1.split(" ", 2);
+                        String[] logArr2 = log2.split(" ", 2);
+                        String id1 = logArr1[0], text1 = logArr1[1];
+                        String id2 = logArr2[0], text2 = logArr2[1];
+                        boolean isLetterLog1 = Character.isLetter(text1.charAt(0)); //H.W.: not fully understand problem
+                        boolean isLetterLog2 = Character.isLetter(text2.charAt(0));
+                        if (isLetterLog1 && isLetterLog2) {
+                            int cmp = text1.compareTo(text2);
+                            return cmp != 0 ? cmp : id1.compareTo(id2);
+                        }
+                        else if (!isLetterLog1 && !isLetterLog2) {
+                            return 0;
+                        }
+                        return isLetterLog1 ? -1 : 1;
+                    });
+        return logs;
     }
 }
