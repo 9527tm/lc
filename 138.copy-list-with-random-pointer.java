@@ -62,7 +62,8 @@ class Node {
 class Solution {
     public Node copyRandomList(Node head) {
         //return sol1(head); 
-        return sol2(head); 
+        //return sol2(head); 
+        return sol3(head); 
     }
 
     private Node sol1(Node head) {
@@ -115,31 +116,32 @@ class Solution {
         return map.get(head);
     }
 
+    ///problems/copy-list-with-random-pointer/discuss/43491/A-solution-with-constant-space-complexity-O(1)-and-linear-time-complexity-O(N)
     private Node sol3(Node head) {
-        Node copyDummyHead = new Node();
-        Node copyTail = copyDummyHead;
         Node curr = head;
         while (curr != null) {
-            Node copyCurr = new Node(curr.val, null, null);
-            copyTail.next = copyCurr;
-            copyTail = copyCurr;
-            
-            Node next = curr.next;
-            curr.next = copyCurr;
-            copyCurr.random = curr;
-
-            curr = next;
+            Node copy = new Node(curr.val, curr.next, null); //H.W.: wrongly think => copy.random = curr
+            curr.next = copy;
+            curr = copy.next;
         }
 
-        for (Node copyCurr = copyDummyHead.next; 
-            copyCurr != null; 
-            copyCurr = copyCurr.next) {
-            Node origCurr = copyCurr.random;
-            Node origRandom = origCurr.random;
-            Node copyRandom = origRandom.next;
-            copyCurr.random = copyRandom;
+        curr = head;
+        while (curr != null) {
+            if (curr.random != null) {
+                curr.next.random = curr.random.next;
+            }
+            curr = curr.next.next;
         }
 
+        Node copyDummyHead = new Node();
+        Node copyPrev = copyDummyHead;
+        curr = head;
+        while (curr != null) {
+            copyPrev.next = curr.next;
+            copyPrev = copyPrev.next;
+            curr.next = curr.next.next;
+            curr = curr.next;
+        }
         return copyDummyHead.next;
     }
 }
