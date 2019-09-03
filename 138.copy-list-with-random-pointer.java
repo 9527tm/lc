@@ -61,6 +61,7 @@ class Node {
 */
 class Solution {
     public Node copyRandomList(Node head) {
+        //return sol1(head); 
         return sol1(head); 
     }
 
@@ -83,5 +84,34 @@ class Solution {
             tail = tail.next;
         }
         return dummyHead.next;
+    }
+
+    private Node sol2(Node head) {
+        if (head == null) {
+            return null;
+        }
+        Map<Node, Node> map = new HashMap<>();
+        map.put(head, new Node());
+        for (Node curr = head; curr != null; curr = curr.next) {
+            Node copy = map.get(curr);
+            copy.val = curr.val;
+            if (curr.next != null) {
+                Node copyNext = map.get(curr.next);
+                if (copyNext == null) {
+                    copyNext = new Node();
+                    map.put(curr.next, copyNext);
+                }
+                copy.next = copyNext;
+            }
+            if (curr.random != null) {
+                Node copyRandom = map.get(curr.random);
+                if (copyRandom == null) {
+                    copyRandom = new Node();
+                    map.put(curr.random, copyRandom);
+                }
+                copy.random = copyRandom;
+            } 
+        }
+        return map.get(head);
     }
 }
