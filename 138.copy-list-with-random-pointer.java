@@ -62,7 +62,7 @@ class Node {
 class Solution {
     public Node copyRandomList(Node head) {
         //return sol1(head); 
-        return sol1(head); 
+        return sol2(head); 
     }
 
     private Node sol1(Node head) {
@@ -113,5 +113,33 @@ class Solution {
             } 
         }
         return map.get(head);
+    }
+
+    private Node sol3(Node head) {
+        Node copyDummyHead = new Node();
+        Node copyTail = copyDummyHead;
+        Node curr = head;
+        while (curr != null) {
+            Node copyCurr = new Node(curr.val, null, null);
+            copyTail.next = copyCurr;
+            copyTail = copyCurr;
+            
+            Node next = curr.next;
+            curr.next = copyCurr;
+            copyCurr.random = curr;
+
+            curr = next;
+        }
+
+        for (Node copyCurr = copyDummyHead.next; 
+            copyCurr != null; 
+            copyCurr = copyCurr.next) {
+            Node origCurr = copyCurr.random;
+            Node origRandom = origCurr.random;
+            Node copyRandom = origRandom.next;
+            copyCurr.random = copyRandom;
+        }
+
+        return copyDummyHead.next;
     }
 }
