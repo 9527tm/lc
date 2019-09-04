@@ -61,7 +61,8 @@ class Solution {
     public int[][] updateMatrix(int[][] matrix) {
         //return sol1(matrix);
         //return sol2(matrix);
-        return sol3(matrix);
+        //return sol3(matrix);
+        return sol3a(matrix);
     }
 
     private int[][] sol1(int[][] matrix) {// O(m * n * (m * n)) / O(m * n) ===> TLE
@@ -166,5 +167,29 @@ class Solution {
             }
         }
         return res;
+    }
+
+    private int[][] sol3a(int[][] matrix) {
+        final int maxDist = Integer.MAX_VALUE - 1;
+        int m = matrix.length, n = matrix[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] != 0) {
+                    int upDist = i > 0 ? matrix[i - 1][j] : maxDist;
+                    int leftDist = j > 0 ? matrix[i][j - 1] : maxDist;
+                    matrix[i][j] = Math.min(maxDist, Math.min(upDist, leftDist) + 1);
+                }
+            }
+        }
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                if (matrix[i][j] != 0) {
+                    int lowDist = i < m - 1 ? matrix[i + 1][j] : maxDist;  //H.W.: off by one =>  i < m 
+                    int rightDist = j < n - 1 ? matrix[i][j + 1] : maxDist;//H.W.: off by one =>  j < n
+                    matrix[i][j] = Math.min(matrix[i][j], Math.min(lowDist, rightDist) + 1);
+                }
+            }
+        }
+        return matrix;
     }
 }
