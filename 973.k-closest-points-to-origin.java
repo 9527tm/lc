@@ -59,7 +59,8 @@
  */
 class Solution {
     public int[][] kClosest(int[][] points, int K) {
-        return sol1(points, K); 
+        //return sol1(points, K); 
+        return sol2(points, K); 
     }
 
     private int[][] sol1(int[][] points, int K) {
@@ -85,5 +86,44 @@ class Solution {
             res[K - 1 - i] = maxHeap.poll();
         }
         return res;
+    }
+
+    private int[][] sol2(int[][] points, int K) {
+        int left = 0, right = points.length - 1;
+        while (left <= right) {
+            int topN = partition(points, left, right) + 1; //topN includes: [< pivot][pivot]
+            if (topN < K) {
+                left = topN;
+            }
+            else if (topN > K) {
+                right = topN - 1; //H.W.: wrong corner case => right = topN;
+            }
+            else {
+                break;
+            }
+        }
+        return Arrays.copyOf(points, K);
+    }
+
+    private int partition(int[][] points, int left, int right) {
+        int pivot = left + (int)((right - left + 1) * Math.random());
+        swap(points, pivot, right);
+        int i = left;
+        for (int j = i; j < right; j++) {
+            if (sumOfSqr(points[j][0], points[j][1]) <
+                sumOfSqr(points[right][0], points[right][1])) {
+                swap(points, i++, j);
+            }
+        }
+        swap(points, i, right);
+        return i;
+    }
+    private void swap(int[][] array, int i, int j) {
+        int[] temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    private int sumOfSqr(int a, int b) {
+        return a * a + b * b;
     }
 }
