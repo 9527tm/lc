@@ -60,7 +60,8 @@
 class Solution {
     public int[][] kClosest(int[][] points, int K) {
         //return sol1(points, K); 
-        return sol2(points, K); 
+        //return sol2(points, K); 
+        return sol2a(points, K); 
     }
 
     private int[][] sol1(int[][] points, int K) {
@@ -100,6 +101,24 @@ class Solution {
             }
             else {
                 break;
+            }
+        }
+        return Arrays.copyOf(points, K);
+    }
+
+    //https://app.laicode.io/app/problem/25
+    private int[][] sol2a(int[][] points, int K) {
+        int left = 0, right = points.length - 1;
+        while (left <= right) {
+            int pivotIndex = partition(points, left, right);
+            if (pivotIndex + 1 == K) {
+                break;
+            }
+            else if (pivotIndex + 1 < K) {
+                left = pivotIndex + 1;
+            }
+            else {
+                right = pivotIndex - 1;
             }
         }
         return Arrays.copyOf(points, K);
