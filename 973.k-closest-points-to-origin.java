@@ -63,7 +63,7 @@ class Solution {
     }
 
     private int[][] sol1(int[][] points, int K) {
-        PriorityQueue<int[]> maxHeap = new PriorityQueue<>(17, 
+        PriorityQueue<int[]> maxHeap = new PriorityQueue<>(K, 
                         (p1, p2) -> Integer.compare(p2[0] * p2[0] + p2[1] * p2[1], 
                                                     p1[0] * p1[0] + p1[1] * p1[1]));
      
