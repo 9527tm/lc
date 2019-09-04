@@ -105,9 +105,8 @@ class Solution {
         String resStr = null;
         int resCount = 0;
         Map<String, Integer> map = new HashMap<>();
-        String[] words = paragraph.split("[ !?',;.]+");
-        for (String rawWord : words) {
-            String word = rawWord.toLowerCase();
+        String[] words = paragraph.toLowerCase().split("[ !?',;.]+");
+        for (String word : words) {
             if (!set.contains(word)) {
                 int count = map.getOrDefault(word, 0) + 1;
                 map.put(word, count);
