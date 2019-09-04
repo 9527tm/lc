@@ -58,7 +58,8 @@
  */
 class Solution {
     public String mostCommonWord(String paragraph, String[] banned) {
-        return sol1(paragraph, banned);      
+        //return sol1(paragraph, banned);      
+        return sol2(paragraph, banned);      
     }
 
     private String sol1(String paragraph, String[] banned) {
@@ -92,6 +93,31 @@ class Solution {
                 }
             }
         }
+        return resStr;
+    }
+
+    private String sol2(String paragraph, String[] banned) {
+        Set<String> set = new HashSet<>();
+        for (String str : banned) {
+            set.add(str);
+        }
+
+        String resStr = null;
+        int resCount = 0;
+        Map<String, Integer> map = new HashMap<>();
+        String[] words = paragraph.split("[ !?',;.]+");
+        for (String rawWord : words) {
+            String word = rawWord.toLowerCase();
+            if (!set.contains(word)) {
+                int count = map.getOrDefault(word, 0) + 1;
+                map.put(word, count);
+                if (resCount < count) {
+                    resCount = count;
+                    resStr = word;
+                }
+            }
+        }
+
         return resStr;
     }
 }
