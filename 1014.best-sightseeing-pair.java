@@ -42,7 +42,8 @@
  */
 class Solution {
     public int maxScoreSightseeingPair(int[] A) {
-        return sol1(A);       
+        //return sol1(A);       
+        return sol2(A);       
     }
 
     /* i < j:
@@ -98,6 +99,15 @@ class Solution {
             res = Math.max(res, rightMax + leftMax[i - 1]);
         }
         
+        return res;
+    }
+
+    private int sol2(int[] A) {
+        int max = A[0] + 0, res = Integer.MIN_VALUE;
+        for (int i = 1; i < A.length; i++) {
+            res = Math.max(res, A[i] - i + max);
+            max = Math.max(max, A[i] + i);
+        }
         return res;
     }
 }
