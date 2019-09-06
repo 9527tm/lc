@@ -29,6 +29,7 @@
 class Solution {
     public int trap(int[] height) {
         return sol1(height);  
+        //return sol0_WRONG(height);  
     }
 
     private int sol1(int[] height) {
@@ -42,6 +43,35 @@ class Solution {
             else {
                 rightMax = Math.max(rightMax, height[right]); //H.W.: typo => Math.max(rightMax, height[left])
                 res += rightMax - height[right--];
+            }
+        }
+        return res;
+    }
+
+    private int sol0_WRONG(int[] height) {//H.W.: while (left < right) <= missing the last elem
+        if (height.length <= 0) {
+            return 0;
+        }
+        int left = 0, right = height.length - 1;
+        int res = 0, leftMax = height[left], rightMax = height[right];
+        while (left < right) {//H.W.: left < right STILL WRONG!!!!! 
+            if (leftMax < rightMax) {//test case: [1,0,2,1]
+                if (leftMax < height[left]) {
+                    leftMax = height[left];
+                }
+                else {
+                    res += leftMax - height[left];
+                }
+                left++;
+            }
+            else {
+                if (rightMax < height[right]) {
+                    rightMax = height[right];
+                }
+                else {
+                    res += rightMax - height[right];
+                }
+                right--;
             }
         }
         return res;
