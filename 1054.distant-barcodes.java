@@ -50,7 +50,8 @@
 class Solution {
     public int[] rearrangeBarcodes(int[] barcodes) {
         //return sol1(barcodes); 
-        return sol2(barcodes); 
+        //return sol2(barcodes); 
+        return sol3(barcodes); 
     }
 
     static class Pair implements Comparable<Pair> {
@@ -112,4 +113,31 @@ class Solution {
         }
         return barcodes;
     }
+
+    private int[] sol3(int[] barcodes) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n : barcodes) {
+            map.put(n, map.getOrDefault(n, 0) + 1);
+        }
+        PriorityQueue<Map.Entry<Integer, Integer>> maxHeap = 
+                new PriorityQueue<>(map.size(), (e1, e2) -> 
+                        Integer.compare(e2.getValue(), e1.getValue()));
+        maxHeap.addAll(map.entrySet());
+        Map.Entry<Integer, Integer> prevEntry = null;
+        for (int i = 0; i < barcodes.length; i++) {
+            Map.Entry<Integer, Integer> entry = maxHeap.poll();//Guarranteed:
+            barcodes[i] = entry.getKey();                      //A solution exists always!
+            if (prevEntry != null) {
+                Integer count = prevEntry.getValue() - 1;
+                if (count > 0) {
+                    prevEntry.setValue(count);
+                    maxHeap.offer(prevEntry);
+                }
+            }
+            prevEntry = entry;
+        }
+        return barcodes;
+    }
+
+
 }
