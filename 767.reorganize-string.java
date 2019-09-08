@@ -45,7 +45,7 @@ class Solution {
         return sol1(S);        
     }
 
-    private String sol1(String S) {//O(n + 26) / O(26)
+    private String sol1(String S) {//O(n + 26) / O(n + 26)
         final int SIZE = 26;
         int[] map = new int[SIZE];
         int maxN = 0;
