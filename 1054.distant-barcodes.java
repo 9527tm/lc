@@ -140,6 +140,10 @@ class Solution {
         return barcodes;
     }
 
+    // why max first and left ones in any order? 
+    // -- say [1,2,1,2,1,2,1]:
+    // if we don't put 1 first, we will fail.
+    // but, except for 1, there will be at most 3 other elements, we can put them in any order.
     //https://leetcode.com/problems/distant-barcodes/discuss/299371/C++-with-picture-O(N)
     private int[] sol4(int[] barcodes) {
         final int SIZE = 10001;
