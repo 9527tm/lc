@@ -51,7 +51,8 @@ class Solution {
     public int[] rearrangeBarcodes(int[] barcodes) {
         //return sol1(barcodes); 
         //return sol2(barcodes); 
-        return sol3(barcodes); 
+        //return sol3(barcodes); 
+        return sol4(barcodes); 
     }
 
     static class Pair implements Comparable<Pair> {
@@ -139,5 +140,23 @@ class Solution {
         return barcodes;
     }
 
-
+    //https://leetcode.com/problems/distant-barcodes/discuss/299371/C++-with-picture-O(N)
+    private int[] sol4(int[] barcodes) {
+        final int SIZE = 10001;
+        int[] map = new int[SIZE];
+        int maxN = 0;
+        for (int n : barcodes) {
+            if (map[n]++ >= map[maxN]) {
+                maxN = n;
+            }
+        }
+        int pos = 0;
+        for (int i = 0; i < SIZE; i++) {
+            for (int n = (maxN + i) % SIZE; map[n] > 0; map[n]--) {
+                barcodes[pos] = n;
+                pos = pos + 2 < barcodes.length ? pos + 2: 1;
+            }
+        }
+        return barcodes;
+    } 
 }
