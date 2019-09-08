@@ -145,7 +145,7 @@ class Solution {
     // if we don't put 1 first, we will fail.
     // but, except for 1, there will be at most 3 other elements, we can put them in any order.
     //https://leetcode.com/problems/distant-barcodes/discuss/299371/C++-with-picture-O(N)
-    private int[] sol4(int[] barcodes) {
+    private int[] sol4(int[] barcodes) {//O(m + n) / O(m)
         final int SIZE = 10001;
         int[] map = new int[SIZE];
         int maxN = 0;
@@ -158,7 +158,7 @@ class Solution {
         for (int i = 0; i < SIZE; i++) {
             for (int n = (maxN + i) % SIZE; map[n] > 0; map[n]--) {
                 barcodes[pos] = n;
-                pos = pos + 2 < barcodes.length ? pos + 2: 1;
+                pos = pos + 2 < barcodes.length ? pos + 2: 1;//even first odd then
             }
         }
         return barcodes;
