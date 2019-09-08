@@ -49,7 +49,8 @@
  */
 class Solution {
     public int[] rearrangeBarcodes(int[] barcodes) {
-        return sol1(barcodes); 
+        //return sol1(barcodes); 
+        return sol2(barcodes); 
     }
 
     static class Pair implements Comparable<Pair> {
@@ -86,6 +87,28 @@ class Solution {
                 }
             }
             prevPair = pair;
+        }
+        return barcodes;
+    }
+
+    private int[] sol2(int[] barcodes) {
+        final int SIZE = 10001;
+        int[] counters = new int[SIZE];
+        for (int n : barcodes) {
+            counters[n]++;
+        }
+        int prevIndex = -1;
+        for (int i = 0; i < barcodes.length; i++) {
+            int maxIndex = -1, maxCount = 0;
+            for (int j = 0; j < counters.length; j++) {
+                if (j != prevIndex && counters[j] > maxCount) {
+                    maxIndex = j;
+                    maxCount = counters[j];
+                }
+            }//assert(counters[maxIndex] = maxCount > 0
+            barcodes[i] = maxIndex;
+            counters[maxIndex]--;
+            prevIndex = maxIndex; //H.W.: forgot to update the globa variable
         }
         return barcodes;
     }
