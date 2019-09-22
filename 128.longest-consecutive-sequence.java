@@ -28,8 +28,28 @@
  */
 class Solution {
     public int longestConsecutive(int[] nums) {
+        return sol0(nums);
         //return sol1(nums); 
-        return sol2(nums); 
+        //return sol2(nums); 
+    }
+
+    private int sol0(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        for (int n : nums) {
+            set.add(n);
+        }
+        int res = 0;
+        for (int n : nums) {
+            if (set.contains(n - 1)) {
+                continue;
+            }
+            int i = 0;
+            while (set.contains(n + i)) {
+                i++;
+            }
+            res = Math.max(res, i);
+        }
+        return res;
     }
 
     private int sol1(int[] nums) {
