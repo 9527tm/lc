@@ -28,9 +28,10 @@
  */
 class Solution {
     public int longestConsecutive(int[] nums) {
-        return sol0(nums);
+        //return sol0(nums);
         //return sol1(nums); 
         //return sol2(nums); 
+        return sol2a(nums);
     }
 
     private int sol0(int[] nums) {
@@ -154,9 +155,10 @@ class Solution {
         private int[] size; 
         public UnionFind2(int n) {
             parent = new int[n];
+            size = new int[n];
             for (int i = 0; i < n; i++) {
-                parent[n] = i;
-                size[n] = 1;
+                parent[i] = i;
+                size[i] = 1;
             }
         }
 
