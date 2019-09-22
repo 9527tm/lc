@@ -128,4 +128,66 @@ class Solution {
             return size.get(find(n));
         }
     }
+
+    public int sol2a(int[] nums) {
+        int res = 0;
+        UnionFind2 uf = new UnionFind2(nums.length);
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(nums[i])) {
+                continue;
+            }
+            map.put(nums[i], i);
+            Integer i1 = map.get(nums[i] - 1);
+            Integer i2 = map.get(nums[i] + 1);
+            int root1 = (i1 != null) ? uf.find(i1) : i;
+            int root2 = (i2 != null) ? uf.find(i2) : i;
+            int root = uf.union(i, uf.union(root1, root2));
+            res = Math.max(res, uf.getSize(root));
+        }
+
+        return res;
+    }
+
+    static class UnionFind2 {
+        private int[] parent; 
+        private int[] size; 
+        public UnionFind2(int n) {
+            parent = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[n] = i;
+                size[n] = 1;
+            }
+        }
+
+        public int find(int i) {
+            while (parent[i] != i) {
+                parent[i] = parent[parent[i]];
+                i = parent[i];
+            }
+            return i;
+        }
+
+        public int union(int i, int j) {
+            int root1 = find(i);
+            int root2 = find(j);
+            if (root1 == root2) {
+                return root1;
+            }
+            if (size[root2] > size[root1]) {
+                parent[root1] = root2;
+                size[root2] += size[root1];
+                return root2;
+            }
+            else {
+                parent[root2] = root1;
+                size[root1] += size[root2];
+                return root1;
+            }
+        }
+
+        public int getSize(int i) {
+            return size[find(i)];
+        }
+    }
 }
