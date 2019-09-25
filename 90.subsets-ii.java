@@ -40,7 +40,8 @@ class Solution {
     private List<List<Integer>> sol1(int[] nums) {
         Arrays.sort(nums);
         List<List<Integer>> res = new ArrayList<>();
-        sol1(nums, 0, new ArrayList<>(), res);
+        //sol1(nums, 0, new ArrayList<>(), res);
+        sol1a(nums, 0, new ArrayList<>(), res);
         return res;
     }
 
@@ -60,4 +61,26 @@ class Solution {
         }
         sol1(nums, j, tmp, res);
     }
+
+    private void sol1a(int[] nums, int index, List<Integer> tmp, List<List<Integer>> res) {
+        if (index == nums.length) {
+            res.add(new ArrayList<>(tmp));
+            return;
+        }
+
+        int j = index;
+        while (j < nums.length && (j == index || nums[j] == nums[j - 1])) {
+            tmp.add(nums[j++]);
+        }
+        sol1a(nums, j, tmp, res);
+        while (j > index) {//H.W.: while (j >= index)
+            tmp.remove(tmp.size() - 1);
+            j--;
+        }
+
+        sol1a(nums, index + 1, tmp, res);
+    }
+
+
 }
+
