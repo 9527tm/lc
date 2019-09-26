@@ -125,8 +125,8 @@ class Solution {
     }
     private void sol2(String s, int i, int left, int right, int invalidLeft, int invalidRight, 
                     StringBuilder builder, List<String> res) {
-        if (i == s.length()) {
-            if (invalidLeft == 0 &&  invalidRight == 0) {
+        if (i == s.length() || invalidLeft < 0 || invalidLeft < 0) {
+            if (invalidLeft == 0 && invalidRight == 0) {
                 res.add(builder.toString());
             }
             return;
