@@ -70,6 +70,8 @@ class Solution {
         return new int[]{right, other};
     }
 
+    //there are two deduplicating techniques for all subsets II. (LC90 - https://leetcode.com/submissions/detail/264188530/)
+    //the better one restricts left and right nums by skipping non-adding parentheses (right branches in the recursion tree).
     private void sol1(String s, int i, int left, int right, int other, char[] tmp, List<String> res) {
         if (i >= s.length()) {
             if (left + right + other == 0) {
@@ -106,52 +108,77 @@ class Solution {
         }
     }
 
+    //there are two deduplicating techniques for all subsets II. (LC90 - https://leetcode.com/submissions/detail/264188530/)
+    //https://leetcode.com/submissions/detail/264367225/  (sol2() is NOT a good example since it skips non-adding for invalid left and right)
+    //the better one restricts invalid left and right nums by skipping adding parentheses (left branches in the recursion tree).
     private List<String> sol2(String s) {
-        int[] invalidNums = findInvalidParenthesesNums(s);
-        //System.out.println(invalidNums[0] + " " + invalidNums[1]);
+        int[] delNums = findInvalidParenthesesNums(s);
         List<String> res = new ArrayList<>();
-        sol2(s, 0, 0, 0, invalidNums[0], invalidNums[1], new StringBuilder(), res);
+        sol2(s, 0, 0, 0, delNums[0], delNums[1], new StringBuilder(), res);
         return res;
     }
+    
     private int[] findInvalidParenthesesNums(String s) {
+        int left = 0, right = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                left++;
+            }
+            else if (s.charAt(i) == ')') {
+                if (left > 0) {//H.W.: if (left > right)
+                    left--;
+                }
+                else {
+                    right++;
+                }
+            }
+        }
+        return new int[]{left, right};
+    }
+
+    private int[] findInvalidParenthesesNums0__EAZY_READ(String s) {
         int left = 0, right = 0, matched = 0;
         for (int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
-            left = (ch == '(') ? left + 1 : left;
-            right = (ch == ')') ? right + 1 : right;
-            matched = (ch == ')' && left > matched) ? matched + 1 : matched; //H.W.: (ch == ')' && left >= right)
+            if (s.charAt(i) == '(') {
+                left++;
+            }
+            else if (s.charAt(i) == ')') {
+                right++;
+                if (left > matched) {
+                    matched++;
+                }
+            }
         }
         return new int[]{left - matched, right - matched};
     }
-    private void sol2(String s, int i, int left, int right, int invalidLeft, int invalidRight, 
-                    StringBuilder builder, List<String> res) {
-        if (i == s.length() || invalidLeft < 0 || invalidLeft < 0) {
-            if (invalidLeft == 0 && invalidRight == 0) {
+
+    private void sol2(String s, int i, int left, int right, int delLeft, int delRight,
+                        StringBuilder builder, List<String> res) {
+        if (i == s.length()) {
+            if (delLeft == 0 && delRight == 0) {// =E> left == right
                 res.add(builder.toString());
             }
             return;
         }
+
         char ch = s.charAt(i);
-        int newLeft = (ch == '(') ? left + 1 : left;
-        int newRight = (ch == ')') ? right + 1 : right;
-        if (newLeft <= s.length() / 2 && newRight <= newLeft) {
+        if (ch == '(' && delLeft > 0) {
+            sol2(s, i + 1, left, right, delLeft - 1, delRight, builder, res);
+        }
+        if (ch == ')' && delRight > 0) {
+            sol2(s, i + 1, left, right, delLeft, delRight - 1, builder, res);
+        }
+
+        int len = builder.length();
+        while (i < s.length() && s.charAt(i) == ch) {//H.W.: https://leetcode.com/submissions/detail/264394583/
             builder.append(ch);
-            sol2(s, i + 1, newLeft, newRight, invalidLeft, invalidRight, builder, res);
-            builder.setLength(builder.length() - 1);
+            left = (ch == '(') ? left + 1 : left;
+            right = (ch == ')') ? right + 1 : right;
+            i++;
         }
-        if (ch == '(' || ch == ')') {
-            int invalidNum = (ch == '(') ? invalidLeft : invalidRight;
-            int j = i;
-            //while ((j < s.length()) && (s.charAt(j) == ch) && (invalidNum > 0)) {
-            while ((j < s.length()) && (s.charAt(j) == ch)) {
-                invalidNum--;
-                j++;
-            }
-            //if (j > i) {
-                int newInvalidLeft = (ch == '(') ? invalidNum : invalidLeft;
-                int newInvalidRight = (ch == ')') ? invalidNum : invalidRight;
-                sol2(s, j, left, right, newInvalidLeft, newInvalidRight, builder, res);
-            //}
+        if (left <= s.length() / 2 && right <= left) {
+            sol2(s, i, left, right, delLeft, delRight, builder, res);
         }
+        builder.setLength(len);
     }
 }
