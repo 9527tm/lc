@@ -40,7 +40,8 @@
  */
 class Solution {
     public List<String> removeInvalidParentheses(String s) {
-        return sol1(s);        
+        //return sol1(s);        
+        return sol2(s);        
     }
 
     private List<String> sol1(String s) {
@@ -102,6 +103,55 @@ class Solution {
                 j++;
             }
             sol1(s, j, left, right, other, tmp, res);
+        }
+    }
+
+    private List<String> sol2(String s) {
+        int[] invalidNums = findInvalidParenthesesNums(s);
+        //System.out.println(invalidNums[0] + " " + invalidNums[1]);
+        List<String> res = new ArrayList<>();
+        sol2(s, 0, 0, 0, invalidNums[0], invalidNums[1], new StringBuilder(), res);
+        return res;
+    }
+    private int[] findInvalidParenthesesNums(String s) {
+        int left = 0, right = 0, matched = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            left = (ch == '(') ? left + 1 : left;
+            right = (ch == ')') ? right + 1 : right;
+            matched = (ch == ')' && left > matched) ? matched + 1 : matched; //H.W.: (ch == ')' && left >= right)
+        }
+        return new int[]{left - matched, right - matched};
+    }
+    private void sol2(String s, int i, int left, int right, int invalidLeft, int invalidRight, 
+                    StringBuilder builder, List<String> res) {
+        if (i == s.length()) {
+            if (invalidLeft == 0 &&  invalidRight == 0) {
+                res.add(builder.toString());
+            }
+            return;
+        }
+        char ch = s.charAt(i);
+        int newLeft = (ch == '(') ? left + 1 : left;
+        int newRight = (ch == ')') ? right + 1 : right;
+        if (newLeft <= s.length() / 2 && newRight <= newLeft) {
+            builder.append(ch);
+            sol2(s, i + 1, newLeft, newRight, invalidLeft, invalidRight, builder, res);
+            builder.setLength(builder.length() - 1);
+        }
+        if (ch == '(' || ch == ')') {
+            int invalidNum = (ch == '(') ? invalidLeft : invalidRight;
+            int j = i;
+            //while ((j < s.length()) && (s.charAt(j) == ch) && (invalidNum > 0)) {
+            while ((j < s.length()) && (s.charAt(j) == ch)) {
+                invalidNum--;
+                j++;
+            }
+            //if (j > i) {
+                int newInvalidLeft = (ch == '(') ? invalidNum : invalidLeft;
+                int newInvalidRight = (ch == ')') ? invalidNum : invalidRight;
+                sol2(s, j, left, right, newInvalidLeft, newInvalidRight, builder, res);
+            //}
         }
     }
 }
