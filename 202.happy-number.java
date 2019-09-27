@@ -33,7 +33,8 @@
  */
 class Solution {
     public boolean isHappy(int n) {
-        return sol1(n); 
+        //return sol1(n); 
+        return sol2(n); 
     }
 
     private boolean sol1(int n) {
@@ -55,5 +56,18 @@ class Solution {
             n /= 10;
         }
         return s;
+    }
+
+    private boolean sol2(int n) {
+        int fast = n, slow = n;
+        while (fast != 1 && slow != 1) {
+            fast = sumDigitSquare(fast);
+            fast = sumDigitSquare(fast);
+            slow = sumDigitSquare(slow);
+            if (fast == slow) {
+                break;
+            }
+        }
+        return fast == 1 || slow == 1;
     }
 }
