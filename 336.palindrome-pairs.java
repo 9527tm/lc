@@ -40,7 +40,8 @@
 class Solution {
     public List<List<Integer>> palindromePairs(String[] words) {
         //return sol1(words); 
-        return sol2(words);
+        //return sol2(words);
+        return sol3(words);
     }
 
     private List<List<Integer>> sol1(String[] words) {
@@ -137,5 +138,42 @@ class Solution {
             }
         } 
         return res;
+    }
+
+    private List<List<Integer>> sol3(String[] words) {
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < words.length; i++) {
+            map.put(words[i], i);
+        }
+
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = 0; i < words.length; i++) {
+            for (int j = 0; j <= words[i].length(); j++) {
+                String leftSubstr = words[i].substring(0, j);
+                String rightSubstr = words[i].substring(j);
+                if (isPalindrome(leftSubstr)) {
+                    Integer k = map.get(new StringBuilder(rightSubstr).reverse().toString());
+                    if (k != null && k != i) {
+                        res.add(Arrays.asList(k, i));
+                    }
+                }
+                if (isPalindrome(rightSubstr) && rightSubstr.length() > 0) {
+                    Integer k = map.get(new StringBuilder(leftSubstr).reverse().toString());
+                    if (k != null && k != i) {
+                        res.add(Arrays.asList(i, k));
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    private boolean isPalindrome(String str) {
+        int left = 0, right = str.length() - 1;
+        while (left < right && str.charAt(left) == str.charAt(right)) {
+            left++;
+            right--;
+        }
+        return left >= right;
     }
 }
