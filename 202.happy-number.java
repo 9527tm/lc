@@ -34,7 +34,8 @@
 class Solution {
     public boolean isHappy(int n) {
         //return sol1(n); 
-        return sol2(n); 
+        //return sol2(n); 
+        return sol3(n); 
     }
 
     private boolean sol1(int n) {
@@ -69,5 +70,21 @@ class Solution {
             }
         }
         return fast == 1 || slow == 1;
+    }
+
+    //Time Complexity: O(243)
+    //https://leetcode.com/problems/happy-number/discuss/57111/No-hashset-O(1)-time-check-whether-is-in-the-loop-with-mathematical-proof
+    /*   n <= 2,147,483,647 < 9,999,999,999
+      => f(n) < f(9,999,999,999) < (9 * 9) * 10 = 810
+      => f(810) < f(999) = 243
+     */
+    private boolean sol3(int n) {
+        boolean[] visited = new boolean[243];
+        n = sumDigitSquare(sumDigitSquare(n));
+        while (n != 1 && !visited[n]) {
+            visited[n] = true;
+            n = sumDigitSquare(n);
+        }
+        return n == 1;
     }
 }
