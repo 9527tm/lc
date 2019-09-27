@@ -57,23 +57,16 @@ class Solution {
         int sum = 0;
         List<List<Integer>> res = new ArrayList<>();
         Map<Integer, List<Integer>> preSumMap = new HashMap<>();
-        preSumMap.put(0, new ArrayList<>());
-        preSumMap.get(0).add(-1);
+        preSumMap.computeIfAbsent(0, key -> new ArrayList<>()).add(-1);
 
+        List<Integer> emptyList = new ArrayList<>();
         for (int i = 0; i < nums.length; i++) {
             sum += nums[i];
-            List<Integer> startList = preSumMap.get(sum - k);
-            if (startList != null) {
-                for (Integer j : startList) {
-                    res.add(Arrays.asList(j + 1, i));
-                }
+            List<Integer> startList = preSumMap.getOrDefault(sum - k, emptyList);
+            for (Integer j : startList) {
+                res.add(Arrays.asList(j + 1, i));
             }
-            List<Integer> endList = preSumMap.get(sum);
-            if (endList == null) {
-                endList = new ArrayList<>();
-                preSumMap.put(sum, endList);
-            }
-            endList.add(i);
+            preSumMap.computeIfAbsent(sum, key -> new ArrayList<>()).add(i);
         }
 
         //System.out.println(res);
