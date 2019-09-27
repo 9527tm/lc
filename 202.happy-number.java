@@ -72,7 +72,7 @@ class Solution {
         return fast == 1 || slow == 1;
     }
 
-    //Time Complexity: O(243)
+    //Time / Space Complexity: O(243 * 10) / O(243)
     //https://leetcode.com/problems/happy-number/discuss/57111/No-hashset-O(1)-time-check-whether-is-in-the-loop-with-mathematical-proof
     /*   n <= 2,147,483,647 < 9,999,999,999
       => f(n) < f(9,999,999,999) < (9 * 9) * 10 = 810
