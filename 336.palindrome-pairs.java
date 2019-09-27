@@ -39,7 +39,8 @@
  */
 class Solution {
     public List<List<Integer>> palindromePairs(String[] words) {
-        return sol1(words); 
+        //return sol1(words); 
+        return sol2(words);
     }
 
     private List<List<Integer>> sol1(String[] words) {
@@ -66,5 +67,75 @@ class Solution {
             right--;
         }
         return true;
+    }
+
+    static class TrieNode {
+        private final int SIZE = 26;
+        private TrieNode[] entries;
+        private List<Integer> valueList;
+        public TrieNode() {
+            entries = new TrieNode[SIZE];
+            valueList = null;
+        }
+        public void insertPostfix(String str, int endIndex, int value) {
+            TrieNode root = this;
+            for (int i = str.length() - 1; i >= endIndex; i--) {
+                int code = str.charAt(i) - 'a';
+                if (root.entries[code] == null) {
+                    root.entries[code] = new TrieNode();
+                }
+                root = root.entries[code];
+            }
+            if (root.valueList == null) {
+                root.valueList = new ArrayList<>();
+            }
+            root.valueList.add(value);
+            //System.out.println("insertPostfix: " + str + " " + endIndex + " " + root.valueList);
+        }
+
+        public List<Integer> queryPrefix(String str, int endIndex) {
+            TrieNode root = this;
+            for (int i = 0; i <= endIndex && root != null; i++) {
+                root = root.entries[str.charAt(i) - 'a'];
+            }
+            /*if (root != null) {
+                System.out.println(str);
+            }*/
+            return (root != null && root.valueList != null) ? root.valueList : new ArrayList<>();
+        }
+    }
+
+    private boolean isPalindromeSubstr(String str, int startIndex, int endIndex) {
+        int left = startIndex, right = endIndex;
+        while (left < right && str.charAt(left) == str.charAt(right)) {
+            left++;
+            right--;
+        }
+        return left >= right;
+    }
+
+    private List<List<Integer>> sol2(String[] words) {
+        List<List<Integer>> res = new ArrayList<>();
+        TrieNode root = new TrieNode();
+        for (int i = 0; i < words.length; i++) {
+            for (int j = 0; j <= words[i].length(); j++) {
+                if (isPalindromeSubstr(words[i], 0, j - 1)) {
+                    root.insertPostfix(words[i], j, i);
+                }
+            }
+        }
+
+        for (int i = 0; i < words.length; i++) {
+            for (int j = 0; j <= words[i].length(); j++) {
+                if (isPalindromeSubstr(words[i], j, words[i].length() - 1)) {
+                    for (int k : root.queryPrefix(words[i], j - 1)) {
+                        if (i != k && (j == words[i].length() || j == words[k].length())) {
+                            res.add(Arrays.asList(i, k));
+                        }
+                    }
+                }
+            }
+        } 
+        return res;
     }
 }
