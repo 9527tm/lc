@@ -34,6 +34,7 @@ class Solution {
     public int subarraySum(int[] nums, int k) {
         //return sol1(nums, k);        
         return sol2(nums, k);        
+        //return sol2F(nums, k);        
     }
 
     private int sol0(int[] nums, int k) {
@@ -54,6 +55,20 @@ class Solution {
     }
 
     private int sol2(int[] nums, int k) {
+        int sum = 0, res = 0;
+        Map<Integer, Integer> preSumMap = new HashMap<>();
+        preSumMap.put(0, 1);
+
+        for (int n : nums) {
+            sum += n;
+            res += preSumMap.getOrDefault(sum - k, 0);
+            preSumMap.put(sum, preSumMap.getOrDefault(sum, 0) + 1);
+        }
+
+        return res;
+    }
+
+    private int sol2F(int[] nums, int k) {
         int sum = 0;
         List<List<Integer>> res = new ArrayList<>();
         Map<Integer, List<Integer>> preSumMap = new HashMap<>();
