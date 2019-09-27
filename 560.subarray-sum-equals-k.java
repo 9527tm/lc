@@ -32,10 +32,11 @@
  */
 class Solution {
     public int subarraySum(int[] nums, int k) {
-        return sol1(nums, k);        
+        //return sol1(nums, k);        
+        return sol2(nums, k);        
     }
 
-    private int sol1(int[] nums, int k) {
+    private int sol0(int[] nums, int k) {
         int sum = 0, res = 0;
         Map<Integer, Integer> preSumMap = new HashMap<>();
         preSumMap.put(0, 1);
@@ -52,4 +53,30 @@ class Solution {
         return res;
     }
 
+    private int sol2(int[] nums, int k) {
+        int sum = 0;
+        List<List<Integer>> res = new ArrayList<>();
+        Map<Integer, List<Integer>> preSumMap = new HashMap<>();
+        preSumMap.put(0, new ArrayList<>());
+        preSumMap.get(0).add(-1);
+
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            List<Integer> startList = preSumMap.get(sum - k);
+            if (startList != null) {
+                for (Integer j : startList) {
+                    res.add(Arrays.asList(j + 1, i));
+                }
+            }
+            List<Integer> endList = preSumMap.get(sum);
+            if (endList == null) {
+                endList = new ArrayList<>();
+                preSumMap.put(sum, endList);
+            }
+            endList.add(i);
+        }
+
+        //System.out.println(res);
+        return res.size();
+    }
 }
