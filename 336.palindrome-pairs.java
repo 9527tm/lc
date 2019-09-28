@@ -43,7 +43,8 @@ class Solution {
         //return sol2(words);
         //return sol3(words);
         //return sol3a(words);
-        return sol3b(words);
+        //return sol3b(words);
+        return sol3c(words);
     }
 
     private List<List<Integer>> sol1(String[] words) {
@@ -240,6 +241,33 @@ class Solution {
             res.add(pair);
         }
     }
+
+    private List<List<Integer>> sol3c(String[] words) {
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < words.length; i++) {
+            map.put(words[i], i);
+        }
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = 0; i < words.length; i++) {
+            for (int j = 1; j <= words[i].length(); j++) {
+                String leftSubstr = words[i].substring(0, j);
+                String rightSubstr = words[i].substring(j);
+                Integer k1 = map.get(new StringBuilder(leftSubstr).reverse().toString());
+                Integer k2 = map.get(new StringBuilder(rightSubstr).reverse().toString());
+                if (k1 != null && k1 != i && isPalindrome(rightSubstr)) {
+                    res.add(Arrays.asList(i, k1));
+                }
+                if (k2 != null && k2 != i && isPalindrome(leftSubstr)) {
+                    res.add(Arrays.asList(k2, i));
+                    if (rightSubstr.isEmpty()) {//words[i] is a palindrome itself.
+                        res.add(Arrays.asList(i, k2));
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
 
     private boolean isPalindrome(String str) {
         int left = 0, right = str.length() - 1;
