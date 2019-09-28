@@ -158,6 +158,7 @@ class Solution {
                     }
                 }
                 if (isPalindrome(rightSubstr) && rightSubstr.length() > 0) {
+                //if (isPalindrome(rightSubstr)) {//H.W. <= ["ab", "ba"] duplicate results
                     Integer k = map.get(new StringBuilder(leftSubstr).reverse().toString());
                     if (k != null && k != i) {
                         res.add(Arrays.asList(i, k));
