@@ -140,6 +140,8 @@ class Solution {
         return res;
     }
 
+    //https://leetcode.com/problems/palindrome-pairs/discuss/79210/The-Easy-to-unserstand-JAVA-Solution [the complete 4 cases]
+    //https://leetcode.com/problems/palindrome-pairs/discuss/79199/150-ms-45-lines-JAVA-solution [sol3 inspired from]
     private List<List<Integer>> sol3(String[] words) {
         Map<String, Integer> map = new HashMap<>();
         for (int i = 0; i < words.length; i++) {
@@ -148,16 +150,16 @@ class Solution {
 
         List<List<Integer>> res = new ArrayList<>();
         for (int i = 0; i < words.length; i++) {
-            for (int j = 0; j <= words[i].length(); j++) {
-                String leftSubstr = words[i].substring(0, j);
-                String rightSubstr = words[i].substring(j);
+            for (int j = 0; j <= words[i].length(); j++) {// corner case 1: j == words[i].length()
+                String leftSubstr = words[i].substring(0, j); //why? if there is an empty string in words.
+                String rightSubstr = words[i].substring(j);   //like ["", "aba"]
                 if (isPalindrome(leftSubstr)) {
                     Integer k = map.get(new StringBuilder(rightSubstr).reverse().toString());
                     if (k != null && k != i) {
                         res.add(Arrays.asList(k, i));
                     }
                 }
-                if (isPalindrome(rightSubstr) && rightSubstr.length() > 0) {
+                if (isPalindrome(rightSubstr) && !rightSubstr.isEmpty()) {// corner case 2: rightSubstr is not an empty string
                 //if (isPalindrome(rightSubstr)) {//H.W. <= ["ab", "ba"] duplicate results
                     Integer k = map.get(new StringBuilder(leftSubstr).reverse().toString());
                     if (k != null && k != i) {
@@ -166,6 +168,44 @@ class Solution {
                 }
             }
         }
+        return res;
+    }
+
+    private List<List<Integer>> sol3a(String[] words) {
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < words.length; i++) {
+            map.put(words[i], i);
+        }
+
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = 0; i < words.length; i++) {
+            //case 1: ["", "aba"]
+            Integer k = map.get("");
+            if (k != null && k != i && isPalindrome(words[i])) {
+                res.add(Arrays.asList(i, k));
+                res.add(Arrays.asList(k, i));
+            }
+            //case 2: ["abc", "cba"]
+            k = map.get(new StringBuilder(words[i]).reverse().toString());
+            if (k != null && k != i) {
+                res.add(Arrays.asList(i, k));
+            }
+            //case 3: ["abb", "a"]
+            //case 4: ["aab", "b"]
+            for (int j = 1; j < words[i].length(); j++) {//j is the length of leftSubstr
+                String leftSubstr = words[i].substring(0, j);
+                String rightSubstr = words[i].substring(j);
+                k = map.get(new StringBuilder(rightSubstr).reverse().toString());
+                if (k != null && isPalindrome(leftSubstr)) {//xxxx-leftSubstr-rightSubstr => (rightSubstr)'-leftSubstr-rightSubstr
+                    res.add(Arrays.asList(k, i));
+                }
+                k = map.get(new StringBuilder(leftSubstr).reverse().toString());
+                if (k != null && isPalindrome(rightSubstr)){//leftSubstr-rightSubstr-xxxx => leftSubstr-rightSubstr-(leftSubstr)'
+                    res.add(Arrays.asList(i, k));
+                }
+            }
+        }
+
         return res;
     }
 
