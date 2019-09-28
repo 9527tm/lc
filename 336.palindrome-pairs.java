@@ -42,7 +42,8 @@ class Solution {
         //return sol1(words); 
         //return sol2(words);
         //return sol3(words);
-        return sol3a(words);
+        //return sol3a(words);
+        return sol3b(words);
     }
 
     private List<List<Integer>> sol1(String[] words) {
@@ -239,7 +240,6 @@ class Solution {
             res.add(pair);
         }
     }
-
 
     private boolean isPalindrome(String str) {
         int left = 0, right = str.length() - 1;
