@@ -41,7 +41,8 @@ class Solution {
     public List<List<Integer>> palindromePairs(String[] words) {
         //return sol1(words); 
         //return sol2(words);
-        return sol3(words);
+        //return sol3(words);
+        return sol3a(words);
     }
 
     private List<List<Integer>> sol1(String[] words) {
@@ -208,6 +209,37 @@ class Solution {
 
         return res;
     }
+
+    private List<List<Integer>> sol3b(String[] words) {
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < words.length; i++) {
+            map.put(words[i], i);
+        }
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = 0; i < words.length; i++) {
+            pairIndex(map, res, i, "", words[i], null); //case 1 ["aba" + ""] 
+            pairIndex(map, res, i, null, words[i], ""); //case 1 ["" + "aba"]
+            pairIndex(map, res, i, words[i], "", null); //case 2 ["abc" + "cba"]
+            for (int j = 1; j < words[i].length(); j++) {//j is the length of words[i]
+                String leftSubstr = words[i].substring(0, j);
+                String rightSubstr = words[i].substring(j); //neither leftSubstr nor rigthSubstr is empty
+                pairIndex(map, res, i, leftSubstr, rightSubstr, null);//case 3
+                pairIndex(map, res, i, null, leftSubstr, rightSubstr);//case 4
+            }
+        }
+        return res;
+    }
+
+    private void pairIndex(Map<String, Integer> map, List<List<Integer>> res, int i,
+                            String leftStr, String middleStr, String rightStr) {
+        String endStr = leftStr != null ? leftStr : rightStr;
+        Integer k = map.get(new StringBuilder(endStr).reverse().toString());
+        if (k != null && k != i && isPalindrome(middleStr)) {
+            List<Integer> pair = leftStr != null ? Arrays.asList(i, k) : Arrays.asList(k, i);
+            res.add(pair);
+        }
+    }
+
 
     private boolean isPalindrome(String str) {
         int left = 0, right = str.length() - 1;
