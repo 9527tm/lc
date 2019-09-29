@@ -216,11 +216,10 @@ class Solution {
 
     private int sol3c(String s) {
         int end1 = 0, end2 = s.length() - 1;
-        return end1 > end2 ? 0 : Math.max(helper3c(s, end1, end2, '('), helper3c(s, end2, end1, ')'));
+        return Math.max(helper3c(s, end1, end2, 1, '('), helper3c(s, end2, end1, -1, ')'));
     }
-    private int helper3c(String s, int start, int end, char openToken) {
+    private int helper3c(String s, int start, int end, int step, char openToken) {//H.W.: only scan one direction <= "(()"
         int res = 0, openNum = 0, closeNum = 0;//Pay attention to: terminating condition and step
-        int step = start <= end ? 1 : -1;
         for (int i = start; i * step <= end * step; i += step) {
             if (s.charAt(i) == openToken) {
                 openNum++;
@@ -232,10 +231,10 @@ class Solution {
                 openNum = 0;
                 closeNum = 0;
             }
-            else if (openNum == closeNum) {
+            else if (openNum == closeNum) {//Why MAXMIZE sub-solutions of both directions
                 res = Math.max(res, openNum + closeNum);
-            }
-        }
-        return res;
+            }//H.W.: Why not update res when "openNum >= closeNum" because theses case: "())()()(()", "()(()"
+        }    //      error answer: https://leetcode.com/submissions/detail/265384824/
+        return res;  //this problem is not the same as LC301 [Remove Invalid Parentheses]
     }
 }
