@@ -59,8 +59,10 @@ class Solution {
     }
 
     private int crossSum(int[] nums, int left, int mid, int right) {
-        int leftSum = 0, leftMax = Integer.MIN_VALUE;//H.W.: wrongly initialize left = 0, leftMax = 0;
-        for (int i = mid; i >= left; i--) {
+        //int leftSum = 0, leftMax = Integer.MIN_VALUE;  //H.W.: wrongly initialize left = 0, leftMax = 0;
+        //for (int i = mid; i >= left; i--) {
+        int leftSum = nums[mid], leftMax = leftSum;//both initialiaztions are OK!
+        for (int i = mid - 1; i >= left; i--) {
             leftSum += nums[i];
             leftMax = Math.max(leftMax, leftSum);
         }
