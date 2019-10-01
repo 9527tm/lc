@@ -51,7 +51,8 @@ class Solution {
     public int lengthOfLongestSubstring(String s) {
         //return sol1(s);        
         //return sol1a(s);        
-        return sol2(s);        
+        //return sol2(s);        
+        return sol2a(s);        
     }
 
     private int sol1(String s) {
@@ -93,4 +94,14 @@ class Solution {
         return res;
     }
 
+    private int sol2a(String s) {
+        int start = 0, res = 0;
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            start = Math.max(start, map.getOrDefault(s.charAt(i), 0));
+            res = Math.max(res, i - start + 1);
+            map.put(s.charAt(i), i + 1);
+        }
+        return res;
+    }
 }
