@@ -49,7 +49,8 @@
  */
 class Solution {
     public int lengthOfLongestSubstring(String s) {
-        return sol1(s);        
+        //return sol1(s);        
+        return sol1a(s);        
     }
 
     private int sol1(String s) {
@@ -63,6 +64,19 @@ class Solution {
             else {
                 set[s.charAt(i++)] = false;
             }
+        }
+        return res;
+    }
+
+    private int sol1a(String s) {
+        Set<Character> set = new HashSet<>();
+        int i = 0, res = 0;
+        for (int j = 0; j < s.length(); j++) {
+            while (set.contains(s.charAt(j))) {
+                set.remove(s.charAt(i++));
+            }
+            set.add(s.charAt(j));
+            res = Math.max(res, j - i + 1);
         }
         return res;
     }
