@@ -36,8 +36,8 @@
  */
 class Solution {
     public ListNode reverseList(ListNode head) {
-        return sol1(head);
-        //return sol2(head);
+        //return sol1(head);
+        return sol2(head);
     }
 
     private ListNode sol1(ListNode head) {
@@ -49,5 +49,15 @@ class Solution {
             curr = next;
         }
         return prev;
+    }
+
+    private ListNode sol2(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode newHead = sol2(head.next);
+        head.next.next = head;
+        head.next = null;
+        return newHead;
     }
 }
