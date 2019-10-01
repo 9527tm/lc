@@ -30,8 +30,8 @@
  */
 class Solution {
     public int maxSubArray(int[] nums) {
-        return sol1(nums);        
         //return sol1(nums);        
+        return sol2(nums);        
     }
 
     private int sol1(int[] nums) {
@@ -41,5 +41,34 @@ class Solution {
             res = Math.max(res, sum);
         }
         return res;
+    }
+
+    private int sol2(int[] nums) {
+        return helperSol2(nums, 0, nums.length - 1);
+    }
+
+    private int helperSol2(int[] nums, int left, int right) {
+        if (left >= right) {
+            return nums[left];
+        }
+        int mid = left + (right -  left) / 2;
+        int leftRes = helperSol2(nums, left, mid);
+        int rightRes = helperSol2(nums, mid + 1, right);
+        int midRes = crossSum(nums, left, mid, right);
+        return Math.max(midRes, Math.max(leftRes, rightRes));
+    }
+
+    private int crossSum(int[] nums, int left, int mid, int right) {
+        int leftSum = 0, leftMax = Integer.MIN_VALUE;//H.W.: wrongly initialize left = 0, leftMax = 0;
+        for (int i = mid; i >= left; i--) {
+            leftSum += nums[i];
+            leftMax = Math.max(leftMax, leftSum);
+        }
+        int rightSum = 0, rightMax = Integer.MIN_VALUE;
+        for (int i = mid + 1; i <= right; i++) {
+            rightSum += nums[i];
+            rightMax = Math.max(rightMax, rightSum);
+        }
+        return leftMax + rightMax;
     }
 }
