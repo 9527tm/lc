@@ -35,7 +35,8 @@
  */
 class Solution {
     public int[][] merge(int[][] intervals) {
-        return sol1(intervals);        
+        //return sol1(intervals);        
+        return sol1a(intervals);        
     }
 
     private int[][] sol1(int[][] intervals) {
@@ -56,5 +57,25 @@ class Solution {
         }
         intervals[i++] = prev;
         return Arrays.copyOfRange(intervals, 0, i);
+    }
+
+    private int[][] sol1a(int[][] intervals) {
+        if (intervals.length < 2) {
+            return intervals;
+        }
+        Arrays.sort(intervals, (itv1, itv2) -> Integer.compare(itv1[0], itv2[0]));
+        List<int[]> list = new ArrayList<>();
+        int[] prev = intervals[0];
+        for (int i = 1; i < intervals.length; i++) {
+            if (prev[1] < intervals[i][0]) {
+                list.add(prev);
+                prev = intervals[i];
+            }
+            else {
+                prev[1] = Math.max(prev[1], intervals[i][1]);
+            }
+        }
+        list.add(prev);
+        return list.toArray(new int[list.size()][2]); //H.W.: don't know list.toArray(...)
     }
 }
