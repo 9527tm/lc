@@ -36,7 +36,8 @@
 class Solution {
     public int[][] merge(int[][] intervals) {
         //return sol1(intervals);        
-        return sol1a(intervals);        
+        //return sol1a(intervals);        
+        return sol2(intervals);        
     }
 
     private int[][] sol1(int[][] intervals) {
@@ -78,4 +79,28 @@ class Solution {
         list.add(prev);
         return list.toArray(new int[list.size()][2]); //H.W.: don't know list.toArray(...)
     }
+
+    private int[][] sol2(int[][] intervals) {
+        int[] starts = new int[intervals.length];
+        int[] finishes = new int[intervals.length];
+        for (int i = 0; i < intervals.length; i++) {
+            starts[i] = intervals[i][0];
+            finishes[i] = intervals[i][1];
+        }
+        Arrays.sort(starts);
+        Arrays.sort(finishes);
+        List<int[]> list = new ArrayList<>();
+        int j = 0;
+        for (int i = 0; i < intervals.length; i++) {
+            if (i == intervals.length - 1 || finishes[i] < starts[i + 1]) {
+                list.add(new int[]{starts[j], finishes[i]});
+                j = i + 1;
+            }
+        }
+        return list.toArray(new int[list.size()][2]);
+    }
+
+
+                
+
 }
