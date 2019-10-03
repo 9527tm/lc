@@ -35,9 +35,9 @@ class Solution {
     public int minMeetingRooms(int[][] intervals) {
         //return sol1(intervals);        
         //return sol2(intervals);        
-        return sol3(intervals);        
+        //return sol3(intervals);        
+        return sol1a(intervals);        
         /*
-        return sol3(intervals);        
         return sol4(intervals);        
         return sol5(intervals);
         */       
@@ -99,5 +99,26 @@ class Solution {
             }
         }
         return num;
+    }
+
+    private int sol1a(int[][] intervals) {
+        Arrays.sort(intervals, (itv1, itv2) -> Integer.compare(itv1[0], itv2[0]));
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>((itv1, itv2) -> Integer.compare(itv1[1], itv2[1]));
+        List<List<int[]>> res = new ArrayList<>();
+        Map<int[], List<int[]>> map = new HashMap<>();
+        for (int[] itv : intervals) {
+            List<int[]> list = null;
+            if (!minHeap.isEmpty() && minHeap.peek()[1] <= itv[0]) {
+                list = map.remove(minHeap.poll());
+            }
+            if (list == null) {
+                list = new ArrayList<>();
+                res.add(list);
+            } 
+            minHeap.offer(itv);
+            list.add(itv);
+            map.put(itv, list);
+        }
+        return res.size();
     }
 }
