@@ -36,9 +36,9 @@ class Solution {
         //return sol1(intervals);        
         //return sol2(intervals);        
         //return sol3(intervals);        
-        return sol1a(intervals);        
+        //return sol1a(intervals);        
+        return sol2a(intervals);        
         /*
-        return sol4(intervals);        
         return sol5(intervals);
         */       
     }
@@ -118,6 +118,41 @@ class Solution {
             minHeap.offer(itv);
             list.add(itv);
             map.put(itv, list);
+        }
+        return res.size();
+    }
+
+    private int sol2a(int[][] intervals) {
+        int[][] starts = new int[intervals.length][2];
+        int[][] finishes = new int[intervals.length][2];
+        for (int i = 0; i < intervals.length; i++) {
+            starts[i][0] = intervals[i][0];
+            finishes[i][0] = intervals[i][1];
+            starts[i][1] = i;
+            finishes[i][1] = i;
+        }
+        Arrays.sort(starts, (s1, s2) -> Integer.compare(s1[0], s2[0]));
+        Arrays.sort(finishes, (f1, f2) -> Integer.compare(f1[0], f2[0]));
+        List<List<int[]>> res = new ArrayList<>();
+        Map<Integer, List<int[]>> map = new HashMap<>();
+        Queue<List<int[]>> queue = new LinkedList<>();
+        int i = 0, j = 0;
+        while (i < intervals.length) {
+            if (starts[i][0] < finishes[j][0]) {
+                if (queue.isEmpty()) {
+                    List<int[]> tmp = new ArrayList<>();
+                    res.add(tmp);
+                    queue.offer(tmp);
+                }
+                List<int[]> list = queue.poll();
+                list.add(intervals[starts[i][1]]);
+                map.put(starts[i][1], list);
+                i++;
+            }
+            else {
+                queue.offer(map.remove(finishes[j][1]));
+                j++;
+            }
         }
         return res.size();
     }
