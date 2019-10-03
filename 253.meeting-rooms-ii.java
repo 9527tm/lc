@@ -34,7 +34,8 @@
 class Solution {
     public int minMeetingRooms(int[][] intervals) {
         //return sol1(intervals);        
-        return sol2(intervals);        
+        //return sol2(intervals);        
+        return sol3(intervals);        
         /*
         return sol3(intervals);        
         return sol4(intervals);        
@@ -77,5 +78,26 @@ class Solution {
             }
         }
         return res;
+    }
+
+    private int sol3(int[][] intervals) {
+        int[] starts = new int[intervals.length];
+        int[] finishes = new int[intervals.length];
+        for (int i = 0; i < intervals.length; i++) {
+            starts[i] = intervals[i][0];
+            finishes[i] = intervals[i][1];
+        }
+        Arrays.sort(starts);
+        Arrays.sort(finishes);
+        int num = 0;
+        for (int i = 0, j = 0; i < intervals.length; i++) {
+            if (starts[i] < finishes[j]) {
+                num++;
+            }
+            else {
+                j++;
+            }
+        }
+        return num;
     }
 }
