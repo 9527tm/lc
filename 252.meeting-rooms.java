@@ -35,13 +35,37 @@
  */
 class Solution {
     public boolean canAttendMeetings(int[][] intervals) {
-        return sol1(intervals);       
+        return sol0(intervals);
+        //return sol1(intervals);       
+        //return sol2(intervals);       
     }
 
+    private boolean sol0(int[][] intervals) {
+        for (int i = 0; i < intervals.length; i++) {
+            for (int j = i + 1; j < intervals.length; j++) {
+                // !(f1 <= s2 || f2 <= s1) equals to (f1 > s2 && f2 > s1)
+                if (intervals[i][1] > intervals[j][0] && intervals[j][1] > intervals[i][0]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     private boolean sol1(int[][] intervals) {
         Arrays.sort(intervals, (itv1, itv2) -> Integer.compare(itv1[0], itv2[0]));
         for (int i = 1; i < intervals.length; i++) {
             if (intervals[i][0] < intervals[i - 1][1]) {
+                return false;//H.W.: wrongly understand requirement as s[i] <= f[i-1] 
+            }
+        }
+        return true;
+    }
+
+    private boolean sol2(int[][] intervals) {
+        Arrays.sort(intervals, (itv1, itv2) -> Integer.compare(itv1[0], itv2[0]));
+        for (int i = 0; i < intervals.length - 1; i++) {
+            if (intervals[i][1] > intervals[i + 1][0]) {
                 return false;
             }
         }
