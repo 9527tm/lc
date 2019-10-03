@@ -37,7 +37,8 @@ class Solution {
     public int[][] merge(int[][] intervals) {
         //return sol1(intervals);        
         //return sol1a(intervals);        
-        return sol2(intervals);        
+        //return sol2(intervals);        
+        return sol3(intervals);
     }
 
     private int[][] sol1(int[][] intervals) {
@@ -77,7 +78,7 @@ class Solution {
             }
         }
         list.add(prev);
-        return list.toArray(new int[list.size()][2]); //H.W.: don't know list.toArray(...)
+        return list.toArray(new int[list.size()][]); //H.W.: don't know list.toArray(...)
     }
 
     private int[][] sol2(int[][] intervals) {
@@ -97,10 +98,21 @@ class Solution {
                 j = i + 1;
             }
         }
-        return list.toArray(new int[list.size()][2]);
+        return list.toArray(new int[list.size()][]);
     }
 
-
-                
-
+    //https://leetcode.com/problems/merge-intervals/discuss/21359/Clean-TreeSet-solution-in-Java
+    private int[][] sol3(int[][] intervals) {
+        TreeSet<int[]> treeSet = new TreeSet<>((itv1, itv2) -> {return itv1[1] < itv2[0] ? -1 : itv2[1] < itv1[0] ? 1 : 0;});
+        for (int[] itv : intervals) {
+            while (treeSet.contains(itv)) {
+                int[] olpItv = treeSet.ceiling(itv);
+                itv[0] = Math.min(itv[0], olpItv[0]);
+                itv[1] = Math.max(itv[1], olpItv[1]);
+                treeSet.remove(olpItv);
+            }
+            treeSet.add(itv);
+        }
+        return treeSet.toArray(new int[treeSet.size()][]);
+    }
 }
