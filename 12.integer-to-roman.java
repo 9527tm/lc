@@ -79,7 +79,8 @@
  */
 class Solution {
     public String intToRoman(int num) {
-        return sol1(num); 
+        //return sol1(num); 
+        return sol2(num); 
     }
 
     private String sol1(int num) {
@@ -88,9 +89,9 @@ class Solution {
                          90, 80, 70, 60, 50, 40, 30, 20, 10, 
                          9, 8, 7, 6, 5, 4, 3, 2, 1};
         String[] scales = {"MMM", "MM", "M", 
-                         "CM", "DCCC", "DCC", "DC", "D", "CD", "CCC", "CC", "C", 
+                         "CM", "DCCC", "DCC", "DC", "D", "CD", "CCC", "CC", "C",  //H.W.: 800 => MCCC 
                          "XC", "LXXX", "LXX", "LX", "L", "XL", "XXX", "XX", "X",
-                         "IX", "VIII", "VII", "VI", "V", "IV", "III", "II", "I"};
+                         "IX", "VIII", "VII", "VI", "V", "IV", "III", "II", "I"}; //H.W.: 8 => XIII
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < weights.length; i++) {
             if (num >= weights[i]) {
@@ -100,4 +101,41 @@ class Solution {
         }
         return builder.toString();
     }
+
+    private String sol2(int num) {
+        int[] weights = {3000, 2000, 1000, 
+                         900, 800, 700, 600, 500, 400, 300, 200, 100, 
+                         90, 80, 70, 60, 50, 40, 30, 20, 10, 
+                         9, 8, 7, 6, 5, 4, 3, 2, 1};
+        String[] scales = {"MMM", "MM", "M", 
+                         "CM", "DCCC", "DCC", "DC", "D", "CD", "CCC", "CC", "C",  //H.W.: 800 => MCCC 
+                         "XC", "LXXX", "LXX", "LX", "L", "XL", "XXX", "XX", "X",
+                         "IX", "VIII", "VII", "VI", "V", "IV", "III", "II", "I"}; //H.W.: 8 => XIII
+        StringBuilder builder = new StringBuilder();
+        int left = 0, right = weights.length - 1;
+        while (left <= right && num > 0) {
+            int i = findLargestSmaller(weights, left, right, num); 
+            builder.append(scales[i]);//guarantee to find
+            num -= weights[i];
+            left = i + 1;
+        }
+        return builder.toString();
+    }
+
+    private int findLargestSmaller(int[] weights, int left, int right, int target) {
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            /*if (weights[mid] == target) {
+                return mid;
+            }*/ //optimize searching from unique weights
+            if (weights[mid] > target) {
+                left = mid + 1;
+            }
+            else {
+                right = mid;
+            }
+        }
+        return left;
+    }
+
 }
