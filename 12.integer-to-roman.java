@@ -81,7 +81,8 @@ class Solution {
     public String intToRoman(int num) {
         //return sol1(num); 
         //return sol2(num); 
-        return sol3(num); 
+        //return sol3(num); 
+        return sol3a(num); 
     }
 
     private String sol1(int num) {
@@ -158,5 +159,19 @@ class Solution {
             buffer[len++] = scale[code];
         }
         return len;
+    }
+
+    private String sol3a(int num) {
+        char[][] scales = {{'M', '.', '?'}, {'C', 'D', 'M'}, {'X', 'L', 'C'}, {'I', 'V', 'X'}};
+        int[][] encodings = {{}, {0}, {0, 0}, {0, 0, 0}, {0, 1}, {1}, {1, 0}, {1, 0, 0}, {1, 0, 0, 0}, {0, 2}};
+        char[] buffer = new char[4 * 4 - 1]; //H.W.: longest string is NOT MMM-CCC-XXX-III
+        int len = 0;                         //                        BUT MMM-DCCC-LXXX-VIII
+        for (int i = 0, base = 1000; i < scales.length; i += 1, base /= 10) {
+            for (int code : encodings[num / base]) {
+                buffer[len++] = scales[i][code];
+            }
+            num %= base;
+        }
+        return new String(buffer, 0, len); //H.W.: no function call new String(buffer, len);
     }
 }
