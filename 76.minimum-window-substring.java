@@ -34,8 +34,8 @@
 class Solution {
     public String minWindow(String s, String t) {
         //return sol1(s, t);        
-        //return sol1a(s, t);        
-        return sol2(s, t);        
+        return sol1a(s, t);        
+        //return sol2(s, t);        
     }
 
     private String sol1(String s, String t) {
@@ -85,11 +85,11 @@ class Solution {
         }
 
         int[] res = {0, Integer.MAX_VALUE};
-        int i = 0, j = 0; //i: [start, j: end]
+        int i = 0, j = -1; //i: [start, j: end)
         while (true) {
             if (types > 0) {
-                if (j < s.length()) {
-                    if (map[s.charAt(j)]-- == 1) {
+                if (j + 1 < s.length()) {
+                    if (map[s.charAt(j + 1)]-- == 1) {
                         types--;
                     }
                     j++;
