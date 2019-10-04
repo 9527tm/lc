@@ -53,26 +53,26 @@ class Solution {
         if (num <= 0) {
             return "Zero";
         }
-        String[] thousands = {"Billion", "Million", "Thousand", ""};
+        String[] thousands = {"Billion", "Million", "Thousand"};
         StringBuilder builder = new StringBuilder();
-        for (int i = 0, base = 1000 * 1000 * 1000; base > 0; i += 1, base /= 1000) {
-                if (num >= base) {
-                    builder.append(helper1(num / base));
-                    if (base > 1) {//H.W. forgot double tailing spaces: 1000 => "1000" + ' ' + "" + ' ' = "1000'  '"
-                        builder.append(thousands[i]).append(' '); //Only "Bi.", "Mi.", and "Th." should have a seperating space.
-                    }                                             //Instead, "" don't need.
-                    num %= base;
-                }
+        for (int i = 0, base = 1000 * 1000 * 1000; i < thousands.length; i += 1, base /= 1000) {
+            if (num >= base) {
+                helper1(builder, num / base);
+                builder.append(thousands[i]).append(' ');
+                num %= base;
+            }
         }
+        if (num >= 1) {//postprocessing: base = 1
+            helper1(builder, num);//H.W. ignore double tailing spaces: 1000 => "1000" + ' ' + "" + ' ' = "1000'  '"
+        }                         //Only "Bi.", "Mi.", and "Th." should have a seperating space. Instead, "" don't need.
         builder.setLength(builder.length() - 1);
         return builder.toString();
     }
 
-    private String helper1(int num) {//1 <= num <= 999
+    private void helper1(StringBuilder builder, int num) {//1 <= num <= 999
         String[] tens = {"", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
         String[] ones = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", 
                          "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
-        StringBuilder builder = new StringBuilder();
         if (num >= 100) {
             builder.append(ones[num / 100]).append(" Hundred ");
             num %= 100;
@@ -81,9 +81,8 @@ class Solution {
             builder.append(tens[num / 10]).append(' ');
             num %= 10;
         }
-        if (num > 0) {
+        if (num >= 1) {
             builder.append(ones[num]).append(' ');
         }
-        return builder.toString();
     }
 }
