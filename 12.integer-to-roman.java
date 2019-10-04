@@ -82,7 +82,8 @@ class Solution {
         //return sol1(num); 
         //return sol2(num); 
         //return sol3(num); 
-        return sol3a(num); 
+        //return sol3a(num); 
+        return sol4(num); 
     }
 
     private String sol1(int num) {
@@ -174,4 +175,25 @@ class Solution {
         }
         return new String(buffer, 0, len); //H.W.: no function call new String(buffer, len);
     }
+
+    private String sol4(int num) {
+        int[] weights = {1000, 
+                         900, 500, 400, 100, 
+                         90, 50, 40, 10, 
+                         9, 5, 4, 1};
+        String[] scales = {"M", 
+                         "CM", "D", "CD", "C",  
+                         "XC", "L", "XL", "X",
+                         "IX", "V", "IV", "I"}; 
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < weights.length; i++) {
+            while (num >= weights[i]) {
+                builder.append(scales[i]);
+                num -= weights[i];
+            }
+        }
+        return builder.toString();
+    }
+
+
 }
