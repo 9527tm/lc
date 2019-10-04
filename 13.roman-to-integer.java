@@ -79,23 +79,40 @@
  */
 class Solution {
     public int romanToInt(String s) {
-        return sol1(s); 
+        //return sol1(s); 
+        return sol2(s); 
+    }
+
+    private int[] allocAsciiTable(int size) {//size: 26 / 127
+        int[] map = new int[size];
+        int offset = size == 26 ? 'A' : 0;
+        map['I' - offset] = 1;
+        map['V' - offset] = 5;
+        map['X' - offset] = 10;
+        map['L' - offset] = 50;
+        map['C' - offset] = 100;
+        map['D' - offset] = 500;
+        map['M' - offset] = 1000;
+        return map;
     }
 
     private int sol1(String s) {
-        int[] map = new int[26];
-        map['I' - 'A'] = 1;
-        map['V' - 'A'] = 5;
-        map['X' - 'A'] = 10;
-        map['L' - 'A'] = 50;
-        map['C' - 'A'] = 100;
-        map['D' - 'A'] = 500;
-        map['M' - 'A'] = 1000;
-
+        int[] map = allocAsciiTable(127);
         int sum = 0;
         for (int i = 0; i < s.length(); i++) {
-            int weight = map[s.charAt(i) - 'A'];
-            sum += (i + 1 < s.length() && weight < map[s.charAt(i + 1) - 'A']) ? -weight : weight;
+            int weight = map[s.charAt(i)];
+            sum += (i + 1 < s.length() && weight < map[s.charAt(i + 1)]) ? -weight : weight;
+        }
+        return sum;
+    }
+
+    private int sol2(String s) {
+        int[] map = allocAsciiTable(127);
+        int sum = 0, preWeight = map['M'];
+        for (int i = 0; i < s.length(); i++) {
+            int weight = map[s.charAt(i)];
+            sum += (weight <= preWeight) ? weight : weight - 2 * preWeight;
+            preWeight = weight;
         }
         return sum;
     }
