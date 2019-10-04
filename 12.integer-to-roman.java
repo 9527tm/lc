@@ -83,7 +83,8 @@ class Solution {
         //return sol2(num); 
         //return sol3(num); 
         //return sol3a(num); 
-        return sol4(num); 
+        //return sol4(num);//insight: jump table construction
+        return sol5(num);  //         -- [ascending / descending, part / whole, zero padding / no padding]  
     }
 
     private String sol1(int num) {
@@ -195,5 +196,16 @@ class Solution {
         return builder.toString();
     }
 
-
+    private String sol5(int num) {
+        String[] thousands = {"", "M", "MM", "MMM"};
+        String[] hundreds =  {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+        String[] tens =      {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+        String[] ones =      {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+        return new StringBuilder().
+                append(thousands[num / 1000]).
+                append(hundreds[(num % 1000) / 100]).
+                append(tens[(num % 100) / 10]).
+                append(ones[num % 10]).
+                toString();
+    }
 }
