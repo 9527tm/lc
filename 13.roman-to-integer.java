@@ -134,9 +134,9 @@ class Solution {
         int[] map = allocAsciiTable(127);
         int sum = 0;
         for (int i = s.length() - 1; i >= 0; i--) {
-            int weight = map[s.charAt(i)];
-            sum += (weight * 4 > sum) ? weight : -weight;
-        }
-        return sum;
+            int weight = map[s.charAt(i)];               
+            sum += (weight * 3 > sum) ? weight : -weight; //insight: s[i] >= s[i + 1..n]
+        }                                                 //X--X-X-IX: 10 * 3 = 10 + 10 + 10 > 10 + 10 + 9
+        return sum;                                       //X--L-????: 10 * 3 < 50 <= 50 + ...
     }
 }
