@@ -58,9 +58,9 @@ class Solution {
         for (int i = 0, base = 1000 * 1000 * 1000; base > 0; i += 1, base /= 1000) {
                 if (num >= base) {
                     builder.append(helper1(num / base));
-                    if (base > 1) {
-                        builder.append(thousands[i]).append(' ');
-                    }
+                    if (base > 1) {//H.W. forgot double tailing spaces: 1000 => "1000" + ' ' + "" + ' ' = "1000'  '"
+                        builder.append(thousands[i]).append(' '); //Only "Bi.", "Mi.", and "Th." should have a seperating space.
+                    }                                             //Instead, "" don't need.
                     num %= base;
                 }
         }
