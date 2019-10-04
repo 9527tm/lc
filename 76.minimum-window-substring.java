@@ -34,7 +34,8 @@
 class Solution {
     public String minWindow(String s, String t) {
         //return sol1(s, t);        
-        return sol1a(s, t);        
+        //return sol1a(s, t);        
+        return sol2(s, t);        
     }
 
     private String sol1(String s, String t) {
@@ -115,5 +116,49 @@ class Solution {
         }
 
         return res[1] == Integer.MAX_VALUE ? "" : s.substring(res[0], res[1] + 1);
+    }
+
+    private String sol2(String s, String t) {
+        int[] map = new int[127];
+        int types = 0;
+        for (int i = 0; i < t.length(); i++) {
+            if (map[t.charAt(i)]++ == 0) {
+                types++;
+            }
+        }
+
+        int num = 0; 
+        int[] indices = new int[s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            if (map[s.charAt(i)] > 0) {
+                indices[num++] = i;
+            }
+        }
+
+        int[] res = {0, Integer.MAX_VALUE};
+        int i = 0, j = -1; //i: staart, j: end
+        while (i < num) {
+            if (types == 0) {
+                if (indices[j] - indices[i] < res[1] - res[0]) {
+                    res[1] = indices[j];
+                    res[0] = indices[i];
+                }
+                if (map[s.charAt(indices[i])]++ == 0) {
+                    types++; 
+                }
+                i++;
+            }
+            else {
+                if (j + 1 >= num) {//H.W.: inconsistent enqueuing char (types > 0) and querying its position (types == 0)
+                    break;
+                }
+                if (map[s.charAt(indices[j + 1])]-- == 1) {
+                    types--;
+                }
+                j++;
+            }
+        }
+
+        return res[1] == Integer.MAX_VALUE ? "" : s.substring(res[0], res[1] + 1); //H.W.: forget + 1 for end position
     }
 }
