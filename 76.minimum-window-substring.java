@@ -85,11 +85,11 @@ class Solution {
         }
 
         int[] res = {0, Integer.MAX_VALUE};
-        int i = 0, j = -1; //i: start, j: end
+        int i = 0, j = 0; //i: [start, j: end]
         while (true) {
             if (types > 0) {
-                if (j + 1 < s.length()) {
-                    if (map[s.charAt(j + 1)]-- == 1) {
+                if (j < s.length()) {
+                    if (map[s.charAt(j)]-- == 1) {
                         types--;
                     }
                     j++;
@@ -136,7 +136,7 @@ class Solution {
         }
 
         int[] res = {0, Integer.MAX_VALUE};
-        int i = 0, j = -1; //i: staart, j: end
+        int i = 0, j = -1; //i: [start, j: end]
         while (i < num) {
             if (types == 0) {
                 if (indices[j] - indices[i] < res[1] - res[0]) {
