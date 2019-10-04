@@ -34,7 +34,8 @@
 class Solution {
     public String minWindow(String s, String t) {
         //return sol1(s, t);        
-        return sol1a(s, t);        
+        //return sol1a(s, t);        
+        return sol1b(s, t);        
         //return sol2(s, t);        
     }
 
@@ -118,6 +119,40 @@ class Solution {
         return res[1] == Integer.MAX_VALUE ? "" : s.substring(res[0], res[1] + 1);
     }
 
+    private String sol1b(String s, String t) {
+        int[] map = new int[127];
+        int types = 0;
+        for (int i = 0; i < t.length(); i++) {
+            if (map[t.charAt(i)]++ == 0) {
+                types++;
+            }
+        }
+
+        int[] res = {0, Integer.MAX_VALUE};
+        int i = 0, j = 0;
+        while (i < s.length()) {
+            if (types > 0) {
+                if (j >= s.length()) {
+                    break;
+                }
+                if (map[s.charAt(j)]-- == 1) {
+                    types--;
+                }
+                j++;
+            }
+            else {
+                if (j - i < res[1] - res[0]) {
+                    res[0] = i;
+                    res[1] = j;
+                }
+                if (map[s.charAt(i)]++ == 0) {
+                    types++;
+                }
+                i++;
+            }
+        }
+        return res[1] == Integer.MAX_VALUE ? "" : s.substring(res[0], res[1]);
+    }
     private String sol2(String s, String t) {
         int[] map = new int[127];
         int types = 0;
