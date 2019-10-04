@@ -80,7 +80,8 @@
 class Solution {
     public int romanToInt(String s) {
         //return sol1(s); 
-        return sol2(s); 
+        //return sol2(s); 
+        return sol2a(s); 
     }
 
     private int[] allocAsciiTable(int size) {//size: 26 / 127
@@ -113,6 +114,17 @@ class Solution {
             int weight = map[s.charAt(i)];
             sum += (weight <= preWeight) ? weight : weight - 2 * preWeight;
             preWeight = weight;
+        }
+        return sum;
+    }
+
+    private int sol2a(String s) {
+        int[] map = allocAsciiTable(127);
+        int sum = 0, postWeight = 1;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            int weight = map[s.charAt(i)];
+            sum += weight >= postWeight ? weight : -weight;
+            postWeight = weight; //H.W.: forgot to relay current value!
         }
         return sum;
     }
