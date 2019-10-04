@@ -79,14 +79,14 @@
  */
 class Solution {
     public String intToRoman(int num) {
-        //return sol1(num); 
-        //return sol2(num); 
-        //return sol3(num); 
-        //return sol3a(num); 
-        //return sol4(num);//insight: jump table construction
-        return sol5(num);  //         -- [ascending / descending, part / whole, zero padding / no padding]  
-    }
-
+        //return sol1(num);   //4    scan on whole table [inefficient]  
+        //return sol2(num);   //4.5  binary search [a little better than sol1] 
+        //return sol3(num);   //5    bitmap encoding 
+        //return sol3a(num);  //5    more concise than sol3 
+        //return sol4(num);   //5.5  perfect jump tables: greedy scanning [descending, part, no padding, combine]
+        return sol5(num);     //5.5  perfect jump tables: direct indexing [ascending, whole, padding, seperate]
+    }                         //insight: how to construct jump tables?
+                              //-- [ascending / descending, part / whole, zero padding / no padding, seperate / combine] 
     private String sol1(int num) {
         int[] weights = {3000, 2000, 1000, 
                          900, 800, 700, 600, 500, 400, 300, 200, 100, 
