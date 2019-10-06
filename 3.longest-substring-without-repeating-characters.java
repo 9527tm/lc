@@ -53,6 +53,7 @@ class Solution {
         //return sol1a(s);        
         //return sol2(s);        
         return sol2a(s);        
+        //return sol3_WRONG(s); //NO! D & C (unlike LC53)
     }
 
     private int sol1(String s) {
@@ -104,4 +105,13 @@ class Solution {
         }
         return res;
     }
+
+    //unsuccessful attempts to DC (Unlike LC 53 -- maximum subarray)
+    //center expanding [first LEFT then RIGHT]  failed at "dvdf" 
+    //center expanding [LEFT / RIGHT alternate] failed at "loddktdji" 
+    //https://leetcode.com/submissions/detail/266079901/ 
+    //https://leetcode.com/submissions/detail/266082735/
+
+    //According to a googler, Qiang, optimal solutions of subproblems cannot be combined into a global optimal solution.
+    //That's, two longest substrings w/o duplicate chars cannot form into one.
 }
