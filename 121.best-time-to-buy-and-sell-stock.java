@@ -41,8 +41,9 @@
  */
 class Solution {
     public int maxProfit(int[] prices) {
-        //return sol1(prices); 
-        return sol2(prices); 
+        //return sol1(prices);  //O(N * N) BF: [min] curr->
+        //return sol2(prices);  //O(N) DP: [min] curr->
+        return sol3(prices);    //O(N) DP: <-curr [max]
     }
 
     private int sol1(int[] prices) {
@@ -62,6 +63,15 @@ class Solution {
         for (int p : prices) {
             res = Math.max(res, p - min);
             min = Math.min(min, p);
+        }
+        return res;
+    }
+
+    private int sol3(int[] prices) {
+        int res = 0, max = 0;
+        for (int i = prices.length - 1; i >= 0; i--) {
+            res = Math.max(res, max - prices[i]);
+            max = Math.max(max, prices[i]);
         }
         return res;
     }
