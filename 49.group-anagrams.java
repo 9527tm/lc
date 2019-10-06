@@ -36,7 +36,8 @@ class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
         //return sol1(strs); 
         //return sol2(strs); 
-        return sol2a(strs); 
+        //return sol2a(strs); 
+        return sol3(strs); 
     }
 
     private List<List<String>> sol1(String[] strs) {
@@ -86,4 +87,51 @@ class Solution {
         }
         return res;
     }
+
+    //leetcode.com/problems/group-anagrams/discuss/19176/Share-my-short-JAVA-solution/193036
+    static class CharCounter {
+        private final int[] array;
+        private final int hash;
+
+        CharCounter(String str) {
+            array = new int['z' - 'a' + 1];
+            for (int i = 0; i < str.length(); i++) {
+                array[str.charAt(i) - 'a']++;
+            }
+            hash = Arrays.hashCode(array);
+        }
+
+        public boolean equals(Object other) {
+            if (other == null) {
+                return false;
+            }
+            if (other == this) {
+                return true;
+            }
+            CharCounter oth = (CharCounter) other;
+            return (hash == oth.hash) && Arrays.equals(this.array, oth.array);
+        }
+
+        public int hashCode() {
+            return hash;
+        }
+    }
+
+    private List<List<String>> sol3(String[] strs) {
+        List<List<String>> res = new ArrayList<>();
+        Map<CharCounter, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            CharCounter counter = new CharCounter(str);
+            List<String> list = map.get(counter);
+            if (list == null) {
+                list = new ArrayList<>();
+                map.put(counter, list);
+                res.add(list);
+            }
+            list.add(str);
+        }
+        return res;
+    }
+
+
 }
