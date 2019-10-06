@@ -135,8 +135,8 @@ class Solution {
     }
 
     //https://leetcode.com/problems/group-anagrams/discuss/19183/Java-beat-100!!!-use-prime-number
-    private long hashCode(String str) {//safe length of string will be up to Long.MAX_VALUE / 101 / 26
-        long[] primes = new long[]{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 
+    private long hashCode(String str) {//safe length of string will be less than 32. why?
+        long[] primes = new long[]{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, //"zzz...zz", total 32 zs make into 101^32 > Long.MAX_VALUE.
                31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101};
         long hash = 1L;
         for (int i = 0; i < str.length(); i++) {
@@ -145,7 +145,7 @@ class Solution {
         return hash;
     }
 
-    private List<List<String>> sol4(String[] strs) {
+    private List<List<String>> sol4(String[] strs) {//Good idea but not rigorous!
         List<List<String>> res = new ArrayList<>();
         Map<Long, List<String>> map = new HashMap<>();
         for (String str : strs) {
