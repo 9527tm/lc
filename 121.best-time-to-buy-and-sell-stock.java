@@ -41,7 +41,8 @@
  */
 class Solution {
     public int maxProfit(int[] prices) {
-        return sol1(prices); 
+        //return sol1(prices); 
+        return sol2(prices); 
     }
 
     private int sol1(int[] prices) {
@@ -52,6 +53,15 @@ class Solution {
                 min = Math.min(min, prices[j]);
             }
             res = Math.max(res, prices[i] - min);
+        }
+        return res;
+    }
+
+    private int sol2(int[] prices) {
+        int res = 0, min = Integer.MAX_VALUE;
+        for (int p : prices) {
+            res = Math.max(res, p - min);
+            min = Math.min(min, p);
         }
         return res;
     }
