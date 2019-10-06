@@ -43,7 +43,8 @@
  */
 class Solution {
     public int reverse(int x) {
-        return sol1(x); 
+        //return sol1(x); 
+        return sol2(x); 
     }
 
     private int sol1(int x) {
@@ -54,5 +55,19 @@ class Solution {
             lx /= 10;
         }
         return res < Integer.MIN_VALUE || res > Integer.MAX_VALUE ? 0 : (int) res;
+    }
+
+    private int sol2(int x) {
+        int res = 0;
+        while (x != 0) {
+            int d = x % 10;
+            int tmp = res * 10 + d;
+            if ((tmp - d) / 10 != res) {
+                return 0;
+            }
+            res = tmp;
+            x /= 10; //H.W.: forgot to update the global variable
+        }
+        return res;
     }
 }
