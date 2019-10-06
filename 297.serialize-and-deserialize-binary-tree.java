@@ -53,7 +53,8 @@
  * }
  */
 public class Codec {
-    private CodecInf sol = new Sol1();
+    //private CodecInf sol = new Sol1();
+    private CodecInf sol = new Sol2();
 
     // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
@@ -73,6 +74,7 @@ interface CodecInf {
 
 class Sol1 implements CodecInf {
     private final String SEP = " ", NULL = "N"; //H.W.:     SEP set to "+"
+
     public String serialize(TreeNode root) {    //          conflicting with regex of split()
         StringBuilder builder = new StringBuilder();//H.W.: SEP set to "-"
         serialize(root, builder);                   //       conflicting with negative numbers
@@ -108,9 +110,9 @@ class Sol1 implements CodecInf {
 class Sol2 implements CodecInf {
     private final String SEP = " ", NULL = "N";
 
-    public String serialize(TreeNode root) {
-        if (root == null) {
-            return "";
+    public String serialize(TreeNode root) {//H.W.: failed to handle left / right in the same level.
+        if (root == null) {                 //      no matter either of them is null.
+            return "";                      //      https://leetcode.com/submissions/detail/267334352/
         }
         StringBuilder builder = new StringBuilder();
         int lastNumPos = 0;
@@ -119,22 +121,16 @@ class Sol2 implements CodecInf {
         queue.offer(root);
         while (!queue.isEmpty()) {
             TreeNode node = queue.poll();
+            if (node == null) {
+                builder.append(NULL).append(SEP);
+                continue;
+            }
+
             builder.append(node.val).append(SEP);
             lastNumPos = builder.length();
 
-            if (node.left == null) {
-                builder.append(NULL).append(SEP);
-            }
-            else {
-                queue.offer(node.left);
-            }
-
-            if (node.right == null) {
-                builder.append(NULL).append(SEP);
-            }
-            else {
-                queue.offer(node.right);
-            }
+            queue.offer(node.left);
+            queue.offer(node.right);
         }
 
         builder.setLength(lastNumPos);
