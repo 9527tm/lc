@@ -35,7 +35,8 @@
 class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
         //return sol1(strs); 
-        return sol2(strs); 
+        //return sol2(strs); 
+        return sol2a(strs); 
     }
 
     private List<List<String>> sol1(String[] strs) {
@@ -68,5 +69,21 @@ class Solution {
             }
         }
         return builder.toString();
+    }
+
+    private List<List<String>> sol2a(String[] strs) {
+        List<List<String>> res = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            String key = getKey(str);
+            List<String> list = map.get(key);
+            if (list == null) {
+                list = new ArrayList<>();
+                map.put(key, list);
+                res.add(list);
+            }
+            list.add(str);
+        }
+        return res;
     }
 }
