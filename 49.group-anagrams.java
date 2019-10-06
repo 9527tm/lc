@@ -34,7 +34,8 @@
  */
 class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
-        return sol1(strs); 
+        //return sol1(strs); 
+        return sol2(strs); 
     }
 
     private List<List<String>> sol1(String[] strs) {
@@ -46,5 +47,26 @@ class Solution {
             map.computeIfAbsent(key, (dummyArg) -> new ArrayList<>()).add(str);
         }
         return new ArrayList<>(map.values());
+    }
+
+    private List<List<String>> sol2(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            map.computeIfAbsent(getKey(str), (dummyArg) -> new ArrayList<>()).add(str);
+        }
+        return new ArrayList<>(map.values());
+    }
+    private String getKey(String str) {
+        int[] map = new int['z' - 'a' + 1];
+        for (int i = 0; i < str.length(); i++) {
+            map[str.charAt(i) - 'a']++;
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int ch = 'a'; ch <= 'z'; ch++) {
+            if (map[ch - 'a'] > 0) {
+                builder.append(ch).append(map[ch - 'a']);
+            }
+        }
+        return builder.toString();
     }
 }
