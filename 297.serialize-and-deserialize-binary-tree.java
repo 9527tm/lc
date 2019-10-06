@@ -105,6 +105,69 @@ class Sol1 implements CodecInf {
 }
 
 
+class Sol2 implements CodecInf {
+    private final String SEP = " ", NULL = "N";
+
+    public String serialize(TreeNode root) {
+        if (root == null) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        int lastNumPos = 0;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            builder.append(node.val).append(SEP);
+            lastNumPos = builder.length();
+
+            if (node.left == null) {
+                builder.append(NULL).append(SEP);
+            }
+            else {
+                queue.offer(node.left);
+            }
+
+            if (node.right == null) {
+                builder.append(NULL).append(SEP);
+            }
+            else {
+                queue.offer(node.right);
+            }
+        }
+
+        builder.setLength(lastNumPos);
+        return builder.toString();
+    }
+
+    public TreeNode deserialize(String data) {
+        if (data.length() <= 0) {
+            return null;
+        }
+        int id = 0;
+        String[] tokens = data.split(SEP);
+        TreeNode root = new TreeNode(Integer.parseInt(tokens[id++]));
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if (id < tokens.length && !tokens[id].equals(NULL)) {
+                node.left = new TreeNode(Integer.parseInt(tokens[id]));
+                queue.offer(node.left);
+            }
+            id++;
+            if (id < tokens.length && !tokens[id].equals(NULL)) {
+                node.right = new TreeNode(Integer.parseInt(tokens[id]));
+                queue.offer(node.right);
+            }
+            id++;
+        }
+
+        return root;
+    }
+}
 // Your Codec object will be instantiated and called as such:
 // Codec codec = new Codec();
 // codec.deserialize(codec.serialize(root));
