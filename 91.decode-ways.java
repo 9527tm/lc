@@ -47,21 +47,19 @@ class Solution {
     }
 
     private int sol1(String s) {
-        if (s.length() <= 0) {
+        if (s.length() <= 0 || s.charAt(0) == '0') {
             return 0;
         }
-        int num = s.charAt(0) - '0';
-        int res = num > 0 ? 1 : 0;
-        int oldRes = res;
+        int res = 1;
+        int oldRes = res; //tricky initialization //H.W.: oldRes = 0: "10"
         for (int i = 1; i < s.length(); i++) {
-            int nextNum = s.charAt(i) - '0';
-            int twoNums = num * 10 + nextNum;
+            int oneDigit = s.charAt(i) - '0';
+            int twoDigits = (s.charAt(i - 1) - '0') * 10 + oneDigit;
             int temp = res;
 
-            res = nextNum > 0 ? res : 0;
-            res += (twoNums >= 10 && twoNums <= 26) ? oldRes : 0; //H.W: "101"
+            res = oneDigit > 0 ? res : 0;
+            res += (twoDigits >= 10 && twoDigits <= 26) ? oldRes : 0; //H.W: twoNums should range from [10, 26]: "101"
             oldRes = temp;
-            num = nextNum; //forgot to transfer
         } 
         return res;
     }
