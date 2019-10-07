@@ -43,7 +43,8 @@
  */
 class Solution {
     public int numDecodings(String s) {
-        return sol1(s);
+        //return sol1(s);
+        return sol2(s);
     }
 
     private int sol1(String s) {
@@ -63,4 +64,22 @@ class Solution {
         } 
         return res;
     }
+
+    private int sol2(String s) {
+        if (s.length() <= 0 || s.charAt(0) == '0') {
+            return 0;
+        }
+        int sum = 1, oldSum = sum; //H.W.: initialization: VERY IMPORTANT!
+        for (int i = 1; i < s.length(); i++) {//H.W.: loop starts from 1
+            int d1 = s.charAt(i) - '0';
+            int d2 = s.charAt(i - 1) - '0';
+            
+            int temp = (d1 > 0 && d1 < 10) ? sum : 0;
+            temp += (d2 == 1 || (d2 == 2 && d1 < 7)) ? oldSum : 0; //H.W.: d2 cannot be 0
+            oldSum = sum;
+            sum = temp;
+        }
+        return sum;
+    }
+
 }
