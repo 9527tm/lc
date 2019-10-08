@@ -31,7 +31,8 @@
  */
 class Solution {
     public List<List<Integer>> permute(int[] nums) {
-        return sol1(nums); 
+        //return sol1(nums); 
+        return sol2(nums); 
     }
 
     private List<List<Integer>> sol1(int[] nums) {
@@ -55,6 +56,26 @@ class Solution {
             swap(nums, i, j);
         }
     }
+
+    private List<List<Integer>> sol2(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        sol2(nums, 0, new ArrayList<>(), res);
+        return res;
+    }
+
+    private void sol2(int[] nums, int i, List<Integer> list, List<List<Integer>> res) {
+        if (i >= nums.length) {
+            res.add(new ArrayList<>(list));
+        }
+        for (int j = i; j < nums.length; j++) {
+            list.add(nums[j]);
+            swap(nums, i, j);
+            sol2(nums, i + 1, list, res);
+            swap(nums, i, j);
+            list.remove(list.size() - 1);
+        }
+    }
+
 
     private void swap(int[] nums, int i, int j) {
         int temp = nums[i];
