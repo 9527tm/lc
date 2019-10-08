@@ -29,7 +29,8 @@
  */
 class Solution {
     public List<List<Integer>> permuteUnique(int[] nums) {
-        return sol1(nums); 
+        //return sol1(nums); 
+        return sol2(nums); 
     }
 
     private List<List<Integer>> sol1(int[] nums) {
@@ -67,5 +68,29 @@ class Solution {
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
+    }
+
+    private List<List<Integer>> sol2(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        sol2(nums, 0, new ArrayList<>(), res);
+        return res;
+    }
+
+    private void sol2(int[] nums, int i, List<Integer> list, List<List<Integer>> res) {
+        if (i >= nums.length) {
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        Set<Integer> set = new HashSet<>();
+        for (int j = i; j < nums.length; j++) {
+            if (!set.add(nums[j])) {
+                continue;
+            }
+            list.add(nums[j]);
+            swap(nums, i, j);
+            sol2(nums, i + 1, list, res);
+            swap(nums, i, j);
+            list.remove(list.size() - 1);
+        }
     }
 }
