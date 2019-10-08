@@ -42,7 +42,8 @@
  */
 class Solution {
     public int firstMissingPositive(int[] nums) {
-        return sol1(nums); 
+        //return sol1(nums); 
+        return sol2(nums); 
     }
 
     private int sol1(int[] nums) {
@@ -62,6 +63,23 @@ class Solution {
 
         return nums.length + 1;
     }    
+    
+    private int sol2(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            int j = nums[i] - 1; //j = nums[i] - k;
+            while (j >= 0 && j < nums.length && i != j && nums[i] != nums[j]) {
+                swap(nums, i, j);
+                j = nums[i] - 1; //j = nums[i] - k
+            }
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            if (i != nums[i] - 1) {// - k
+                return i + 1; // + k
+            }
+        }
+        return nums.length + 1;
+    }
 
     private void swap(int[] nums, int i, int j) {
         int temp = nums[i];
