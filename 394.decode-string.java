@@ -37,6 +37,7 @@
  */
 class Solution {
     public String decodeString(String s) {
+        //return sol1(s);    
         return sol1(s);    
     }
 
@@ -71,5 +72,41 @@ class Solution {
             }
         }
         return builder.toString();
+    }
+
+    private String sol2(String s) {
+        StringBuilder builder = new StringBuilder();
+        sol2(s, new int[1], builder);
+        return builder.toString();
+    }
+    private void sol2(String s, int[] index, StringBuilder builder) {
+        int num = 0;
+        while (index[0] < s.length()) {
+            char ch = s.charAt(index[0]++);
+            if (Character.isLetter(ch)) {
+                builder.append(ch);
+            }
+            else if (Character.isDigit(ch)) {
+                num = num * 10 + ch - '0';
+            }
+            else if (ch == '[') {
+                int start = builder.length();
+                sol2(s, index, builder);
+                if (num == 0) {
+                    builder.setLength(start);
+                    continue; //num is restored to 0
+                }
+                int end = builder.length();
+
+                while (--num > 0) {
+                   for (int i = start; i < end; i++) {
+                        builder.append(builder.charAt(i));
+                   } 
+                }//num is also restored to 0
+            }
+            else if (ch == ']') {
+                break;
+            }
+        }
     }
 }
