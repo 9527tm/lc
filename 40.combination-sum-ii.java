@@ -62,18 +62,17 @@ class Solution {
     }
 
     private void sol1(int[] candidates, int target, int i, List<Integer> list, List<List<Integer>> res) {
-        if (i >= candidates.length) {
+        if (i >= candidates.length || target <= 0) {
             if (target == 0) {
                 res.add(new ArrayList<>(list));
             }
             return;
         }
 
-        if (candidates[i] <= target) {//H.W.: forgot to check candidates[i] <= target to guaruantee target non-negative
-            list.add(candidates[i]);
-            sol1(candidates, target - candidates[i], i + 1, list, res);
-            list.remove(list.size() - 1);
-        }
+        //H.W.: forgot to check candidates[i] <= target to guaruantee target non-negative
+        list.add(candidates[i]);
+        sol1(candidates, target - candidates[i], i + 1, list, res);
+        list.remove(list.size() - 1);
 
         while (i + 1 < candidates.length && candidates[i + 1] == candidates[i]) {
             i++;
