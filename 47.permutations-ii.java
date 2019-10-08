@@ -28,13 +28,14 @@
  * 
  */
 class Solution {
+    //https://www.cnblogs.com/grandyang/p/4359825.html
     public List<List<Integer>> permuteUnique(int[] nums) {
-        //return sol1(nums); 
-        return sol2(nums); 
+        return sol1(nums); //How to dedup? Opt 1: scan a new number from tried number subarray [O(N!*N) / O(N)]
+        //return sol2(nums);   //              Opt 2: add a new number to tried number set [O(N!*N) / O(N*N)]
     }
 
     private List<List<Integer>> sol1(int[] nums) {
-        Arrays.sort(nums);
+        //Arrays.sort(nums); //https://www.cnblogs.com/grandyang/p/4359825.html#4314885
         List<List<Integer>> res = new ArrayList<>();
         sol1(nums, 0, new ArrayList<>(), res);
         return res;
