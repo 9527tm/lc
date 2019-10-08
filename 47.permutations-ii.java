@@ -35,8 +35,7 @@ class Solution {
     private List<List<Integer>> sol1(int[] nums) {
         Arrays.sort(nums);
         List<List<Integer>> res = new ArrayList<>();
-        //sol1(nums, 0, new ArrayList<>(), res);
-        sol1a(nums, 0, new ArrayList<>(), res);
+        sol1(nums, 0, new ArrayList<>(), res);
         return res;
     }
 
@@ -46,35 +45,12 @@ class Solution {
             return;
         }
         for (int j = i; j < nums.length; j++) {
-            //H.W.: wrongly deduplicate by if (j > i && nums[j] == nums[j - 1]) { <= 1[2]3[2]
-            //                          or      j > i && nums[j] == nums[i] <= [2,2,1,1]  
-            int k = j - 1;
-            while (k >= i && nums[k] != nums[j]) { //scan between nums[i, j - 1] 
-                k--;                               //to find the same elem as nums[j]
-            }
-            if (k >= i) {
-                continue; //there exists one duplicate before.
-            }
-            list.add(nums[j]);                     
-            swap(nums, i, j);
+            if (hasExistedDupBetween(nums, i, j - 1, nums[j])) { //H.W.: wrongly deduplicating by:
+                continue;                                        //      j > i && nums[j] != nums[j - 1]
+            }                                                    //or    j > i && nums[j] != nums[i]
+            list.add(nums[j]);                      //https://leetcode.com/submissions/detail/267960641/ 
+            swap(nums, i, j);                       //https://leetcode.com/submissions/detail/267960644/
             sol1(nums, i + 1, list, res);
-            swap(nums, i, j);
-            list.remove(list.size() - 1);
-        }
-    }
-
-    private void sol1a(int[] nums, int i, List<Integer> list, List<List<Integer>> res) {
-        if (i >= nums.length) {
-            res.add(new ArrayList<>(list));
-            return;
-        }
-        for (int j = i; j < nums.length; j++) {
-            if (hasExistedDupBetween(nums, i, j - 1, nums[j])) {
-                continue;
-            }
-            list.add(nums[j]);                     
-            swap(nums, i, j);
-            sol1a(nums, i + 1, list, res);
             swap(nums, i, j);
             list.remove(list.size() - 1);
         }
