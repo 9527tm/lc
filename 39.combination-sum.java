@@ -51,7 +51,8 @@
  */
 class Solution {
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        return sol1(candidates, target);       
+        //return sol1(candidates, target);       
+        return sol2(candidates, target);       
     }
 
     private List<List<Integer>> sol1(int[] candidates, int target) {
@@ -67,7 +68,7 @@ class Solution {
             }
             return;
         }
-        for (int j = 0; j * candidates[i] <= target; j++) {//H.W.: j > 0
+        for (int j = 0; j * candidates[i] <= target; j++) {//H.W.: j starts 1 indicating candidates[i] must be chosen.
             if (j > 0) {
                 list.add(candidates[i]);
             }
@@ -77,4 +78,30 @@ class Solution {
             list.remove(list.size() - 1);
         }
     }    
+
+    private List<List<Integer>> sol2(int[] candidates, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        sol2(candidates, target, 0, new int[candidates.length], res);
+        return res;
+    }
+
+    private void sol2(int[] candidates, int target, int i, int[] nums, List<List<Integer>> res) {
+        if (i >= candidates.length) {
+            if (target == 0) {
+                List<Integer> list = new ArrayList<>();
+                for (int j = 0; j < candidates.length; j++) {
+                    for (int k = 0; k < nums[j]; k++) {
+                        list.add(candidates[j]);
+                    }
+                }
+                res.add(list);
+            }
+            return;
+        }
+
+        for (int j = 0; j * candidates[i] <= target; j++) {
+            nums[i] = j;
+            sol2(candidates, target - j * candidates[i], i + 1, nums, res);
+        }
+    }
 }
