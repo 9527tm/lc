@@ -35,7 +35,8 @@ class Solution {
     private List<List<Integer>> sol1(int[] nums) {
         Arrays.sort(nums);
         List<List<Integer>> res = new ArrayList<>();
-        sol1(nums, 0, new ArrayList<>(), res);
+        //sol1(nums, 0, new ArrayList<>(), res);
+        sol1a(nums, 0, new ArrayList<>(), res);
         return res;
     }
 
@@ -61,11 +62,34 @@ class Solution {
             list.remove(list.size() - 1);
         }
     }
-    
+
+    private void sol1a(int[] nums, int i, List<Integer> list, List<List<Integer>> res) {
+        if (i >= nums.length) {
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        for (int j = i; j < nums.length; j++) {
+            if (hasExistedDupBetween(nums, i, j - 1, nums[j])) {
+                continue;
+            }
+            list.add(nums[j]);                     
+            swap(nums, i, j);
+            sol1a(nums, i + 1, list, res);
+            swap(nums, i, j);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    private boolean hasExistedDupBetween(int[] nums, int left, int right, int target) {//[left, right]
+        while (left <= right && nums[left] != target) {
+            left++;
+        }
+        return left <= right;
+    }
+
     private void swap(int[] nums, int i, int j) {
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
     }
-
 }
