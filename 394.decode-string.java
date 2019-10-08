@@ -38,7 +38,7 @@
 class Solution {
     public String decodeString(String s) {
         //return sol1(s);    
-        return sol1(s);    
+        return sol2(s);    
     }
 
     private String sol1(String s) {
