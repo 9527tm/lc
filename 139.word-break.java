@@ -52,6 +52,9 @@
  */
 
 class Solution {
+    //4 types of solutions: https://leetcode.com/problems/word-break/discuss/43908
+    //brute force complexity analysis: https://leetcode.com/problems/word-break/discuss/169383
+    //another submission: https://leetcode.com/submissions/detail/269132005
     public boolean wordBreak(String s, List<String> wordDict) {
         //return sol1(s, wordDict);  DP Basic
         //return sol1a(s, wordDict); DP Improve
