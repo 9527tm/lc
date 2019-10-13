@@ -64,12 +64,13 @@
  */
 class Solution {
     public int change(int amount, int[] coins) {
-        return sol1(amount, coins);             //combination => coins loop outside
+        //return sol1(amount, coins);           //combination => coins loop outside
         //return sol2(amount, coins);           //permutation => amount loop outside
+        return sol2a(amount, coins);
     }
     //https://leetcode.com/problems/coin-change-2/discuss/99212
     //https://leetcode.com/problems/coin-change-2/discuss/99222
-
+    
     //https://youtu.be/DJ4a7cmjZY0
     /*dp[i][j]: the number of combinations of i types of coins that amounts to j value.
       dp[0][0] = 1, dp[i][0] = 1, dp[0][j] = 0
@@ -77,7 +78,7 @@ class Solution {
                 (amount j from w/o i-th type coin) + (amount j - coins[i - 1] from w/ i-th type coins)
       or,
       dp[i][j] = dp[i - 1][j] (j < coins[i - 1])
-                (amount j from w/o i-th type coin only)
+                (amount j from w/o i-th type coin only) 
     */
     private int sol1(int amount, int[] coins) {
         int[][] dp = new int[coins.length + 1][amount + 1];
@@ -91,11 +92,11 @@ class Solution {
         }
         return dp[coins.length][amount];
     }
-
-
+    
+    
     //leetcode.com/problems/coin-change-2/discuss/99222/Video-explaining-how-dynamic-programming-works-with-the-Coin-Change-problem/192340
     /*
-    Why the outer loop is the coins, not the amount? --
+    Why the outer loop is the coins, not the amount? -- 
     The reason behind that is that as you mentioned, the problem is to find the total number of combinations, not the permutations. If the outer loop is the amount, then the same combination will be counted multiple times because they can come in in different orders. By letting the coins to be the outer loops, one assures that for any valid combination, the order of each coin will always be the same as their order in coins, so there can be no duplicates.
     */
     //https://youtu.be/jaNZ83Q3QGc
@@ -107,6 +108,17 @@ class Solution {
                 if (j >= weight) {
                     dp[j] += dp[j - weight];
                 }
+            }
+        }
+        return dp[amount];
+    }
+    
+    private int sol2a(int amount, int[] coins) {
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;
+        for (int weight : coins) {
+            for (int j = weight; j <= amount; j++) {
+                dp[j] += dp[j - weight];
             }
         }
         return dp[amount];
