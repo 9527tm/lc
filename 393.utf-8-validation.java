@@ -68,17 +68,18 @@
  */
 class Solution {
     public boolean validUtf8(int[] data) {
-        //return sol1(data);
-        return sol2(data);
+        //return sol1(data); //5.0
+        //return sol2(data); //5.5
+        return sol3(data);   //6.0
     }
-
+    
     private boolean sol1(int[] data) {
         int i = 0;
         while (i < data.length) {
             int size = checkLeader(data[i]);
             if (size <= 0 || i + size > data.length) {
-                return false;
-            }
+                return false; 
+            }                 
             for (int j = 1; j < size; j++) {
                 if (!checkFollower(data[i + j])) {
                     return false;
@@ -88,7 +89,7 @@ class Solution {
         }
         return true;
     }
-
+    
     private int checkLeader(int code) {
         //System.out.println("check leader: " + toBinaryString(code));
         int num = 0;
@@ -100,19 +101,19 @@ class Solution {
         }             //https://leetcode.com/problems/utf-8-validation/discuss/87468
         return num == 0 ? 1 : num;
     }
-
+    
     private boolean checkFollower(int code) {
         //System.out.println("check follower: " + toBinaryString(code));
         int mask1 = 0x01 << 7;
         int mask2 = 0x01 << 6;
         return (code & mask1) != 0 && (code & mask2) == 0;
     }
-
+    
     private String toBinaryString(int code) {
         return String.format("%8s", Integer.toBinaryString(code & 0xFF)).replace(' ', '0');
     }
-
-
+    
+    
     private boolean sol2(int[] data) {
         int i = 0;
         while (i < data.length) {
@@ -120,7 +121,7 @@ class Solution {
             if (size == 1 || size > 4) {
                 return false;
             }//valid sizes are: 0, 2, 3, 4
-
+            
             for (int j = 1; j < size; j++) {//check follower
                 if (i + j >= data.length || countOnes(data[i + j]) != 1) {
                     return false;
@@ -130,7 +131,7 @@ class Solution {
         }
         return true;
     }
-
+    
     private int countOnes(int code) {
         int num = 0;
         for (int mask = 0x01 << 7; (mask & code) != 0; mask >>= 1) {
@@ -138,5 +139,37 @@ class Solution {
         }
         return num;
     }
+    
+    private boolean sol3(int[] data) {
+        int num = 0; //the number of followers
+        for (int code : data) {
+            if (num == 0) {
+                if ((code >> 7) == 0b0) {
+                    num = 0;
+                }
+                else if ((code >> 6) == 0b10) {
+                    return false;
+                }
+                else if ((code >> 5) == 0b110) {
+                    num = 1;
+                }
+                else if ((code >> 4) == 0b1110) {
+                    num = 2;
+                }
+                else if ((code >> 3) == 0b11110) {
+                    num = 3;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                if ((code >> 6) != 0b10) {
+                    return false;
+                }
+                num--;
+            }
+        }
+        return num == 0;
+    }
 }
-
