@@ -47,10 +47,41 @@
  * 
  */
 class Solution {
+    /*A - Euler Path/Curcuit exists if:
+      1. Graph is connected (BFS / DFS)
+      2. Either of both subconditions holds:
+      2.1. Euler Path: 
+           All vertices except one (Source) and the other (Sink) have even degrees, 
+           and for each vertex indegree equals outdegree. 
+           (Source: indegree = outdegree - 1; Sink: indegree = outdegree + q)
+      2.2. Euler Curcuit:
+           All vertices have even degrees, and for each vertex indegree equals outdegree.
+           Each vertex can be a Source and natually the vertex will be the Sink.
+      
+      B - How to find Euler Path/Curcuit?
+      1. Brutal Force: O(k ^ n) + O(n!) / O(n))
+      2. Hierholzer:   O(n) / O(n)
+      
+      https://zhuanlan.zhihu.com/p/37693521
+      https://www.laioffer.com/zh/videos/2018-03-14-332-reconstruct-itinerary/
+    */
+    
     public List<String> findItinerary(List<List<String>> tickets) {
-        //return sol1(tickets);
-        //return sol2(tickets);
-        return sol3(tickets);
+        //return sol1(tickets);  //5.0: BF -- 1. choose key to dedup a ticket (avoid revisiting)
+                                 //        -- 2. reverse sort adj city list and add/remove from tail
+        
+        //return sol2(tickets);  //6.0: Hier. -- 1. adj city list is minHeap (pq)
+                                 //Recursive  -- 2. post order traversal
+                                 //           -- 3. reverse the result list at last (like topological sort)
+        
+        return sol2a(tickets);   //6.0: Hier. -- 1. 3. the same as sol2
+                                 //Iterative  -- 2. update source city when a ticket is put into stack
+    
+        //Why we prefer min heap to reverse sort list to store dst citys from a src city?
+        //1. it is more clear to represent dst citys semanticly as a queue: 
+        //   each dst city is offerred to / polled from adj min heap once and only once.
+        //2. we avoid modifying a list (remove the last city) while iterating on it.
+        //   though a list works: https://leetcode.com/submissions/detail/270752870/
     }
     
     //O(n) + O(n * lgn) + O(k ^ n) / O(m + n) + O(n) + O(n)
@@ -64,6 +95,9 @@ class Solution {
         return res;
     }
     
+    //key of visited set (edges here) is ticket-index
+    //but it can also be a combinative string: "src-city-string" + "dst-city-index in adj-city-list"
+    //JFK -> [SFO, DFW, LAS]: the ticket JFK->DFW has the key JFK1 and JFK->LAS has JFK2.
     private boolean dfs(Map<String, List<Integer>> graph, List<List<String>> tickets, 
                         String src, Set<Integer> edges, List<String> res) {
         if (edges.size() >= tickets.size()) {
@@ -105,8 +139,39 @@ class Solution {
         return graph;
     }
     
-    //O(n) + O(n * lgn) + O(n) + O(n) / O(m + n) + (n)
+    //O(n * lgk) + O(n * lgk)  + O(n) / O(m + n) + O(n)
     private List<String> sol2(List<List<String>> tickets) {
+        Map<String, PriorityQueue<String>> graph = initGraph(tickets);
+        List<String> res = new ArrayList<>();
+        dfs(graph, "JFK", res); //Hierholzer
+        Collections.reverse(res); //Tricky 2: reverse result
+        return res;
+    }
+    
+    private void dfs(Map<String, PriorityQueue<String>> map, String src, List<String> res) {
+        PriorityQueue<String> dstMinHeap = map.get(src);
+        while (dstMinHeap != null && !dstMinHeap.isEmpty()) {//H.W.: wrongly use if (....) 
+            dfs(map, dstMinHeap.poll(), res); //Tricky 3: must remove to avoid revisiting
+        }
+        res.add(src); //Tricky 1: post order traversal
+    }
+    
+    private Map<String, PriorityQueue<String>> initGraph(List<List<String>> tickets) {
+        Map<String, PriorityQueue<String>> graph = new HashMap<>();
+        for (List<String> ticket : tickets) {
+            String src = ticket.get(0), dst = ticket.get(1);
+            PriorityQueue<String> dstMinHeap = graph.get(src);
+            if (dstMinHeap == null) {
+                dstMinHeap = new PriorityQueue<>();
+                graph.put(src, dstMinHeap);
+            }
+            dstMinHeap.add(dst);
+        }
+        return graph;
+    }
+    
+    //O(n * lgk) + O(n * lgk) + (n) / O(m + n) + (n)
+    private List<String> sol2a(List<List<String>> tickets) {
         Map<String, PriorityQueue<String>> map = new HashMap<>();
         for (List<String> ticket : tickets) {
             String src = ticket.get(0), dst = ticket.get(1);
@@ -130,39 +195,6 @@ class Solution {
                 dstMinHeap = map.get(src);
             }
             res.add(stack.pollFirst());
-        }
-        Collections.reverse(res);
-        return res;
-    }
-    
-    //O(n) + O(n * lgn) + O(n) + O(n) / O(m + n) + (n)
-    private List<String> sol3(List<List<String>> tickets) {
-        Map<String, List<String>> map = new HashMap<>();
-        for (List<String> ticket : tickets) {
-            String src = ticket.get(0), dst = ticket.get(1);
-            List<String> dstList = map.get(src);
-            if (dstList == null) {
-                dstList = new ArrayList<>();
-                map.put(src, dstList);
-            }
-            dstList.add(dst);
-        }
-        for (List<String> dstList : map.values()) {//H.W.: missing reverse order sort
-            Collections.sort(dstList, Collections.reverseOrder());  
-        }
-        
-        List<String> res = new ArrayList<>();
-        Deque<String> stack = new LinkedList<>();
-        stack.offerFirst("JFK");
-        while (!stack.isEmpty()) {
-            for (List<String> dstList = map.get(stack.peekFirst());
-                dstList != null && !dstList.isEmpty();
-                 dstList = map.get(stack.peekFirst())) {
-                String dst = dstList.remove(dstList.size() - 1);
-                stack.offerFirst(dst);
-            }
-            String src = stack.pollFirst();
-            res.add(src);
         }
         Collections.reverse(res);
         return res;
