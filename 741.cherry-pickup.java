@@ -86,7 +86,8 @@
 class Solution {
     public int cherryPickup(int[][] grid) {
         //return sol1(grid); //5.5: DFS
-        return sol2(grid);   //6.0: DFS
+        //return sol2(grid);   //6.0: DFS
+        return sol3(grid);   //6.0: DP
     }
 
     //DFS: O(n ^ 4) / O(n ^ 4) + (2n - 2)
@@ -162,6 +163,7 @@ class Solution {
     }
 
     //DP: O(n ^ 4) / O(n ^ 4)
+    //https://leetcode.com/problems/cherry-pickup/discuss/109911
     private int sol3(int[][] grid) {
         int n = grid.length;
         int[][][][] dp = new int[n + 1][n + 1][n + 1][n + 1];
@@ -193,7 +195,7 @@ class Solution {
                 }
             }
         }
-        return dp[n][n][n][n];
+        return Math.max(0, dp[n][n][n][n]); //H.W.: forgot to return 0 when no solution.
     }
 }
 // @lc code=end
