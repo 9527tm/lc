@@ -129,6 +129,7 @@ class Solution {
 
     //DFS: O(n ^ 3) / (n ^ 3) + (2n - 2)
     //https://leetcode.com/problems/cherry-pickup/discuss/279967
+    //leetcode.com/problems/cherry-pickup/discuss/329945/Very-easy-to-follow-:-step-by-step-recursive-backtracking-with-memoization-N4./365157
     private int sol2(int[][] grid) {
         int n = grid.length;
         return Math.max(0, dfs2(grid, 0, 0, 0, new Integer[n][n][n]));
@@ -158,6 +159,41 @@ class Solution {
         }
         mem[x][y][x2] = res;
         return res;
+    }
+
+    //DP: O(n ^ 4) / O(n ^ 4)
+    private int sol3(int[][] grid) {
+        int n = grid.length;
+        int[][][][] dp = new int[n + 1][n + 1][n + 1][n + 1];
+        for (int x = 0; x <= n; x++) {
+            for (int y = 0; y <= n; y++) {
+                for (int x2 = 0; x2 <= n; x2++) {
+                    for (int y2 = 0; y2 <= n; y2++) {
+                        if (x == 0 || y == 0 || x2 == 0 || y2 == 0) {
+                            dp[x][y][x2][y2] = -1;
+                        }
+                        else if (x == 1 && y == 1 && x2 == 1 && y2 == 1) {
+                            dp[x][y][x2][y2] = grid[0][0];
+                        }
+                        else {
+                            if (grid[x - 1][y - 1] < 0 || grid[x2 - 1][y2 - 1] < 0) {
+                                dp[x][y][x2][y2] = -1;
+                            }
+                            else {
+                                int currValue = (x == x2 && y == y2) ? 
+                                    grid[x - 1][y - 1] : grid[x - 1][y - 1] + grid[x2 - 1][y2 - 1];
+                                int prevValue = Math.max(Math.max(dp[x - 1][y][x2 - 1][y2], 
+                                                                  dp[x - 1][y][x2][y2 - 1]),
+                                                         Math.max(dp[x][y - 1][x2 - 1][y2],
+                                                                  dp[x][y - 1][x2][y2 - 1]));
+                                dp[x][y][x2][y2] = prevValue >= 0 ? prevValue + currValue : -1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return dp[n][n][n][n];
     }
 }
 // @lc code=end
