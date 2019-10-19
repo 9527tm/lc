@@ -85,17 +85,18 @@
 // @lc code=start
 class Solution {
     public int cherryPickup(int[][] grid) {
-        return sol1(grid); //5.5: DFS
+        //return sol1(grid); //5.5: DFS
+        return sol2(grid);   //6.0: DFS
     }
 
     //DFS: O(n ^ 4) / O(n ^ 4) + (2n - 2)
     //https://leetcode.com/problems/cherry-pickup/discuss/329945
     private int sol1(int[][] grid) {
         int n = grid.length;
-        return Math.max(0, dfs(grid, 0, 0, 0, 0, new Integer[n][n][n][n]));
+        return Math.max(0, dfs1(grid, 0, 0, 0, 0, new Integer[n][n][n][n]));
     }
 
-    private int dfs(int[][] grid, int x, int y, int x2, int y2,
+    private int dfs1(int[][] grid, int x, int y, int x2, int y2,
                     Integer[][][][] mem) {//H.W.: wrongly pass the sum down to subproblems
         int n = grid.length;              //      then get max result from them
         if (x >= n || y >= n || x2 >= n || y2 >= n || //https://leetcode.com/submissions/detail/271322542/
@@ -115,14 +116,47 @@ class Solution {
         }*/
         else {
             int currValue = (x == x2 && y == y2) ? grid[x][y] : grid[x][y] + grid[x2][y2];
-            int nextValue = Math.max(Math.max(dfs(grid, x + 1, y, x2 + 1, y2, mem),
-                                        dfs(grid, x + 1, y, x2, y2 + 1, mem)),
-                               Math.max(dfs(grid, x, y + 1, x2 + 1, y2, mem),
-                                        dfs(grid, x, y + 1, x2, y2 + 1, mem)));
+            int nextValue = Math.max(Math.max(dfs1(grid, x + 1, y, x2 + 1, y2, mem),
+                                        dfs1(grid, x + 1, y, x2, y2 + 1, mem)),
+                               Math.max(dfs1(grid, x, y + 1, x2 + 1, y2, mem),
+                                        dfs1(grid, x, y + 1, x2, y2 + 1, mem)));
             res = (nextValue != Integer.MIN_VALUE) ? currValue + nextValue : Integer.MIN_VALUE;
         }
 
         mem[x][y][x2][y2] = res;
+        return res;
+    }
+
+    //DFS: O(n ^ 3) / (n ^ 3) + (2n - 2)
+    //https://leetcode.com/problems/cherry-pickup/discuss/279967
+    private int sol2(int[][] grid) {
+        int n = grid.length;
+        return Math.max(0, dfs2(grid, 0, 0, 0, new Integer[n][n][n]));
+    }
+
+    private int dfs2(int[][] grid, int x, int y, int x2, Integer[][][] mem) {
+        int n = grid.length;
+        int y2 = x + y - x2;
+        if (x >= n || y >= n || x2 >= n || y2 >= n ||
+            grid[x][y] == -1 || grid[x2][y2] == -1) {
+            return Integer.MIN_VALUE;
+        }
+        if (mem[x][y][x2] != null) {
+            return mem[x][y][x2];
+        }
+        int res = 0;
+        if (x == n - 1 && y == n - 1) {
+            res = grid[x][y];
+        }
+        else {
+            int currValue = (x == x2 && y == y2) ? grid[x][y] : grid[x][y] + grid[x2][y2];
+            int nextValue = Math.max(Math.max(dfs2(grid, x + 1, y, x2 + 1, mem),
+                                              dfs2(grid, x + 1, y, x2, mem)),
+                                     Math.max(dfs2(grid, x, y + 1, x2 + 1, mem),
+                                              dfs2(grid, x, y + 1, x2, mem)));
+            res = (nextValue != Integer.MIN_VALUE) ? currValue + nextValue : Integer.MIN_VALUE;
+        }
+        mem[x][y][x2] = res;
         return res;
     }
 }
