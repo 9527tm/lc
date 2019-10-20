@@ -89,13 +89,17 @@ class Solution {
         //return sol2(grid);   //6.0: DFS
         //return sol3(grid);   //6.0: DP
         //return sol4(grid);   //6.0: DP
-        return sol5(grid);   //6.0: DP
+        //return sol5(grid);   //6.5: DP
+        return sol5(grid);     //6.5: DP
 
         /*TUITION:
           1. Basement:     a round trip (src <=> dst) equals two single trips (src => dst).
                            -- Don't change the grid.
-          2. Optimization: each single trip has the same pace and distance as the other trip.
+          2. Time Optim.:  each single trip has the same pace and distance as the other trip.
                            -- O(n ^ 4) => O(n ^ 3).
+          3. Space Optim.: coordinate pair (x, y) can be converted to pair (steps, x).
+                           -- dp matrix can be reused and updated backwards 
+                              since dp elements depend others forwards. 
          */
     }
 
@@ -248,6 +252,12 @@ class Solution {
 
     //DP: O(n ^ 3) / O(n ^ 2)
     //https://leetcode.com/problems/cherry-pickup/discuss/109903
+    //Why x: n - 1 => 0
+    //       x2: n - 1 >= 0 
+    //   Why we reuse dp[][] and updates it backwards?
+    //   Because: dp[x][x2] depends on dp[x - 1][x2], dp[x][x2 - 1], dp[x - 1][x2 - 1],
+    //            we update dp[x][x2] before its sources.
+    //            in this way, we avoid early updating error.
     private int sol5(int[][] grid) {
         int n = grid.length;
         int[][] dp = new int[n][n];
@@ -262,8 +272,8 @@ class Solution {
                         dp[x][x2] = grid[0][0];
                     }
                     else {
-                        if (grid[x][y] == -1 || grid[x2][y2] == -1) {//H.W.: forgot index = len - 1
-                            dp[x][x2] = -1;                                          //      => grid[x][y]
+                        if (grid[x][y] == -1 || grid[x2][y2] == -1) {
+                            dp[x][x2] = -1;                          
                         }
                         else {
                             if (x >= 1) {
@@ -287,6 +297,40 @@ class Solution {
         }
 
         return Math.max(0, dp[n - 1][n - 1]);
+    }
+
+    //DP: O(n ^ 3) / O(n ^ 2)
+    //https://leetcode.com/problems/cherry-pickup/discuss/109903
+    private int sol5a(int[][] grid) {
+        int n = grid.length;
+        int[][] dp = new int[n + 1][n + 1];
+        for (int steps = 0; steps <= 2 * n; steps++) {
+            for (int x = n; x >= 0; x--) {
+                for (int x2 = n; x2 >= 0; x2--) {
+                    int y = steps - x, y2 = steps - x2;
+                    if (x == 0 || x2 == 0 || y <= 0 || y > n || y2 <= 0 || y2 > n) {//Tricky: check y and y2
+                        dp[x][x2] = -1;
+                    }
+                    else if (x == 1 && y == 1 && x2 == 1 && y2 == 1) {
+                        dp[x][x2] = grid[0][0];
+                    }
+                    else {
+                        if (grid[x - 1][y - 1] == -1 || grid[x2 - 1][y2 - 1] == -1) {//H.W.: forgot index = len - 1
+                            dp[x][x2] = -1;                                          //      => grid[x][y]
+                        }
+                        else {
+                            int currValue = (x == x2) ? grid[x - 1][y - 1] : 
+                                    grid[x - 1][y - 1] + grid[x2 - 1][y2 - 1];
+                            int prevValue = Math.max(Math.max(dp[x][x2], dp[x - 1][x2]),
+                                                    Math.max(dp[x][x2 - 1], dp[x - 1][x2 - 1]));
+                            dp[x][x2] = (prevValue != -1) ? prevValue + currValue : -1;
+                        }
+                    }
+                }
+            }
+        }
+
+        return Math.max(0, dp[n][n]);
     }
 }
 // @lc code=end
