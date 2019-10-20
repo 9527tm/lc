@@ -88,7 +88,15 @@ class Solution {
         //return sol1(grid); //5.5: DFS
         //return sol2(grid);   //6.0: DFS
         //return sol3(grid);   //6.0: DP
-        return sol4(grid);   //6.0: DP
+        //return sol4(grid);   //6.0: DP
+        return sol5(grid);   //6.0: DP
+
+        /*TUITION:
+          1. Basement:     a round trip (src <=> dst) equals two single trips (src => dst).
+                           -- Don't change the grid.
+          2. Optimization: each single trip has the same pace and distance as the other trip.
+                           -- O(n ^ 4) => O(n ^ 3).
+         */
     }
 
     //DFS: O(n ^ 4) / O(n ^ 4) + (2n - 2)
@@ -201,6 +209,7 @@ class Solution {
 
     //DP: O(n ^ 3) / O(n ^ 3)
     //https://leetcode.com/problems/cherry-pickup/discuss/109911
+    //https://leetcode.com/problems/cherry-pickup/discuss/165218
     private int sol4(int[][] grid) {
         int n = grid.length;
         int[][][] dp = new int[n + 1][n + 1][n + 1];
@@ -235,6 +244,49 @@ class Solution {
             }
         }
         return Math.max(0, dp[n][n][n]); 
+    }
+
+    //DP: O(n ^ 3) / O(n ^ 2)
+    //https://leetcode.com/problems/cherry-pickup/discuss/109903
+    private int sol5(int[][] grid) {
+        int n = grid.length;
+        int[][] dp = new int[n][n];
+        for (int steps = 0; steps < 2 * n - 1; steps++) {
+            for (int x = n - 1; x >= 0; x--) {
+                for (int x2 = n - 1; x2 >= 0; x2--) {
+                    int y = steps - x, y2 = steps - x2;
+                    if (y < 0 || y >= n || y2 < 0 || y2 >= n) {//Tricky: check y and y2
+                        dp[x][x2] = -1;
+                    }
+                    else if (x == 0 && y == 0 && x2 == 0 && y2 == 0) {
+                        dp[x][x2] = grid[0][0];
+                    }
+                    else {
+                        if (grid[x][y] == -1 || grid[x2][y2] == -1) {//H.W.: forgot index = len - 1
+                            dp[x][x2] = -1;                                          //      => grid[x][y]
+                        }
+                        else {
+                            if (x >= 1) {
+                                dp[x][x2] = Math.max(dp[x][x2], dp[x - 1][x2]);
+                            }
+                            if (x2 >= 1) {
+                                dp[x][x2] = Math.max(dp[x][x2], dp[x][x2 - 1]);
+                            }
+                            if (x >= 1 && x2 >= 1) {
+                                dp[x][x2] = Math.max(dp[x][x2], dp[x - 1][x2 - 1]);
+                            }
+                            
+                            if (dp[x][x2] >= 0) {
+                                dp[x][x2] += (x == x2 && y == y2) ? 
+                                    grid[x][y] : grid[x][y] + grid[x2][y2];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return Math.max(0, dp[n - 1][n - 1]);
     }
 }
 // @lc code=end
