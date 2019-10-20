@@ -87,7 +87,8 @@
 class TimeMap {
 
     /** Initialize your data structure here. */
-    Sol sol = new Sol1();
+    //Sol sol = new Sol1();
+    Sol sol = new Sol2();
     public TimeMap() {
         
     }
@@ -109,6 +110,7 @@ interface Sol {
 class Sol1 implements Sol {
     private Map<String, TreeMap<Integer, String>> db = new HashMap<>();
 
+    //O(lgn) / O(n)
     public void set(String key, String value, int timestamp) {
         TreeMap<Integer, String> table = db.get(key);
         if (table == null) {
@@ -118,6 +120,7 @@ class Sol1 implements Sol {
         table.put(timestamp, value);
     }
 
+    //O(lgn) / O(n)
     public String get(String key, int timestamp) {
         TreeMap<Integer, String> table = db.get(key);
         if (table == null) {
@@ -127,7 +130,52 @@ class Sol1 implements Sol {
         return entry != null ? entry.getValue() : "";
     }
 }
-    
+
+
+
+class Sol2 implements Sol {//assume timestamp is ascending
+    static class Elem {
+        private String value;
+        private int timestamp;
+        public Elem(String value, int timestamp) {
+            this.value = value;
+            this.timestamp = timestamp;
+        }
+    }
+
+    private Map<String, List<Elem>> db = new HashMap<>();
+
+    //O(1) / O(n)
+    public void set(String key, String value, int timestamp) {
+        List<Elem> table = db.get(key);
+        if (table == null) {
+            table = new ArrayList<>();
+            db.put(key, table);
+        }
+        table.add(new Elem(value, timestamp));
+    }
+
+    //O(lgn) / O(n)
+    public String get(String key, int timestamp) {
+        List<Elem> table = db.get(key);
+        return table != null ? binarySearch(table, timestamp) : "";
+    }
+
+    private String binarySearch(List<Elem> table, int timestamp) {
+        int left = 0, right = table.size() - 1;
+        while (left + 1 < right) {
+            int mid = left + (right - left) / 2;
+            if (table.get(mid).timestamp <= timestamp) {
+                left = mid;
+            }
+            else {
+                right = mid - 1;
+            }
+        }
+        return table.get(right).timestamp <= timestamp ? table.get(right).value :
+               table.get(left).timestamp <= timestamp ? table.get(left).value : "";
+    }
+}   
 /**
  * Your TimeMap object will be instantiated and called as such:
  * TimeMap obj = new TimeMap();
