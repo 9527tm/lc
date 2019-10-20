@@ -87,7 +87,8 @@ class Solution {
     public int cherryPickup(int[][] grid) {
         //return sol1(grid); //5.5: DFS
         //return sol2(grid);   //6.0: DFS
-        return sol3(grid);   //6.0: DP
+        //return sol3(grid);   //6.0: DP
+        return sol4(grid);   //6.0: DP
     }
 
     //DFS: O(n ^ 4) / O(n ^ 4) + (2n - 2)
@@ -196,6 +197,44 @@ class Solution {
             }
         }
         return Math.max(0, dp[n][n][n][n]); //H.W.: forgot to return 0 when no solution.
+    }
+
+    //DP: O(n ^ 3) / O(n ^ 3)
+    //https://leetcode.com/problems/cherry-pickup/discuss/109911
+    private int sol4(int[][] grid) {
+        int n = grid.length;
+        int[][][] dp = new int[n + 1][n + 1][n + 1];
+        for (int x = 0; x <= n; x++) {
+            for (int y = 0; y <= n; y++) {
+                for (int x2 = 0; x2 <= n; x2++) { 
+                    int y2 = x + y - x2; //TICKY: how can we judge if a y2 is valid!!! (y2: 1 <= y2 <= n)
+                    if (y2 < 0 || y2 > n) {//H.W.: forgot to validate y2 (y2 == n is ok!)
+                        dp[x][y][x2] = -1;
+                    }
+                    else if (x == 0 || y == 0 || x2 == 0 || y2 == 0) {//H.W.: forgot to check y2 == 0
+                        dp[x][y][x2] = -1;
+                    }
+                    else if (x == 1 && y == 1 && x2 == 1 && y2 == 1) {
+                        dp[x][y][x2] = grid[0][0];
+                    }
+                    else {
+                        if (grid[x - 1][y - 1] < 0 || grid[x2 - 1][y2 - 1] < 0) {
+                            dp[x][y][x2] = -1;
+                        }
+                        else {
+                            int currValue = (x == x2 && y == y2) ? 
+                                grid[x - 1][y - 1] : grid[x - 1][y - 1] + grid[x2 - 1][y2 - 1];
+                            int prevValue = Math.max(Math.max(dp[x - 1][y][x2 - 1], 
+                                                              dp[x - 1][y][x2]),
+                                                     Math.max(dp[x][y - 1][x2 - 1],
+                                                              dp[x][y - 1][x2]));
+                            dp[x][y][x2] = prevValue >= 0 ? prevValue + currValue : -1;
+                        }
+                    }
+                }
+            }
+        }
+        return Math.max(0, dp[n][n][n]); 
     }
 }
 // @lc code=end
