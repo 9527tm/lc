@@ -53,36 +53,38 @@ class Solution {
     //O(n * lgs) / O(1) 
     //n -- len(nums), s -- sum(nums)
     /*binary search: find the first occurrence 
-      -- the smallest value to split nums into m subarrays 
-         and the sum of each subarray is no larger than "that value"
-         so "that value" is equal to the sum of largest subarrays
+      -- the smallest cap to split nums into m subarrays 
+         so that the sum of each subarray is no larger than "the cap"
+         and "that cap" actually equals to the sum of largest subarray.
     */
+    //https://leetcode.com/problems/split-array-largest-sum/discuss/89820
+    //https://leetcode.com/problems/split-array-largest-sum/discuss/89819
     private int sol1(int[] nums, int m) {
         int left = 0, right = Integer.MAX_VALUE;
         //int left = max(nums), right = sum(nums);
         while (left < right) {
             int mid = left + (right - left) / 2;
-            int k = countSubarrays(nums, mid); //mid is actually the filter size
-            if (k < m) {//filter size is too large so that too few subarrays we got 
+            int k = countSubarrays(nums, mid); //mid is actually the cap we're trying 
+            if (k < m) {//the cap is too large so that too few subarrays we got 
                 right = mid; //mid - 1; //left < right => search range is at least 2
             }
-            else if (k > m) {//filter size is too small so that too many subarray we got
+            else if (k > m) {//the cap is too small so that too many subarrays we got
                 left = mid + 1;
             }
-            else {//filter size is satisfying but there may be mulitple candidates
+            else {//the cap is satisfying but there may be mulitple candidates
                 right = mid;//we want the smallest one (first occurrence)
             }
         }
         return left;
     }
 
-    private int countSubarrays(int[] nums, int filterSize) {
-        int k = 1, subSum = 0;
+    private int countSubarrays(int[] nums, int cap) {
+        int k = 1, subSum = 0; //H.W.: k is WRONGLY initialized to 0.
         for (int n : nums) {
-            if (n > filterSize) {//[7, 2, 5, 10 ,8], 7
+            if (n > cap) {//H.W.: forgot to avoid small caps. ex: [7, 2, 5, 10 ,8], 7
                 return Integer.MAX_VALUE;//if we don't break here and indicate too many subarrays 
             }                            //we will get k = 5 wrongly.
-            if (subSum + n <= filterSize) {
+            if (subSum + n <= cap) {
                 subSum += n;
             }
             else {
