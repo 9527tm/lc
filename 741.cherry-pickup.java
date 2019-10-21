@@ -87,10 +87,10 @@ class Solution {
     public int cherryPickup(int[][] grid) {
         //return sol1(grid); //5.5: DFS
         //return sol2(grid);   //6.0: DFS
-        //return sol3(grid);   //6.0: DP
+        return sol3(grid);   //6.0: DP
         //return sol4(grid);   //6.0: DP
         //return sol5(grid);   //6.5: DP
-        return sol5(grid);     //6.5: DP
+        //return sol5(grid);     //6.5: DP
 
         /*TUITION:
           1. Basement:     a round trip (src <=> dst) equals two single trips (src => dst).
@@ -100,6 +100,47 @@ class Solution {
           3. Space Optim.: coordinate pair (x, y) can be converted to pair (steps, x).
                            -- dp matrix can be reused and updated backwards 
                               since dp elements depend others forwards. 
+          4. Followup:
+             Q1. will one single trip repeat any part trail of the other?
+                 if so, except for the intersection points, the will be some points to be wrongly collected twice.
+                 -- fortunately, the answer is NO. why?
+                    at time t1, trip A goes to point P1 (x1, y1) and trip B goes to point P2 (x2, y2).
+                    we assume at time t2 (t2 > t1), A goes to point P2. and we have:
+                    i.   since A and B starts from (0, 0) and at the same pace => x1 + y1 = x2 + y2
+                    ii.  during time t1 to t2, A has dx and dy steps           => x1 + dx = x2, y1 + dy = y2
+                    iii. A and B move down and right (never up nor left)       => dx >= 0, dy >= 0
+                    from i, ii and iii   x1 + y1 = x2 + y2 = x1 + dx + y1 + dy => dx + dy = 0 
+                                                                               => dx = 0 and dy = 0
+                    Contradiciton!!!
+             Q2. will invalid point pairs [P1(x1, y1) and P2(x2, y2), x1 + y1 # x2 + y2] 
+                 spoil DP recursion?
+                 -- fortunately, the answer is NO also. why?
+                    (x1, y1) = (0, 0) + (dx1, dy1), dx1 = x1, dy1 = y1
+                    (x2, y2) = (0, 0) + (dx2, dy2), dx2 = x2, dy2 = y2
+                    
+                    each step: (xi, yi) = (xi - 1, yi) + (1, 0) or (xi, yi - 1) + (0, 1)
+                    A starts from (0, 0) and arrives at (x1, y1) by x1 + y1 steps;
+                    B arrives at (x2, y2) when A goes to (x1, y1), 
+                    that's, when A started from (0, 0) and B started from (x2_n, y2_n) and x2_n + y2_n # 0
+                    
+                    dp(x1, y1, x2, y2) = dp(x1_1, y1_1, x2_1, y2_1) + 
+                                         grid[x1_1][y1_1] + (or grid[x2_1][y2_1])
+                    dp(x1_1, y1_1, x2_1, y2_1) = dp(x1_2, y1_2, x2_2, y2_2) +
+                                                 grid[x1_2][y1_2] + (or grid[x2_2][y2_2])
+                    ... after x1 + y1 steps,
+                    dp(x1_n-1, y1_n-1, x2_n-1, y2_n-1) = dp(x1_n, y1_n, x2_n, y2_n) + 
+                                                 grid[x1_n][y1_n] + (or grid[x2_n][y2_n])
+                    
+                    dp(0, 0, x2_n, y2_n) = dp(x1_n, y1_n, x2_n, y2_n) # dp(0, 0, 0, 0)
+                    dp(0, 0, x2_n, y2_n) = dp(-1, 0, x2_n+1, y2_n) + 
+                                           grid[-1][0] + (or grid[x2_n+1][y2_n+1])
+                                         or,
+                                         = dp(0, -1, x2_n+1, y2_n) + 
+                                           grid[0][-1] + (or grid[x2_n+1][y2_n+1])
+                    
+                    so we know: initially dp(0, 0, x2_n, y2_n) = -1,
+                                all the dp(x1_i, y1_i, x2_i, y2_i) and finally dp(x1, y1, x2, y2) are -1.
+                    
          */
     }
 
@@ -204,6 +245,10 @@ class Solution {
                                 dp[x][y][x2][y2] = prevValue >= 0 ? prevValue + currValue : -1;
                             }
                         }
+                        
+                        /*if (x * y * x2 * y2 != 0) {
+                            System.out.printf("%d\t%d\t%d\t%d\t%d\n", x, y, x2, y2, dp[x][y][x2][y2]);
+                        }*/
                     }
                 }
             }
