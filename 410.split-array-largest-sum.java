@@ -48,8 +48,8 @@
 class Solution {
     public int splitArray(int[] nums, int m) {
         //return sol1(nums, m); //6.0: binary search       
-        //return sol2(nums, m); //5.5: DP       
-        return sol2a(nums, m);  //5.5  DP
+        return sol2(nums, m); //5.5: DP       
+        //return sol2a(nums, m);  //5.5  DP
     }
 
     //O(n * lgs) / O(1) 
@@ -115,32 +115,42 @@ class Solution {
 
 
     /*
-     * dp[i, j]: the minimum sum of i subarrays which are cut from the first j elements of input nums.
-                 0 <= i <= m, i <= j <= len(nums)
-       dp[0, j] = dp[i, 0] = Integer.MAX_VALUE
-       dp[i, j] = min{max(dp[i - 1, k], sum(nums[k],...nums[j]))}, i - 1 <= k <= j
-     */
+     * dp[i, j]: the minimum sum of i subarrays which are cut from the first j elements of input array -- nums.
+                 0 < i <= m, i <= j <= len(nums)
+       dp[1, j] = sum of first j elements (NO CUT AT ALL)
+       dp[i, j] = min{max(dp[i - 1, k], sum(nums[k],...nums[j]))}, i - 1 <= k <= j - 1, i >= 2 (ONE CUT AT LEAST)
+
+                  Why is k in [i - 1, j - 1]?
+                  -- because the k-th cut happens when both dp[i - 1, k] and nums[k] are feasible.
+                  1. k-1_th cut needs i - 1 elements at least.
+                  2. k_th cut should make first j elements into two valid parts: 
+                     part 1: nums[0, k - 1] and part 2: nums[k, j - 1] 
+                     obviously, each one parts may have 1 element at least.
+                     that's why we use cutting (transfom formular) when i >= 2.
+                  
+                  in this way, our algorithm can correctly process an input array of 
+                               any elements no matter positive or negative.
+
+       https://leetcode.com/problems/split-array-largest-sum/solution/
+    */
     //DP: O(n * n * m) / (n * m)
     private int sol2(int[] nums, int m) {
         int n = nums.length;
-        long[][] dp = new long[m + 1][n + 1]; //H.W.: '[1, 2147483647]\n2'
-        for (int i = 0; i <= m; i++) {
-            dp[i][0] = Long.MAX_VALUE;
-        }
-        for (int j = 0; j <= n; j++) {
-            dp[0][j] = Long.MAX_VALUE;
-        }
-        
-        dp[1][0] = 0;
+        long[] sum = new long[n + 1];//H.W.: '[1, 2147483647]\n2'
         for (int j = 1; j <= n; j++) {
-            dp[1][j] = dp[1][j - 1] + nums[j - 1];
+            sum[j] = sum[j - 1] + nums[j - 1];
+        }
+
+        long[][] dp = new long[m + 1][n + 1]; 
+        for (int j = 1; j <= n; j ++) {
+            dp[1][j] = sum[j];
         }
 
         for (int i = 2; i <= m; i++) {
-            for (int j = i; j <= n; j++) {
-                dp[i][j] = Long.MAX_VALUE;
-                for (int k = i - 1; k <= j; k++) {
-                    dp[i][j] = Math.min(dp[i][j], Math.max(dp[i - 1][k], dp[1][j] - dp[1][k]));
+            for (int j = i; j <= n; j++) {        
+                dp[i][j] = Long.MAX_VALUE;        
+                for (int k = i - 1; k < j; k++) {//i - 1 <= k <= j - 1: two valid parts from one cut
+                    dp[i][j] = Math.min(dp[i][j], Math.max(dp[i - 1][k], sum[j] - sum[k]));
                 }
             }
         }
@@ -153,22 +163,21 @@ class Solution {
     private int sol2a(int[] nums, int m) {
         int n = nums.length;
         long[] sum = new long[n + 1];
-        long[] dp = new long[n + 1];
+        for (int j = 1; j <= n; j++) {
+            sum[j] = sum[j - 1] + nums[j - 1];
+        }
 
-        sum[0] = 0L;
-        dp[0] = Long.MAX_VALUE;
-        for (int i = 1; i <= n; i++) {
-            sum[i] = sum[i - 1] + nums[i - 1];
-            dp[i] = sum[i];
+        long[] dp = new long[n + 1];
+        for (int j = 1; j <= n; j++) {//i = 1
+            dp[j] = sum[j];
         }
 
         for (int i = 2; i <= m; i++) {
             for (int j = n; j >= i; j--) {//TRICKY: update backward since dp[j] <= dp[k], k <= j
-                long value = Long.MAX_VALUE;//TRICKY: use a temp value for dp[j] since k <= j
-                for (int k = i - 1; k <= j; k++) {
-                    value = Math.min(value, Math.max(dp[k], sum[j] - sum[k]));
+                dp[j] = Long.MAX_VALUE;//TRICKY: don't have to use a temp value for dp[j]
+                for (int k = i - 1; k < j; k++) {//since we have made clear k < j (two parts from one valid cut)
+                    dp[j] = Math.min(dp[j], Math.max(dp[k], sum[j] - sum[k]));
                 }
-                dp[j] = value;
             }
         }
         return (int)dp[n];
