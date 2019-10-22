@@ -48,7 +48,8 @@
 class Solution {
     public int splitArray(int[] nums, int m) {
         //return sol1(nums, m);        
-        return sol2(nums, m);        
+        //return sol2(nums, m);        
+        return sol2a(nums, m);        
     }
 
     //O(n * lgs) / O(1) 
@@ -144,6 +145,30 @@ class Solution {
         }
 
         return (int)dp[m][n];
+    }
+
+    private int sol2a(int[] nums, int m) {
+        int n = nums.length;
+        long[] sum = new long[n + 1];
+        long[] dp = new long[n + 1];
+
+        sum[0] = 0L;
+        dp[0] = Long.MAX_VALUE;
+        for (int i = 1; i <= n; i++) {
+            sum[i] = sum[i - 1] + nums[i - 1];
+            dp[i] = sum[i];
+        }
+
+        for (int i = 2; i <= m; i++) {
+            for (int j = n; j >= i; j--) {//TRICKY: update backward since dp[j] <= dp[k], k <= j
+                long value = Long.MAX_VALUE;
+                for (int k = i - 1; k <= j; k++) {
+                    value = Math.min(value, Math.max(dp[k], sum[j] - sum[k]));
+                }
+                dp[j] = value;
+            }
+        }
+        return (int)dp[n];
     }
 }
 // @lc code=end
