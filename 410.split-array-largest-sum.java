@@ -48,8 +48,8 @@
 class Solution {
     public int splitArray(int[] nums, int m) {
         //return sol1(nums, m); //6.0: binary search       
-        return sol2(nums, m); //5.5: DP       
-        //return sol2a(nums, m);  //5.5  DP
+        //return sol2(nums, m); //5.5: DP       
+        return sol2a(nums, m);  //5.5  DP
     }
 
     //O(n * lgs) / O(1) 
