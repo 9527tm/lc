@@ -47,9 +47,9 @@
 // @lc code=start
 class Solution {
     public int splitArray(int[] nums, int m) {
-        //return sol1(nums, m);        
-        //return sol2(nums, m);        
-        return sol2a(nums, m);        
+        //return sol1(nums, m); //6.0: binary search       
+        //return sol2(nums, m); //5.5: DP       
+        return sol2a(nums, m);  //5.5  DP
     }
 
     //O(n * lgs) / O(1) 
@@ -120,6 +120,7 @@ class Solution {
        dp[0, j] = dp[i, 0] = Integer.MAX_VALUE
        dp[i, j] = min{max(dp[i - 1, k], sum(nums[k],...nums[j]))}, i - 1 <= k <= j
      */
+    //DP: O(n * n * m) / (n * m)
     private int sol2(int[] nums, int m) {
         int n = nums.length;
         long[][] dp = new long[m + 1][n + 1]; //H.W.: '[1, 2147483647]\n2'
@@ -147,6 +148,8 @@ class Solution {
         return (int)dp[m][n];
     }
 
+
+    //DP: O(n * n * m) / O(n)
     private int sol2a(int[] nums, int m) {
         int n = nums.length;
         long[] sum = new long[n + 1];
@@ -161,7 +164,7 @@ class Solution {
 
         for (int i = 2; i <= m; i++) {
             for (int j = n; j >= i; j--) {//TRICKY: update backward since dp[j] <= dp[k], k <= j
-                long value = Long.MAX_VALUE;
+                long value = Long.MAX_VALUE;//TRICKY: use a temp value for dp[j] since k <= j
                 for (int k = i - 1; k <= j; k++) {
                     value = Math.min(value, Math.max(dp[k], sum[j] - sum[k]));
                 }
