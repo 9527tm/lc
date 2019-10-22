@@ -47,7 +47,8 @@
 // @lc code=start
 class Solution {
     public int splitArray(int[] nums, int m) {
-        return sol1(nums, m);        
+        //return sol1(nums, m);        
+        return sol2(nums, m);        
     }
 
     //O(n * lgs) / O(1) 
@@ -109,6 +110,40 @@ class Solution {
             sum += n;
         }
         return sum;
+    }
+
+
+    /*
+     * dp[i, j]: the minimum sum of i subarrays which are cut from the first j elements of input nums.
+                 0 <= i <= m, i <= j <= len(nums)
+       dp[0, j] = dp[i, 0] = Integer.MAX_VALUE
+       dp[i, j] = min{max(dp[i - 1, k], sum(nums[k],...nums[j]))}, i - 1 <= k <= j
+     */
+    private int sol2(int[] nums, int m) {
+        int n = nums.length;
+        long[][] dp = new long[m + 1][n + 1]; //H.W.: '[1, 2147483647]\n2'
+        for (int i = 0; i <= m; i++) {
+            dp[i][0] = Long.MAX_VALUE;
+        }
+        for (int j = 0; j <= n; j++) {
+            dp[0][j] = Long.MAX_VALUE;
+        }
+        
+        dp[1][0] = 0;
+        for (int j = 1; j <= n; j++) {
+            dp[1][j] = dp[1][j - 1] + nums[j - 1];
+        }
+
+        for (int i = 2; i <= m; i++) {
+            for (int j = i; j <= n; j++) {
+                dp[i][j] = Long.MAX_VALUE;
+                for (int k = i - 1; k <= j; k++) {
+                    dp[i][j] = Math.min(dp[i][j], Math.max(dp[i - 1][k], dp[1][j] - dp[1][k]));
+                }
+            }
+        }
+
+        return (int)dp[m][n];
     }
 }
 // @lc code=end
