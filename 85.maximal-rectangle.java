@@ -71,5 +71,37 @@ class Solution {
         }
         return res;
     }
+
+    private int sol2(char[][] matrix) {
+        if (matrix.length <= 0 || matrix[0].length <= 0) {
+            return 0;
+        }
+        int m = matrix.length, n = matrix[0].length;
+        int[] heights = new int[n], leftWidths = new int[n], rightWidths = new int[n];
+        Arrays.fill(leftWidths, Integer.MAX_VALUE);
+        Arrays.fill(rightWidths, Integer.MAX_VALUE);
+        int res = 0;
+        for (int i = 0; i < m; i++) {
+            //forward scan
+            int leftLen = 0;
+            for (int j = 0; j < n; j++) {
+                leftLen = (matrix[i][j] == '1') ? leftLen + 1 : 0; 
+                leftWidths[j] = (matrix[i][j] == '1') ? Math.max(leftWidths[j], leftLen) : Integer.MAX_VALUE;
+            }                   //H.W.: forgot to judge matrix[i][j] when update leftWidth
+            //backward scan
+            int rightLen = 0;
+            for (int j = n - 1; j >= 0; j--) {
+                rightLen = (matrix[i][j] == '1') ? rightLen + 1 : 0;
+                rightWidths[j] = (matrix[i][j] == '1') ? Math.max(rightWidths[j], rightLen) : Integer.MAX_VALUE;
+            }
+            //collect result candidate
+            for (int j = 0; j < n; j++) {
+                heights[j] = (matrix[i][j] == '1') ? heights[j] + 1 : 0;
+                res = Math.max(res, heights[j] * (leftWidths[j] + rightWidths[j] - 1));
+            }   //we are safe when heights[j] is 0 although leftWidths[j] and rightWidths[j] are Integer.MAX_VALUE
+        }
+        return res;
+    }
+
 }
 // @lc code=end
