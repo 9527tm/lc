@@ -34,8 +34,8 @@
 // @lc code=start
 class Solution {
     public int maximalRectangle(char[][] matrix) {
-        return sol1(matrix);        
-        //return sol2(matrix);        
+        //return sol1(matrix);  //rowly progressive max histogram      
+        return sol2(matrix);    //rowly progressive drag knife (拖刀计)   
     }
 
     private int sol1(char[][] matrix) {
@@ -86,13 +86,13 @@ class Solution {
             int leftLen = 0;
             for (int j = 0; j < n; j++) {
                 leftLen = (matrix[i][j] == '1') ? leftLen + 1 : 0; 
-                leftWidths[j] = (matrix[i][j] == '1') ? Math.max(leftWidths[j], leftLen) : Integer.MAX_VALUE;
+                leftWidths[j] = (matrix[i][j] == '1') ? Math.min(leftWidths[j], leftLen) : Integer.MAX_VALUE;
             }                   //H.W.: forgot to judge matrix[i][j] when update leftWidth
             //backward scan
             int rightLen = 0;
             for (int j = n - 1; j >= 0; j--) {
                 rightLen = (matrix[i][j] == '1') ? rightLen + 1 : 0;
-                rightWidths[j] = (matrix[i][j] == '1') ? Math.max(rightWidths[j], rightLen) : Integer.MAX_VALUE;
+                rightWidths[j] = (matrix[i][j] == '1') ? Math.min(rightWidths[j], rightLen) : Integer.MAX_VALUE;
             }
             //collect result candidate
             for (int j = 0; j < n; j++) {
