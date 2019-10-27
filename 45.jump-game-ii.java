@@ -63,20 +63,18 @@ class Solution {
         //dp[i]: the farrest accessible position
         //       after we visited i poisition
         int[] dp = new int[nums.length];
+
         dp[0] = nums[0];
         for (int i = 1; i < dp.length; i++) {
-            dp[i] = dp[i - 1] >= i ? Math.max(dp[i - 1], i + nums[i]) : -1;
-        }
-
-        int count = 0, i = 0; 
-        while (i < nums.length - 1) {
-            if (dp[i] < 0) {
+            if (dp[i - 1] < i) {
                 return Integer.MAX_VALUE;
             }
-            else {
-                i = dp[i];
-                count++;
-            }
+            dp[i] = Math.max(dp[i - 1], i + nums[i]);
+        }
+
+        int count = 0; 
+        for (int i = 0; i < nums.length - 1; i = dp[i]) {
+            count++;
         }
         return count;
     }
