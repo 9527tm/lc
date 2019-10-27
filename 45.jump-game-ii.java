@@ -38,10 +38,11 @@
 // @lc code=start
 class Solution {
     public int jump(int[] nums) {
-        //return sol1(nums); 
-        //return sol2(nums); 
-        //return sol3(nums); 
-        return sol4(nums); 
+        //return sol1(nums); //DP:          5.0
+        //return sol2(nums); //DP + Greedy: 5.5
+        //return sol3(nums); //Greedy:      5.0
+        //return sol4(nums); //DFS:         6.5
+        return sol4a(nums);  //DFS:         7.0
     }
 
     //DP: O(n * n) / O(n) -- TLE
@@ -114,6 +115,24 @@ class Solution {
             left = right + 1; //deque current layer nodes
             right = nextRight;//enque next layer nodes
             depth++;          //go deeper by one layer
+        }
+        return Integer.MAX_VALUE; //not found
+    }
+
+    //BFS: O(n) / O(1)
+    private int sol4a(int[] nums) {
+        int head = 0, tail = 0, depth = 0; //H.W.: [0]
+        while (head <= tail) {//queue is not empty
+            int size = tail - head + 1;//queue size
+            for (int i = 0; i < size; i++) {//process nodes of a layer
+                int curr = head++;          //deque (expand)
+                if (curr >= nums.length - 1) {//H.W.: [0] => check goal when expanding
+                    return depth;             //             instead of generating
+                }
+                int child = curr + nums[curr];//generate
+                tail = Math.max(tail, child);//enqueue
+            }
+            depth++;//go deeper
         }
         return Integer.MAX_VALUE; //not found
     }
