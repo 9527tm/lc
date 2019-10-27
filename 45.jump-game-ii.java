@@ -39,7 +39,8 @@
 class Solution {
     public int jump(int[] nums) {
         //return sol1(nums); 
-        return sol2(nums); 
+        //return sol2(nums); 
+        return sol3(nums); 
     }
 
     //DP: O(n * n) / O(n) -- TLE
@@ -79,5 +80,21 @@ class Solution {
         return count;
     }
 
+    private int sol3(int[] nums) {
+        int count = 0;
+        int max = 0, nextMax = 0;
+        for (int i = 0; i < nums.length - 1; i++) {
+            if (i > max) {
+                return Integer.MAX_VALUE;
+            }
+
+            nextMax = Math.max(nextMax, i + nums[i]);
+            if (i == max) {
+                count++;
+                max = nextMax;
+            }
+        }
+        return count;
+    }
 }
 // @lc code=end
