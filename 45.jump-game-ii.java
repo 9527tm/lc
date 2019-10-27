@@ -40,7 +40,8 @@ class Solution {
     public int jump(int[] nums) {
         //return sol1(nums); 
         //return sol2(nums); 
-        return sol3(nums); 
+        //return sol3(nums); 
+        return sol4(nums); 
     }
 
     //DP: O(n * n) / O(n) -- TLE
@@ -60,6 +61,7 @@ class Solution {
         return dp[nums.length - 1];
     }
 
+    //DP + Greedy: O(n) / O(n)
     private int sol2(int[] nums) {
         //dp[i]: the farrest accessible position
         //       after we visited i poisition
@@ -80,6 +82,7 @@ class Solution {
         return count;
     }
 
+    //Greedy: O(n) / O(1)
     private int sol3(int[] nums) {
         int count = 0;
         int max = 0, nextMax = 0;
@@ -95,6 +98,24 @@ class Solution {
             }
         }
         return count;
+    }
+
+    //BFS: O(n) / O(1)
+    private int sol4(int[] nums) {
+        int left = 0, right = 0, depth = 0;//left/right: first/last node of a layer
+        while (left <= right) {            //nodes of a layer are in the queue
+            int nextRight = 0;             
+            for (int i = left; i <= right; i++) {//queue is not empty
+                if (i >= nums.length - 1) {//expand
+                    return depth;
+                }
+                nextRight = Math.max(nextRight, i + nums[i]);//generate
+            }
+            left = right + 1; //deque current layer nodes
+            right = nextRight;//enque next layer nodes
+            depth++;          //go deeper by one layer
+        }
+        return Integer.MAX_VALUE; //not found
     }
 }
 // @lc code=end
