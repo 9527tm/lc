@@ -122,19 +122,19 @@ class Solution {
     //BFS: O(n) / O(1)
     private int sol4a(int[] nums) {
         int head = 0, tail = 0, depth = 0; //H.W.: [0]
-        while (head <= tail) {//queue is not empty
-            int size = tail - head + 1;//queue size
-            for (int i = 0; i < size; i++) {//process nodes of a layer
-                int curr = head++;          //deque (expand)
-                if (curr >= nums.length - 1) {//H.W.: [0] => check goal when expanding
-                    return depth;             //             instead of generating
+        while (head <= tail) {                //queue is not empty
+            int size = tail - head + 1;       //queue size
+            for (int i = 0; i < size; i++) {  //process nodes of one layer
+                int curr = head++;            //deque
+                if (curr >= nums.length - 1) {//expand   H.W.: [0] => check goal when expanding
+                    return depth;             //         instead of generating
                 }
-                int child = curr + nums[curr];//generate
-                tail = Math.max(tail, child);//enqueue
+                int nexts = curr + nums[curr];//generate
+                tail = Math.max(tail, nexts); //enqueue
             }
-            depth++;//go deeper
+            depth++;                          //go deeper one layer
         }
-        return Integer.MAX_VALUE; //not found
+        return Integer.MAX_VALUE;             //goal is not found
     }
 }
 // @lc code=end
