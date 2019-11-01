@@ -38,7 +38,8 @@ class Solution {
         //return sol1(intervals);        
         //return sol1a(intervals);        
         //return sol2(intervals);        
-        return sol3(intervals);
+        //return sol3(intervals);
+        return sol4(intervals);
     }
 
     private int[][] sol1(int[][] intervals) {
@@ -115,4 +116,46 @@ class Solution {
         }
         return treeSet.toArray(new int[treeSet.size()][]);
     }
+
+    //H.W.: wrongly merge without copy space!  [[5, 6], [7, 8],  [0, 1], [2, 3], [4, 5]]
+    //      [7, 8] is actually overwritten by [2, 3], though [5, 6] was avoided!
+    
+    //O(nlgn) / O(n): DC without extra copying / with temp spaces
+    private int[][] sol4(int[][] intervals) {
+        int newRight = sol4(intervals, 0, intervals.length - 1, Arrays.copyOf(intervals, intervals.length));
+        return Arrays.copyOfRange(intervals, 0, newRight + 1);
+    }
+
+    private int sol4(int[][] intervals, int left, int right, int[][] copys) {
+        if (left + 1 > right) {
+            return right;//H.W.: wrongly return length instead of right end point
+        }
+        int mid = left + (right - left) / 2;
+        int right1 = sol4(copys, left, mid, intervals);
+        int right2 = sol4(copys, mid + 1, right, intervals);
+        return merge(copys, left, right1, mid + 1, right2, intervals);
+    }
+
+    private int merge(int[][] input, int left1, int right1, int left2, int right2, int[][] output) {
+        int k = left1;
+        int[] curr = input[left1++];
+        while (left1 <= right1 || left2 <= right2) {
+            int[] next = (left1 > right1 || (left2 <= right2 && input[left2][0] < input[left1][0])) ?
+                    input[left2++] : input[left1++];
+            if (curr[1] < next[0]) {
+                output[k++] = curr;
+                curr = next;
+            }
+            else if (next[1] < curr[0]) {
+                output[k++] = next;
+            }
+            else {
+                curr[0] = Math.min(curr[0], next[0]);
+                curr[1] = Math.max(curr[1], next[1]);
+            }
+        }
+        output[k] = curr;
+        return k;
+    }
+
 }
