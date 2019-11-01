@@ -176,8 +176,9 @@ class Solution {
         }
         List<int[]> list1 = list.subList(0, size / 2);
         List<int[]> list2 = list.subList(size / 2, size);
+        //return merge2(sol4a(list1), sol4a(list2)); //H.W.: wrong merge structure
         return merge(sol4a(list1), sol4a(list2)); //H.W.: forgot to call sol4a recursively
-    }                                             //      => return merge(list1, list2);
+    }                                              //      => return merge(list1, list2);
 
     private List<int[]> merge(List<int[]> list1, List<int[]> list2) {
         int[] curr = list1.get(0);
@@ -202,4 +203,9 @@ class Solution {
         res.add(curr); //H.W.: forgot postprocessing curr!
         return res;
     }
+
+    //H.W.: merge without "curr / next" structure
+    //https://leetcode.com/submissions/detail/275112699/
+    /*private List<int[]> merge2(List<int[]> list1, List<int[]> list2) {
+    }*/
 }
