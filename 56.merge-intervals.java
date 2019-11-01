@@ -39,7 +39,8 @@ class Solution {
         //return sol1a(intervals);        
         //return sol2(intervals);        
         //return sol3(intervals);
-        return sol4(intervals);
+        //return sol4(intervals);
+        return sol4a(intervals);
     }
 
     private int[][] sol1(int[][] intervals) {
@@ -158,4 +159,47 @@ class Solution {
         return k;
     }
 
+    //O(nlgn) / O(nlgn)
+    private int[][] sol4a(int[][] intervals) {
+        List<int[]> list = new ArrayList<>();
+        for (int[] interval : intervals) {
+            list.add(interval);
+        }
+        List<int[]> res = sol4a(list);
+        return res.toArray(new int[res.size()][]);
+    }
+
+    private List<int[]> sol4a(List<int[]> list) {
+        int size = list.size();
+        if (size <= 1) {
+            return list;
+        }
+        List<int[]> list1 = list.subList(0, size / 2);
+        List<int[]> list2 = list.subList(size / 2, size);
+        return merge(sol4a(list1), sol4a(list2)); //H.W.: forgot to call sol4a recursively
+    }                                             //      => return merge(list1, list2);
+
+    private List<int[]> merge(List<int[]> list1, List<int[]> list2) {
+        int[] curr = list1.get(0);
+        List<int[]> res = new ArrayList<>();
+        int i = 1, j = 0;
+        while (i < list1.size() || j < list2.size()) {
+            int[] next = (i >= list1.size() || 
+                          (j < list2.size() && list2.get(j)[0] < list1.get(i)[0])) ?
+                         list2.get(j++) : list1.get(i++); //H.W.: typo => list2.get(i++)
+            if (curr[1] < next[0]) {
+                res.add(curr);
+                curr = next;
+            }
+            else if (next[1] < curr[0]) {
+                res.add(next);
+            }
+            else {
+                curr[0] = Math.min(curr[0], next[0]);
+                curr[1] = Math.max(curr[1], next[1]);
+            }
+        }
+        res.add(curr); //H.W.: forgot postprocessing curr!
+        return res;
+    }
 }
