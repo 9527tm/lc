@@ -176,8 +176,8 @@ class Solution {
         }
         List<int[]> list1 = list.subList(0, size / 2);
         List<int[]> list2 = list.subList(size / 2, size);
-        //return merge2(sol4a(list1), sol4a(list2)); //H.W.: wrong merge structure
-        return merge(sol4a(list1), sol4a(list2)); //H.W.: forgot to call sol4a recursively
+        return merge2(sol4a(list1), sol4a(list2)); //H.W.: wrong merge structure
+        //return merge(sol4a(list1), sol4a(list2)); //H.W.: forgot to call sol4a recursively
     }                                              //      => return merge(list1, list2);
 
     private List<int[]> merge(List<int[]> list1, List<int[]> list2) {
@@ -204,8 +204,41 @@ class Solution {
         return res;
     }
 
-    //H.W.: merge without "curr / next" structure
-    //https://leetcode.com/submissions/detail/275112699/
-    /*private List<int[]> merge2(List<int[]> list1, List<int[]> list2) {
-    }*/
+    //H.W.: failed to handle tie cases
+    //https://leetcode.com/problems/merge-intervals/discuss/288681/Java-divide-and-conquer-solution-beats-97.66
+    private List<int[]> merge2(List<int[]> list1, List<int[]> list2) {
+        List<int[]> res = new ArrayList<>();
+        int i = 0, j = 0;
+        while (i < list1.size() || j < list2.size()) {
+            if (i >= list1.size()) {
+                res.add(list2.get(j++));
+            }
+            else if (j >= list2.size()) {
+                res.add(list1.get(i++));
+            }
+            else {
+                int[] itv1 = list1.get(i);
+                int[] itv2 = list2.get(j);
+                if (itv1[1] < itv2[0]) {//[itv1] < [itv2]
+                    res.add(itv1);
+                    i++;
+                }
+                else if (itv2[1] < itv1[0]){//[itv2] < [itv1]
+                    res.add(itv2);
+                    j++;
+                }
+                else {//[itv1 [ = ] itv2] //H.W.: not clear to move which one when ties
+                    if (itv1[1] < itv2[1]) {//H.W.: [[2,3],[4,5],[6,7],[1,10]]
+                        itv2[0] = Math.min(itv1[0], itv2[0]);
+                        i++;
+                    }
+                    else {
+                        itv1[0] = Math.min(itv1[0], itv2[0]);
+                        j++;
+                    }
+                }
+            }
+        }
+        return res;
+    }
 }
