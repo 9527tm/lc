@@ -42,7 +42,8 @@
 // @lc code=start
 class Solution {
     public int[][] insert(int[][] intervals, int[] newInterval) {
-        return sol1(intervals, newInterval); 
+        //return sol1(intervals, newInterval); 
+        return sol2(intervals, newInterval); 
     }
 
     private int[][] sol1(int[][] intervals, int[] newInterval) {
@@ -74,6 +75,32 @@ class Solution {
         return res.toArray(new int[res.size()][]);
     } 
 
+    private int[][] sol2(int[][] intervals, int[] newInterval) {
+        List<int[]> res = new ArrayList<>();
+        int[][] newIntervals = new int[][] {{newInterval[0], newInterval[1]}};
+        int i = 0, j = 0;
+        while (i < intervals.length && j < newIntervals.length) {
+            if (intervals[i][1] < newIntervals[j][0]) {
+                res.add(intervals[i++]);
+            }
+            else if (newIntervals[j][1] < intervals[i][0]) {
+                res.add(newIntervals[j++]);
+            }
+            else {
+                if (intervals[i][1] < newIntervals[j][1]) {
+                    newIntervals[j][0] = Math.min(newIntervals[j][0], intervals[i++][0]);
+                }
+                else {
+                    intervals[i][0] = Math.min(intervals[i][0], newIntervals[j++][0]);
+                }
+            }
+        }
 
+        while (i < intervals.length || j < newIntervals.length) {
+            int[] curr = i < intervals.length ? intervals[i++] : newIntervals[j++];
+            res.add(curr);
+        }
+        return res.toArray(new int[res.size()][]);
+    }
 }
 // @lc code=end
