@@ -45,7 +45,8 @@ class Solution {
     public int numDecodings(String s) {
         //return sol1(s);
         //return sol2(s);
-        return sol3(s);
+        //return sol3(s);
+        return sol4(s);
     }
 
     private int sol1(String s) {
@@ -102,4 +103,18 @@ class Solution {
         return dp[s.length()];
     }
 
+    //https://leetcode.com/submissions/detail/275358384/
+    private int sol4(String s) {
+        int count1 = 1, count2 = 1;
+        for (int i = 0; i < s.length(); i++) {
+            int temp = 0;
+            temp += (s.charAt(i) >= '1' && s.charAt(i) <= '9') ? count1 : 0;
+            temp += (i > 0 && ((s.charAt(i - 1) == '1') ||
+                               (s.charAt(i - 1) == '2' && s.charAt(i) <= '6'))) 
+                    ? count2 : 0;
+            count2 = count1;
+            count1 = temp;
+        }
+        return count1;
+    }
 }
