@@ -77,7 +77,7 @@ class Solution {
 
     private int[][] sol2(int[][] intervals, int[] newInterval) {
         List<int[]> res = new ArrayList<>();
-        int[][] newIntervals = new int[][] {{newInterval[0], newInterval[1]}};
+        int[][] newIntervals = {newInterval};
         int i = 0, j = 0;
         while (i < intervals.length && j < newIntervals.length) {
             if (intervals[i][1] < newIntervals[j][0]) {
