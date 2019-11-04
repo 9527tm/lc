@@ -61,6 +61,7 @@ class Solution {
         return sol1(A, B); 
     }
 
+    //O(n) / O(n)
     private int[][] sol1(int[][] A, int[][] B) {
         List<int[]> res = new ArrayList<>();
         int i = 0, j = 0;
