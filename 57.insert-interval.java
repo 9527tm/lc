@@ -47,6 +47,7 @@ class Solution {
         return sol3(intervals, newInterval); 
     }
 
+    //O(n) / O(n)
     private int[][] sol1(int[][] intervals, int[] newInterval) {
         List<int[]> res = new ArrayList<>();
         boolean hasInserted = false;
@@ -76,6 +77,7 @@ class Solution {
         return res.toArray(new int[res.size()][]);
     } 
 
+    //O(n) / O(n)
     private int[][] sol2(int[][] intervals, int[] newInterval) {
         List<int[]> res = new ArrayList<>();
         int[][] newIntervals = {newInterval};
@@ -104,6 +106,8 @@ class Solution {
         return res.toArray(new int[res.size()][]);
     }
 
+
+    //O(nlgn) / O(n)
     private int[][] sol3(int[][] intervals, int[] newInterval) {
         TreeSet<int[]> treeSet = new TreeSet<>((interval1, interval2) -> {
                         return  interval1[1] < interval2[0] ? -1 :
