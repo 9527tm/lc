@@ -43,7 +43,8 @@
 class Solution {
     public int[][] insert(int[][] intervals, int[] newInterval) {
         //return sol1(intervals, newInterval); 
-        return sol2(intervals, newInterval); 
+        //return sol2(intervals, newInterval); 
+        return sol3(intervals, newInterval); 
     }
 
     private int[][] sol1(int[][] intervals, int[] newInterval) {
@@ -101,6 +102,23 @@ class Solution {
             res.add(curr);
         }
         return res.toArray(new int[res.size()][]);
+    }
+
+    private int[][] sol3(int[][] intervals, int[] newInterval) {
+        TreeSet<int[]> treeSet = new TreeSet<>((interval1, interval2) -> {
+                        return  interval1[1] < interval2[0] ? -1 :
+                                interval2[1] < interval1[0] ? 1 : 0;});
+        treeSet.add(newInterval);
+        for (int[] interval : intervals) {
+            while (treeSet.contains(interval)) {
+                int[] overlappingInterval = treeSet.floor(interval);
+                interval[0] = Math.min(interval[0], overlappingInterval[0]);
+                interval[1] = Math.max(interval[1], overlappingInterval[1]);
+                treeSet.remove(overlappingInterval);
+            }
+            treeSet.add(interval);
+        }
+        return treeSet.toArray(new int[treeSet.size()][]);
     }
 }
 // @lc code=end
