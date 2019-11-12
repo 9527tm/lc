@@ -54,7 +54,8 @@ class Solution {
         //return sol2a(head, k);
         //return sol3(head, k);
         //return sol3a(head, k);
-        return sol4(head, k);
+        //return sol4(head, k);
+        return sol5(head, k);
     }
 
     private ListNode sol1(ListNode head, int k) {
@@ -262,5 +263,72 @@ class Solution {
             num++;
         }
         return num;
+    }
+
+    /*
+Problem: LC25 - Reverse the linked list in a group of K nodes
+
+Solution:
+
+1. We need to maintain a result list.
+   Assume: its head is saved in a "dummyHead" and its tail is "tail".
+
+2. We use a "curr" pointer to iterate the given list from "head" node.
+   We always try to find out the first K nodes starting from "curr" node.
+   We group them as the first node "groupHead" and the last node "groupTail".
+
+   There will be two cases: C1 and C2.
+
+C1: If the group has less than K nodes:
+    We chain the first one of the group after the tail of the result list
+    and goto 3.
+
+C2: Otherwise, we follow these procedures:
+    P1: we move curr to the next node of groupTail (for next group).
+    P2: we reverse the group of K nodes.
+        after that, the group begins at groupTail and finishes at groupHead.
+    P3: we chain the first node of reversed group after the result list.
+        also note that the result list now has the new end at groupHead.
+    P4: goto 2 to process the next group of nodes remained in the list.
+
+3. We return the head of the result list as the answer.
+     */
+    
+    private ListNode sol5(ListNode head, int k) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode tail = dummyHead;
+
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode groupHead = curr;
+            ListNode groupTail = findKth(curr, k);
+            if (groupTail == null) {
+                tail.next = groupHead;
+                break;
+            }
+            curr = groupTail.next;
+            reverse(groupHead, k);
+            tail.next = groupTail;
+            tail = groupHead;
+        }
+        return dummyHead.next;
+    }
+
+    private ListNode findKth(ListNode head, int k) {
+        ListNode curr = head;
+        for (int i = 1; i < k && curr != null; i++) {
+            curr = curr.next;
+        }
+        return curr;
+    }
+
+    private void reverse(ListNode head, int k) {
+        ListNode curr = head, prev = null;
+        for (int i = 0; i < k; i++) {//curr is not null: guaranteed
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
     }
 }
