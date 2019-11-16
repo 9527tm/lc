@@ -63,6 +63,7 @@ class Solution {
         return sol1(accounts); 
     }
 
+    //O(n^2*mk) / O(nmk)
     private List<List<String>> sol1(List<List<String>> accounts) {
         //assume accounts is not null nor empty and one email for one name at least
         Map<String, Set<Set<String>>> map = new HashMap<>(); //name -> [email-set1, email-set2]
@@ -84,7 +85,7 @@ class Solution {
                     toBeDeletedEmails.add(existedEmails);//merged by [2, 7]
                 }
             }
-            emailsSetUnderOneName.removeAll(toBeDeletedEmails); //Concurrent Modification Error
+            emailsSetUnderOneName.removeAll(toBeDeletedEmails); //H.W.: Concurrent Modification Error
             emailsSetUnderOneName.add(emails);
         }
 
