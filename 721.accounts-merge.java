@@ -60,7 +60,8 @@
 // @lc code=start
 class Solution {
     public List<List<String>> accountsMerge(List<List<String>> accounts) {
-        return sol1(accounts); 
+        //return sol1(accounts); 
+        return sol2(accounts); 
     }
 
     //O(n^2*mk) / O(nmk)
@@ -117,5 +118,117 @@ class Solution {
         }
         return false;
     }
+
+    private List<List<String>> sol2(List<List<String>> accounts) {
+        UnionFind uf = new UnionFind(accounts.size());
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < accounts.size(); i++) {
+            for (int j = 1; j < accounts.get(i).size(); j++) {
+                Integer userId = map.get(accounts.get(i).get(j));
+                if (userId == null) {
+                    map.put(accounts.get(i).get(j), i);
+                    continue;
+                }
+                uf.union(uf.find(i), uf.find(userId));
+            }
+        }
+        
+        List<Set<String>> emailGroups = new ArrayList<>();
+        for (int i = 0; i < accounts.size(); i++) {
+            emailGroups.add(new HashSet<>());
+        }
+        for (int i = 0; i < accounts.size(); i++) {
+            int root = uf.find(i);
+            emailGroups.get(root).addAll(accounts.get(i));
+            emailGroups.get(root).remove(accounts.get(i).get(0)); //exclude leading name
+        }
+
+        List<List<String>> res = new ArrayList<>();
+        for (int i = 0; i < accounts.size(); i++) {
+            if (emailGroups.get(i).isEmpty()) {
+                continue;
+            }
+            String name = accounts.get(i).get(0);
+            List<String> list = new ArrayList<>(emailGroups.get(i));
+            Collections.sort(list);
+            list.add(0, name);
+            res.add(list);
+        }
+
+        return res;
+    }
+
+    class UnionFind {
+        private int[] parent;
+        private int[] size;
+        public UnionFind(int capacity) {
+            parent = new int[capacity];
+            size = new int[capacity];
+            for (int i = 0; i < capacity; i++) {
+                parent[i] = i;
+                size[i] = 1;
+            }
+        }
+        public int find(int i) {
+            while (parent[i] != i) {
+                parent[i] = parent[parent[i]];
+                i = parent[i];
+            }
+            return i;
+        }
+        public void union(int i, int j) {
+            int root1 = find(i);
+            int root2 = find(j);
+            if (root1 == root2) {
+                return;
+            }
+            if (size[root1] < size[root2]) {
+                parent[root1] = root2;
+                size[root2] += size[root1];
+            }
+            else {
+                parent[root2] = root1;
+                size[root1] += size[root2];
+            }
+        }
+    }
+
+    /* WRONG to recursively union
+
+    //O(mn) + O(mn*lg(mn)) / O(mn) + O(mn)
+    private List<List<String>> sol2(List<List<String>> accounts) {
+        Map<String, List<Integer>> map = new HashMap<>();//email -> [index1, index2]
+        for (int i = 0; i < accounts.size(); i++) {
+            List<Integer> groupList = null;
+            for (int j = 1; j < accounts.get(i).size() && groupList == null; j++) {
+                groupList = map.get(accounts.get(i).get(j)); //H.W.: j wrongly starts 0
+            }                                                //only emails to be processed
+            if (groupList == null) {
+                groupList = new ArrayList<>();
+            }
+            
+            groupList.add(i);
+            for (int j = 1; j < accounts.get(i).size(); j++) {//H.W.: j wrongly starts 0
+                map.put(accounts.get(i).get(j), groupList);
+            }
+        }
+
+        List<List<String>> res = new ArrayList<>();
+        Set<List<Integer>> uniqGroupLists = new HashSet<>(map.values()); //H.W.: forget to dedup
+        for (List<Integer> groupList : uniqGroupLists) {
+            Set<String> set = new HashSet<>();
+            for (int i : groupList) {
+                set.addAll(accounts.get(i));
+            }
+            String name = accounts.get(groupList.get(0)).get(0);
+            set.remove(name);
+            List<String> list = new ArrayList<>(set);//emails => list
+            Collections.sort(list);
+            list.add(0, name);//name + emails => list
+            res.add(list);
+        }
+        return res;
+    }
+    */
 }
 // @lc code=end
