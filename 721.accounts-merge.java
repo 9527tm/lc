@@ -126,12 +126,10 @@ class Solution {
         Map<String, Integer> map1 = new HashMap<>();//email -> userId
         for (int i = 0; i < accounts.size(); i++) {//O(nm*lgn) / O(nm)
             for (int j = 1; j < accounts.get(i).size(); j++) {
-                Integer userId = map1.get(accounts.get(i).get(j));
+                Integer userId = map1.putIfAbsent(accounts.get(i).get(j), i);
                 if (userId != null) {
                     uf.union(uf.find(i), uf.find(userId));
-                    continue;
                 }
-                map1.put(accounts.get(i).get(j), i);
             }
         }
         
