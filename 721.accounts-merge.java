@@ -119,43 +119,42 @@ class Solution {
         return false;
     }
 
+    //https://leetcode.com/problems/accounts-merge/discuss/140978/Easy-to-Understand-Union-Find-in-Java-95
     //O(nm*lgnm) / O(nm)
     private List<List<String>> sol2(List<List<String>> accounts) {
         UnionFind uf = new UnionFind(accounts.size());//O(n) / O(n)
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> map1 = new HashMap<>();//email -> userId
         for (int i = 0; i < accounts.size(); i++) {//O(nm*lgn) / O(nm)
             for (int j = 1; j < accounts.get(i).size(); j++) {
-                Integer userId = map.get(accounts.get(i).get(j));
+                Integer userId = map1.get(accounts.get(i).get(j));
                 if (userId == null) {
-                    map.put(accounts.get(i).get(j), i);
+                    map1.put(accounts.get(i).get(j), i);
                     continue;
                 }
                 uf.union(uf.find(i), uf.find(userId));
             }
         }
         
-        List<Set<String>> emailGroups = new ArrayList<>();//O(n) / O(n)
-        for (int i = 0; i < accounts.size(); i++) {
-            emailGroups.add(new HashSet<>());
-        }
+        Map<Integer, Set<String>> map2 = new HashMap<>(); //userId -> emails
         for (int i = 0; i < accounts.size(); i++) {//O(nm) / O(nm)
             int root = uf.find(i);
-            emailGroups.get(root).addAll(accounts.get(i));
-            emailGroups.get(root).remove(accounts.get(i).get(0)); //exclude leading name
+            Set<String> set = map2.get(root);
+            if (set == null) {
+                set = new HashSet<>();
+                map2.put(root, set);
+            }
+            set.addAll(accounts.get(i));
+            set.remove(accounts.get(i).get(0)); //exclude leading name
         }
 
         List<List<String>> res = new ArrayList<>();
-        for (int i = 0; i < accounts.size(); i++) {//O(nm*lgnm) / O(nm)
-            if (emailGroups.get(i).isEmpty()) {
-                continue;
-            }
+        for (int i : map2.keySet()) {//O(nm*lgnm) / O(nm)
             String name = accounts.get(i).get(0);
-            List<String> list = new ArrayList<>(emailGroups.get(i));
+            List<String> list = new ArrayList<>(map2.get(i));
             Collections.sort(list);
             list.add(0, name);
             res.add(list);
         }
-
         return res;
     }
 
