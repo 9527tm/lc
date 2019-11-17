@@ -119,10 +119,11 @@ class Solution {
         return false;
     }
 
+    //O(nm*lgnm) / O(nm)
     private List<List<String>> sol2(List<List<String>> accounts) {
-        UnionFind uf = new UnionFind(accounts.size());
+        UnionFind uf = new UnionFind(accounts.size());//O(n) / O(n)
         Map<String, Integer> map = new HashMap<>();
-        for (int i = 0; i < accounts.size(); i++) {
+        for (int i = 0; i < accounts.size(); i++) {//O(nm*lgn) / O(nm)
             for (int j = 1; j < accounts.get(i).size(); j++) {
                 Integer userId = map.get(accounts.get(i).get(j));
                 if (userId == null) {
@@ -133,18 +134,18 @@ class Solution {
             }
         }
         
-        List<Set<String>> emailGroups = new ArrayList<>();
+        List<Set<String>> emailGroups = new ArrayList<>();//O(n) / O(n)
         for (int i = 0; i < accounts.size(); i++) {
             emailGroups.add(new HashSet<>());
         }
-        for (int i = 0; i < accounts.size(); i++) {
+        for (int i = 0; i < accounts.size(); i++) {//O(nm) / O(nm)
             int root = uf.find(i);
             emailGroups.get(root).addAll(accounts.get(i));
             emailGroups.get(root).remove(accounts.get(i).get(0)); //exclude leading name
         }
 
         List<List<String>> res = new ArrayList<>();
-        for (int i = 0; i < accounts.size(); i++) {
+        for (int i = 0; i < accounts.size(); i++) {//O(nm*lgnm) / O(nm)
             if (emailGroups.get(i).isEmpty()) {
                 continue;
             }
