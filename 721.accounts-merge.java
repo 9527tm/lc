@@ -127,32 +127,26 @@ class Solution {
         for (int i = 0; i < accounts.size(); i++) {//O(nm*lgn) / O(nm)
             for (int j = 1; j < accounts.get(i).size(); j++) {
                 Integer userId = map1.get(accounts.get(i).get(j));
-                if (userId == null) {
-                    map1.put(accounts.get(i).get(j), i);
+                if (userId != null) {
+                    uf.union(uf.find(i), uf.find(userId));
                     continue;
                 }
-                uf.union(uf.find(i), uf.find(userId));
+                map1.put(accounts.get(i).get(j), i);
             }
         }
         
         Map<Integer, Set<String>> map2 = new HashMap<>(); //userId -> emails
         for (int i = 0; i < accounts.size(); i++) {//O(nm*lgn) / O(nm)
-            int root = uf.find(i);
-            Set<String> set = map2.get(root);
-            if (set == null) {
-                set = new HashSet<>();
-                map2.put(root, set);
-            }
+            Set<String> set = map2.computeIfAbsent(uf.find(i), k -> new HashSet<>());
             set.addAll(accounts.get(i));
             set.remove(accounts.get(i).get(0)); //exclude leading name
         }
 
         List<List<String>> res = new ArrayList<>();
         for (int i : map2.keySet()) {//O(nm*lgnm) / O(nm)
-            String name = accounts.get(i).get(0);
             List<String> list = new ArrayList<>(map2.get(i));
             Collections.sort(list);
-            list.add(0, name);
+            list.add(0, accounts.get(i).get(0));
             res.add(list);
         }
         return res;
