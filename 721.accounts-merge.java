@@ -136,7 +136,7 @@ class Solution {
         }
         
         Map<Integer, Set<String>> map2 = new HashMap<>(); //userId -> emails
-        for (int i = 0; i < accounts.size(); i++) {//O(nm) / O(nm)
+        for (int i = 0; i < accounts.size(); i++) {//O(nm*lgn) / O(nm)
             int root = uf.find(i);
             Set<String> set = map2.get(root);
             if (set == null) {
