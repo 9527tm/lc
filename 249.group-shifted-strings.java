@@ -44,6 +44,7 @@ class Solution {
         return sol1(strings);        
     }
 
+    //O(n * m) / O(n * m)
     private List<List<String>> sol1(String[] strings) {
         Map<String, List<String>> map = new HashMap<>();
         for (String str : strings) {
