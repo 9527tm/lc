@@ -62,10 +62,11 @@
 // @lc code=start
 class Solution {
     public int[] nextGreaterElement(int[] nums1, int[] nums2) {
-        return sol1(nums1, nums2); 
+        //return sol1(nums1, nums2); 
+        return sol2(nums1, nums2); 
     }
 
-    //O(n * n) / O(1)
+    //O(m * n) / O(1)
     private int[] sol1(int[] nums1, int[] nums2) {
         int[] res = new int[nums1.length];
         for (int i = 0; i < nums1.length; i++) {
@@ -78,6 +79,26 @@ class Solution {
                 k++;
             }
             res[i] = k < nums2.length ? nums2[k] : -1;
+        }
+        return res;
+    }
+
+    //O(m + n) / O(n)
+    private int[] sol2(int[] nums1, int[] nums2) {
+        Deque<Integer> stack = new LinkedList<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = nums2.length - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && stack.peekFirst() < nums2[i]) {
+                stack.pollFirst();
+            }
+            int greaterElem = !stack.isEmpty() ? stack.peekFirst() : -1;
+            map.put(nums2[i], greaterElem);
+            stack.offerFirst(nums2[i]); //H.W.: forgot to add new elements 
+        }                              //      to global data structure
+
+        int[] res = new int[nums1.length];
+        for (int i = 0; i < nums1.length; i++) {
+            res[i] = map.get(nums1[i]);
         }
         return res;
     }
