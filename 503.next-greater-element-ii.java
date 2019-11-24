@@ -40,9 +40,11 @@
 // @lc code=start
 class Solution {
     public int[] nextGreaterElements(int[] nums) {
-        return sol1(nums); 
+        //return sol1(nums); 
+        return sol2(nums); 
     }
 
+    //O(n * n) / O(1)
     private int[] sol1(int[] nums) {
         int[] res = new int[nums.length];
         for (int i = 0; i < nums.length; i++) {
@@ -54,5 +56,21 @@ class Solution {
         }
         return res;
     }
+
+    //O(n + n) / O(n)
+    private int[] sol2(int[] nums) {
+        int[] res = new int[nums.length];
+        Deque<Integer> stack = new LinkedList<>();
+        for (int i = 0; i < nums.length * 2 - 1; i++) {
+            int j = (nums.length - 1 - i + nums.length) % nums.length;
+            while (!stack.isEmpty() && nums[j] >= stack.peekFirst()) {
+                stack.pollFirst();
+            }
+            res[j] = !stack.isEmpty() ? stack.peekFirst() : -1;
+            stack.offerFirst(nums[j]); //H.W.: forgot to update global DS.
+        }
+        return res;
+    }
+
 }
 // @lc code=end
