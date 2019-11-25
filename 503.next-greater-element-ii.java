@@ -41,7 +41,8 @@
 class Solution {
     public int[] nextGreaterElements(int[] nums) {
         //return sol1(nums); 
-        return sol2(nums); 
+        //return sol2(nums); 
+        return sol3(nums); 
     }
 
     //O(n * n) / O(1)
@@ -58,7 +59,7 @@ class Solution {
     }
 
     //O(n + n) / O(n)
-    private int[] sol2(int[] nums) {
+    private int[] sol2(int[] nums) {//backward scanning
         int[] res = new int[nums.length];
         Deque<Integer> stack = new LinkedList<>();
         for (int i = 0; i < nums.length * 2 - 1; i++) {
@@ -68,6 +69,21 @@ class Solution {
             }
             res[j] = !stack.isEmpty() ? stack.peekFirst() : -1;
             stack.offerFirst(nums[j]); //H.W.: forgot to update global DS.
+        }
+        return res;
+    }
+
+    //O(n + n) / O(n)
+    private int[] sol3(int[] nums) {//forward scanning
+        Deque<Integer> stack = new LinkedList<>(); //H.W.: not considering dup elements
+        int[] res = new int[nums.length];
+        Arrays.fill(res, -1); //H.W.: forgot to initilize to -1
+        for (int i = 0; i < nums.length * 2; i++) {//both 2n and 2n - 1 are OK
+            int j = i % nums.length; //H.W.: forgot remapping i to j 
+            while (!stack.isEmpty() && nums[stack.peekFirst()] < nums[j]) {
+                res[stack.pollFirst()] = nums[j];
+            }
+            stack.offerFirst(j);
         }
         return res;
     }
