@@ -46,18 +46,18 @@ class Solution {
     }
 
     private boolean sol1(int[] nums, int k) {
-        int sum = 0, max = 0;
-        for (int n : nums) {
-            sum += n;
-            max = Math.max(max, n);
-        }
+        int sum = getSum(nums), max = getMax(nums);
         if (sum % k != 0 || max > sum / k) {
             return false;
         }
-        Arrays.sort(nums);
+        Arrays.sort(nums); //TRICKY: very important!
         reverse(nums);
-        return dfs(nums, 0, 0, sum / k);
+        //return dfs(nums, 0, 0, sum / k);
+        //return dfs2(nums, 0, new int[k], sum / k); //TLE
+        return dfs3(nums, 0, k, new boolean[nums.length], 0, sum / k);
     }
+
+    //O(n!) / O(n)
     private boolean dfs(int[] nums, int i, int sum, int target) {
         if (i >= nums.length) {
             return true;
@@ -72,6 +72,62 @@ class Solution {
             swap(nums, i, j);
         }
         return false;
+    }
+
+    //O(k^n) / O(n)
+    private boolean dfs2(int[] nums, int i, int[] sums, int target) {
+        if (i >= nums.length) {
+            for (int j = 0; j < sums.length; j++) {
+                if (sums[j] != target) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        for (int j = 0; j < sums.length; j++) {
+            if (sums[j] + nums[i] <= target) {
+                sums[j] += nums[i];
+                if (dfs2(nums, i + 1, sums, target)) {
+                    return true;
+                }
+                sums[j] -= nums[i];
+            }
+        }
+        return false;
+    }
+
+    private boolean dfs3(int[] nums, int i, int k, boolean[] visited, int sum,  int target) {
+        if (k == 0) {
+            return true;
+        }
+        for (int j = i; j < nums.length; j++) {
+            if (!visited[j] && sum + nums[j] <= target) {
+                visited[j] = true;
+                boolean res = (sum + nums[j] == target) ? 
+                              dfs3(nums, 0, k - 1, visited, 0, target) :
+                              dfs3(nums, i + 1, k, visited, sum + nums[j], target);
+                if (res) {
+                    return true;
+                }
+                visited[j] = false;
+            }
+        }
+        return false;
+    }
+
+    private int getSum(int[] nums) {
+        int sum = 0;
+        for (int n : nums) {
+            sum += n;
+        }
+        return sum;
+    }
+    private int getMax(int[] nums) {
+        int max = 0;
+        for (int n : nums) {
+            max = Math.max(max, n);
+        }
+        return max;
     }
     private void swap(int[] nums, int i, int j) {
         int temp = nums[i];
