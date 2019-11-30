@@ -53,8 +53,8 @@ class Solution {
         Arrays.sort(nums); //TRICKY: very important!
         reverse(nums);
         //return dfs(nums, 0, 0, sum / k);
-        //return dfs2(nums, 0, new int[k], sum / k); //TLE
-        return dfs3(nums, 0, k, new boolean[nums.length], 0, sum / k);
+        return dfs2(nums, 0, new int[k], sum / k); //TLE
+        //return dfs3(nums, 0, k, new boolean[nums.length], 0, sum / k);
     }
 
     //O(n!) / O(n)
