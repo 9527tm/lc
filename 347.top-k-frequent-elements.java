@@ -43,8 +43,9 @@
 // @lc code=start
 class Solution {
     public List<Integer> topKFrequent(int[] nums, int k) {
-        return sol1(nums, k); 
+        //return sol1(nums, k); 
         //return sol2(nums, k); 
+        return sol3(nums, k);
     }
 
     //O(n + mlgk) / O(n)
@@ -73,6 +74,42 @@ class Solution {
         Collections.reverse(res); //O(n) / O(1)
         return res;
     }
+
+
+    //O(n) / O(n)
+    private List<Integer> sol3(int[] nums, int k) {
+        Map<Integer, Integer> freqMap = new HashMap<>();
+        int max = 0;
+        for (int n : nums) {//O(n) / O(n)
+            int freq = freqMap.getOrDefault(n, 0) + 1;
+            freqMap.put(n, freq);
+            max = Math.max(freq, max);
+        }
+
+        List<Integer>[] buckets = new List[max + 1]; //H.W.: declare List<>[] 
+        for (Map.Entry<Integer, Integer> entry : freqMap.entrySet()) {//O(m) / O(m)
+            int freq = entry.getValue();
+            if (buckets[freq] == null) {
+                buckets[freq] = new ArrayList<>();
+            }
+            buckets[freq].add(entry.getKey()); //O(n) / O(n)
+        }
+
+        List<Integer> res = new ArrayList<>();
+        for (int i = max; i >= 0; i--) {//H.W.: decrease but i++       //O(k) / O(1)
+            if (buckets[i] == null) {//H.W.: forgot the case [0:2, 1:3, 2: 5], k = 8
+                continue;
+            }
+            for (int n : buckets[i]) {
+                res.add(n);
+                if (res.size() >= k) {
+                    return res;
+                }
+            }
+        }
+        return null;//Never be there
+    }
+
 
     //O(n + nlgm) / O(n)
     private List<Integer> sol2(int[] nums, int k) {
