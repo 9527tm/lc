@@ -43,8 +43,8 @@
 // @lc code=start
 class Solution {
     public List<Integer> topKFrequent(int[] nums, int k) {
-        //return sol1(nums, k); 
-        return sol2(nums, k); 
+        return sol1(nums, k); 
+        //return sol2(nums, k); 
     }
 
     //O(n + mlgk) / O(n)
@@ -67,7 +67,7 @@ class Solution {
         }
      
         List<Integer> res = new ArrayList<>(); 
-        for (int i = 0; i < k; i++) {//O(klgk) / O(k)
+        while (!minHeap.isEmpty()) {//O(klgk) / O(k)
             res.add(minHeap.poll().getKey());
         }
         Collections.reverse(res); //O(n) / O(1)
