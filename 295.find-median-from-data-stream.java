@@ -55,7 +55,8 @@
 class MedianFinder {
 
     /** initialize your data structure here. */
-    private Sol1 sol = new Sol1();
+    //private Sol1 sol = new Sol1();
+    private Sol2 sol = new Sol2();
     public MedianFinder() {
     }
     
@@ -104,6 +105,26 @@ class Sol1 {
 
 
 }
+
+class Sol2 {
+    PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder()); //for the small half elements
+    PriorityQueue<Integer> minHeap = new PriorityQueue<>(); //for the large half elements
+    public void addNum(int num) {//H.W.: forgot to initialize maxHeap with reverseOrder()
+        maxHeap.offer(num);
+        minHeap.offer(maxHeap.poll());
+        if (minHeap.size() > maxHeap.size()) {
+            maxHeap.offer(minHeap.poll());
+        }
+    }
+
+    public double findMedian() {
+        int sum = maxHeap.size() > minHeap.size() ? 
+                  (maxHeap.peek() * 2) : (maxHeap.peek() + minHeap.peek());
+        return sum / 2.0;
+    }
+}
+
+
 
 /**
  * Your MedianFinder object will be instantiated and called as such:
