@@ -54,6 +54,7 @@ class Solution {
         return sol2(nums, k);        
     }
 
+    //O(nlgk) / O(k)
     public double[] sol1(int[] array, int k) {
         //assume k > 0, array != null, array.length >= k
         double[] res = new double[array.length - k + 1];
@@ -127,7 +128,7 @@ class Solution {
         }
     }
 
-
+    //O(nlgk) / O(k)
     public double[] sol2(int[] array, int k) {
         //assume k > 0, array != null, array.length >= k
         double[] res = new double[array.length - k + 1];
