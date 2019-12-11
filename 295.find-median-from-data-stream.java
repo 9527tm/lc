@@ -56,7 +56,8 @@ class MedianFinder {
 
     /** initialize your data structure here. */
     //private Sol1 sol = new Sol1();
-    private Sol2 sol = new Sol2();
+    //private Sol2 sol = new Sol2();
+    private Sol3 sol = new Sol3();
     public MedianFinder() {
     }
     
@@ -121,6 +122,62 @@ class Sol2 {
         int sum = maxHeap.size() > minHeap.size() ? 
                   (maxHeap.peek() * 2) : (maxHeap.peek() + minHeap.peek());
         return sum / 2.0;
+    }
+}
+
+
+class Sol3 {
+    Counter smallCounter = new Counter();
+    Counter largeCounter = new Counter();
+    public void addNum(int num) {
+        smallCounter.offer(num);
+        largeCounter.offer(smallCounter.pollLast());
+        if (largeCounter.size() > smallCounter.size()) {
+            smallCounter.offer(largeCounter.pollFirst());
+        }
+    }
+    public double findMedian() {
+        int sum = smallCounter.size() > largeCounter.size() ?
+                  (smallCounter.peekLast() * 2) : (smallCounter.peekLast() + largeCounter.peekFirst());
+        return sum / 2.0;
+    }
+
+    class Counter {
+        private int count = 0;
+        private TreeMap<Integer, Integer> treeMap = new TreeMap<>();
+        public int size() {
+            return count;
+        }
+        public void offer(int num) {
+            count++;
+            treeMap.put(num, treeMap.getOrDefault(num, 0) + 1);
+        }
+        public int peekFirst() {
+            return treeMap.firstKey();
+        }
+        public int peekLast() {
+            return treeMap.lastKey();
+        }
+        public int pollFirst() {
+            int key = treeMap.firstKey();
+            reduceCount(key);
+            return key;
+        }
+        public int pollLast() {
+            int key = treeMap.lastKey();
+            reduceCount(key);
+            return key;
+        }
+        private void reduceCount(int key) {
+            count--;
+            int value = treeMap.get(key);
+            if (value == 1) {
+                treeMap.remove(key);
+            }
+            else {
+                treeMap.put(key, value - 1);
+            }
+        }
     }
 }
 
