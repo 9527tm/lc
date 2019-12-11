@@ -50,10 +50,11 @@
 // @lc code=start
 class Solution {
     public double[] medianSlidingWindow(int[] nums, int k) {
-        return sol1(nums, k);        
+        //return sol1(nums, k);        
+        return sol2(nums, k);        
     }
 
-    public static double[] sol1(int[] array, int k) {
+    public double[] sol1(int[] array, int k) {
         //assume k > 0, array != null, array.length >= k
         double[] res = new double[array.length - k + 1];
         Counter smalls = new Counter();
@@ -80,7 +81,7 @@ class Solution {
         return res;
     }
 
-    static class Counter {
+    class Counter {
         private int count = 0;
         private TreeMap<Integer, Integer> treeMap = new TreeMap<>();
 
@@ -123,6 +124,64 @@ class Solution {
             int key = treeMap.lastKey();
             reduceCount(key);
             return key;
+        }
+    }
+
+
+    public double[] sol2(int[] array, int k) {
+        //assume k > 0, array != null, array.length >= k
+        double[] res = new double[array.length - k + 1];
+        MultiTreeSet<Integer> smalls = new MultiTreeSet<>();
+        MultiTreeSet<Integer> larges = new MultiTreeSet<>();
+        for (int fast = 0; fast < array.length; fast++) {
+            smalls.add(array[fast]);     //1. add a[f]
+            int largestSmallKey = smalls.lastKey();
+            smalls.remove(largestSmallKey);
+            larges.add(largestSmallKey); //2. associate
+            if (fast >= k) {             //3. remove a[f - k] (when f >= k)
+                if (!larges.remove(array[fast - k])) {
+                    smalls.remove(array[fast - k]);
+                }
+            }
+            if (larges.size() > smalls.size()) {//4. balance
+                int smallestLargeKey = larges.firstKey();
+                larges.remove(smallestLargeKey);
+                smalls.add(smallestLargeKey);
+            }
+            if (fast >= k - 1) {         //5. update result of window: a[f - k + 1, ..., k]
+                long sum = smalls.size() > larges.size() ?
+                           (smalls.lastKey() * 2L) : (smalls.lastKey() * 1L + larges.firstKey());
+                res[fast - k + 1] = sum / 2.0;
+            }
+        }
+        return res;
+    }
+
+    class MultiTreeSet<E> {
+        private int totalCount = 0;
+        private TreeMap<E, Integer> treeMap = new TreeMap<>();
+        public int size() {
+            return totalCount;
+        }
+        public boolean add(E key) {
+            totalCount++;//H.W.: forgot to update exposed global counter!
+            treeMap.put(key, treeMap.getOrDefault(key, 0) + 1);
+            return true;
+        }
+        public boolean remove(E key) {
+            if (!treeMap.containsKey(key)) {
+                return false;
+            }
+            totalCount--;//H.W. forgot to update exposed global counter!
+                         //H.W.2 added it before false return 
+            treeMap.compute(key, (k, v) -> {return v > 1 ? v - 1 : null;});
+            return true;
+        }
+        public E firstKey() {
+            return treeMap.firstKey();
+        }
+        public E lastKey() {
+            return treeMap.lastKey();
         }
     }
 }
